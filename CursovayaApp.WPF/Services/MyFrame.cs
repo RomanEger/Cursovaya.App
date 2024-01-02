@@ -10,5 +10,10 @@ namespace CursovayaApp.WPF.Services
     internal class MyFrame
     {
         public static Frame frame;
+
+        public static bool Navigate(Page newPage)
+        {
+            return frame?.Navigate(newPage) ?? false;
+        }
     }
 }

@@ -4,11 +4,15 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:CursovayaApp.WPF"
+        SizeToContent="Height"
         mc:Ignorable="d"
-        Title="MainWindow" Height="465.96" Width="800">
-    <Grid>
-        <Frame Name="MainFrame"
-               NavigationUIVisibility="Hidden" 
-               Height="450"/>
-    </Grid>
+        Title="" Height="465.96" Width="800">
+    
+        <Grid>
+            
+            <Frame Name="MainFrame"
+                   NavigationUIVisibility="Hidden" 
+                   Height="450"/>
+        </Grid>
+    
 </Window>

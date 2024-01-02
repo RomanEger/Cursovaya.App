@@ -1,0 +1,58 @@
+﻿<Page x:Class="CursovayaApp.WPF.Views.LoginPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:CursovayaApp.WPF.Views"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800"
+      Title="Авторизация">
+
+    <Grid>
+        <Label Content="Добро пожаловать!"
+               FontSize="18pt"
+               FontWeight="DemiBold"
+               HorizontalAlignment="Center"
+               Margin="0 25"/>
+        <StackPanel HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Margin="0 0 0 0">
+
+
+
+            <StackPanel HorizontalAlignment="Center"
+                        Margin="0 5">
+
+                <Label Content="Логин"
+                       FontSize="14pt"
+                       HorizontalAlignment="Center"/>
+                <TextBox Style="{StaticResource tbLoginStyle}"
+                         Text="{Binding Login, UpdateSourceTrigger=PropertyChanged}"
+                         Name="TbLogin"/>
+
+            </StackPanel>
+
+            <StackPanel HorizontalAlignment="Center"
+                        Margin="0 5">
+                <Label Content="Пароль"
+                       HorizontalAlignment="Center"
+                       FontSize="14pt"/>
+                <TextBox Style="{StaticResource tbLoginStyle}"
+                         Name="TbPass"
+                         Text="{Binding Password, UpdateSourceTrigger=PropertyChanged}"
+                />
+            </StackPanel>
+
+            <StackPanel
+                Margin="0 25 0 0">
+                <Button Content="Войти"
+                        HorizontalAlignment="Center"
+                        Style="{StaticResource btnLoginStyle}"
+                        Background="Lime"
+                        Name="BtnLogin"
+                        Command="{Binding LoginCommand}"
+                        Width="250"/>
+            </StackPanel>
+        </StackPanel>
+    </Grid>
+</Page>

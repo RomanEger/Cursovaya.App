@@ -8,7 +8,12 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using CursovayaApp.WPF.Models;
+using CursovayaApp.WPF.Models.DbModels;
 using CursovayaApp.WPF.Services;
+using CursovayaApp.WPF.ViewModels;
+using CursovayaApp.WPF.Views;
+using Microsoft.EntityFrameworkCore;
 
 namespace CursovayaApp.WPF
 {
@@ -22,7 +27,10 @@ namespace CursovayaApp.WPF
             InitializeComponent();
             ResizeMode =  ResizeMode.CanMinimize;
             MyFrame.frame = MainFrame;
-            //MyFrame.frame.Navigate(new );
+            var l = new LoginPage();
+            MyFrame.Navigate(l);
+            DbClass.entities = new ApplicationContext();
+            Title = "Библиотека \"Читайка\"";
         }
     }
 }
