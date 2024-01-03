@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Controls;
+using System.Windows.Navigation;
 
 namespace CursovayaApp.WPF.Services
 {
@@ -14,6 +15,21 @@ namespace CursovayaApp.WPF.Services
         public static bool Navigate(Page newPage)
         {
             return frame?.Navigate(newPage) ?? false;
+        }
+
+        public static void ClearHistory()
+        {
+            while (frame.CanGoBack && frame.CanGoForward)
+            {
+                try
+                {
+                    frame.RemoveBackEntry();
+                }
+                catch (Exception ex)
+                {
+                    break;
+                }
+            }
         }
     }
 }
