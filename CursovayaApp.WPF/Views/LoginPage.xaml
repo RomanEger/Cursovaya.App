@@ -26,7 +26,7 @@
                 <Label Content="Логин"
                        FontSize="14pt"
                        HorizontalAlignment="Center"/>
-                <TextBox Style="{StaticResource tbLoginStyle}"
+                <TextBox Style="{StaticResource TbLoginStyle}"
                          Text="{Binding Login, UpdateSourceTrigger=PropertyChanged}"
                          Name="TbLogin"/>
 
@@ -37,7 +37,7 @@
                 <Label Content="Пароль"
                        HorizontalAlignment="Center"
                        FontSize="14pt"/>
-                <TextBox Style="{StaticResource tbLoginStyle}"
+                <TextBox Style="{StaticResource TbLoginStyle}"
                          Name="TbPass"
                          Text="{Binding Password, UpdateSourceTrigger=PropertyChanged}"
                 />
@@ -46,12 +46,14 @@
             <StackPanel
                 Margin="0 25 0 0">
                 <Button Content="Войти"
+                        Margin="0"
+                        BorderBrush="Transparent"
                         HorizontalAlignment="Center"
-                        Style="{StaticResource btnLoginStyle}"
-                        Background="Lime"
+                        Background="DodgerBlue"
                         Name="BtnLogin"
-                        Command="{Binding LoginCommand}"
-                        Width="250"/>
+                        Foreground="White"
+                        Width="140"
+                        Command="{Binding LoginCommand}"/>
             </StackPanel>
         </StackPanel>
     </Grid>
