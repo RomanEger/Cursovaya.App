@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.ComponentModel;
+using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -22,15 +23,35 @@ namespace CursovayaApp.WPF
     /// </summary>
     public partial class MainWindow : Window
     {
+        LoginPage l = new LoginPage();
         public MainWindow()
         {
             InitializeComponent();
             ResizeMode =  ResizeMode.CanMinimize;
             MyFrame.frame = MainFrame;
-            var l = new LoginPage();
             MyFrame.Navigate(l);
             DbClass.entities = new ApplicationContext();
             Title = "Библиотека \"Читайка\"";
+        }
+
+        private void MainWindow_OnClosing(object? sender, CancelEventArgs e)
+        {
+            var x = MyFrame.frame.Content as Page;
+            if(x == l)
+                return;
+
+            var a = MessageBox.Show(
+                "Хотите ли вы сохранить изменения?", "",
+                MessageBoxButton.YesNoCancel,
+                MessageBoxImage.Asterisk);
+            if (a == MessageBoxResult.Yes)
+            {
+                DbClass.entities.SaveChanges();
+            }
+            else if (a == MessageBoxResult.Cancel) 
+            {
+                e.Cancel = true;
+            }
         }
     }
 }
