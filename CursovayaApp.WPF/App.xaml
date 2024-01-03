@@ -5,31 +5,36 @@
              StartupUri="/Views/MainWindow.xaml">
     <Application.Resources>
         <Style TargetType="{x:Type Control}" 
-               x:Key="baseStyle">
+               x:Key="BaseStyle">
             <Setter Property="FontSize" Value="14pt" />
         </Style>
 
 
         <Style TargetType="TextBox" 
-               x:Key="tbLoginStyle" 
-               BasedOn="{StaticResource baseStyle}">
+               x:Key="TbLoginStyle" 
+               BasedOn="{StaticResource BaseStyle}">
             <Setter Property="Width" Value="250"/>
             <Setter Property="Height" Value="35"/>
         </Style>
 
         <Style TargetType="PasswordBox" 
-               x:Key="pbLoginStyle" 
-               BasedOn="{StaticResource baseStyle}">
+               x:Key="PbLoginStyle" 
+               BasedOn="{StaticResource BaseStyle}">
             <Setter Property="Width" Value="250"/>
             <Setter Property="Height" Value="35"/>
         </Style>
 
         <Style TargetType="Button"
-               x:Key="btnLoginStyle"
-               BasedOn="{StaticResource baseStyle}">
-            <Setter Property="Width" Value="200"/>
-            <Setter Property="Height" Value="40"/>
-            <Setter Property="Margin" Value="0 5"/>
+               BasedOn="{StaticResource BaseStyle}">
+            <Setter Property="Margin" Value="15"></Setter>
+            <Setter Property="Height" Value="30"/>
+            <Setter Property="Background" Value="White"/>
+            <Style.Resources>
+                <Style TargetType="Border">
+                    <Setter Property="CornerRadius" Value="10"/>
+                    <Setter Property="Cursor" Value="Hand"/>
+                </Style>
+            </Style.Resources>
         </Style>
     </Application.Resources>
 </Application>
