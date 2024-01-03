@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace CursovayaApp.WPF.Models.DbModels
 {
-    public class RentalBook
+    public class RentalBook : TableBase
     {
-        public int Id { get; set; }
+        public override int Id { get; set; }
         public int BookId { get; set; }
         public int UserId { get; set; }
         public DateTime DateStart { get; set; }

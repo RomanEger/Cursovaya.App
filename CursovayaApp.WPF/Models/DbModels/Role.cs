@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace CursovayaApp.WPF.Models.DbModels
 {
-    public class Role
+    public class Role : TableBase
     {
-        public int Id { get; set; }
+        public override int Id { get; set; }
         public string Name { get; set; }
 
         public ICollection<User> Users { get; set; } = new List<User>();
