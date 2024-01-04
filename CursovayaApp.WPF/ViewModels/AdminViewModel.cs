@@ -49,20 +49,6 @@ namespace CursovayaApp.WPF.ViewModels
         }
         private void InsertToUsers()
         {
-            //if (i <= 0)
-            //    IndexUser -= UsersAtPage;
-            //if (IndexUser < 0)
-            //    IndexUser = 0;
-            //if (UsersAtPage > i)
-            //{
-            //    if (i == 0)
-            //        i = listUsers.Count - IndexUser;
-            //    Users = new ObservableCollection<User>(listUsers.GetRange(IndexUser, i));
-            //}
-
-            //else
-            //    Users = new ObservableCollection<User>(listUsers.GetRange(IndexUser, UsersAtPage));
-
             if (listUsers.Count <= UsersAtPage)
             {
                 Users = new ObservableCollection<User>(listUsers);
@@ -161,8 +147,6 @@ namespace CursovayaApp.WPF.ViewModels
                     var canGoForward = i >= 5;
                     if (canGoForward)
                         IndexUser += UsersAtPage;
-                    //else
-                    //    IndexUser += i;
                     InsertToUsers();
                 });
             }
@@ -218,10 +202,7 @@ namespace CursovayaApp.WPF.ViewModels
                     var canGoForward = i > UsersAtPage;
                     if (canGoForward)
                         IndexUser += UsersAtPage;
-                    //else
-                    //    IndexUser += i;
                     InsertToUsers();
-                    //InsertToUsers();
                     SelectedUser = newUser;
                     SetCount();
                 });
