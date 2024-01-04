@@ -63,7 +63,22 @@ namespace CursovayaApp.WPF.ViewModels
             //else
             //    Users = new ObservableCollection<User>(listUsers.GetRange(IndexUser, UsersAtPage));
 
+            if (listUsers.Count <= UsersAtPage)
+            {
+                Users = new ObservableCollection<User>(listUsers);
+                return;
+            }
+
+
             var i = listUsers.Count - IndexUser;
+            if (i <= 0)
+            {
+                if (UsersAtPage <= IndexUser)
+                    IndexUser -= UsersAtPage;
+                else
+                    IndexUser = 0; 
+                i = UsersAtPage;
+            }
             if (UsersAtPage > i)
                 Users = new ObservableCollection<User>(listUsers.GetRange(IndexUser, i));
             else
@@ -146,8 +161,8 @@ namespace CursovayaApp.WPF.ViewModels
                     var canGoForward = i >= 5;
                     if (canGoForward)
                         IndexUser += UsersAtPage;
-                    else
-                        IndexUser += i;
+                    //else
+                    //    IndexUser += i;
                     InsertToUsers();
                 });
             }
@@ -241,18 +256,6 @@ namespace CursovayaApp.WPF.ViewModels
                             SelectedUser = listUsers[s];
                         InsertToUsers();
                         SetCount();
-                        if (!Users.Any())
-                        {
-                                RelayCommand command;
-                                command = new RelayCommand(obj =>
-                                {
-                                    if (IndexUser < 5)
-                                        IndexUser = 0;
-                                    else
-                                        IndexUser -= UsersAtPage;
-                                    InsertToUsers();
-                                });
-                        }
                         MessageBox.Show("Пользователь удален");
                     }
                 });
