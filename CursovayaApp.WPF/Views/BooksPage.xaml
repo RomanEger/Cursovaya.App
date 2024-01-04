@@ -11,22 +11,26 @@
     <Grid>
         <StackPanel VerticalAlignment="Top"
                     Orientation="Horizontal"
-                    Margin="0 5">
+                    Margin="15">
 
             <Button Content="Назад"
                     Command="{Binding GoBackCommand}"
-                    Margin="5 0"
+                    Margin="0"
                     Name="BtnBack"/>
 
             <Label Content="Автор"
+                   Margin="5 0"
+                   VerticalAlignment="Center"
                    FontSize="14pt"/>
 
             <ComboBox Width="140"
+                      VerticalAlignment="Center"
+                      Height="30"
+                      Margin="5 0"
                       Name="CmbAuthor"/>
 
-            <TextBox 
-                     Margin="5 0"
-                     Width="492"
+            <TextBox Style="{StaticResource TbLoginStyle}"
+                     Width="450"
                      Name="TbSearch"/>
         </StackPanel>
     </Grid>

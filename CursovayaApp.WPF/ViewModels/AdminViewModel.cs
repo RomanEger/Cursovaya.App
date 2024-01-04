@@ -16,7 +16,6 @@ namespace CursovayaApp.WPF.ViewModels
 {
     public class AdminViewModel : ViewModelBase
     {
-        private bool IsUsersPage = true;
         private List<User> listUsers;
         private readonly int UsersAtPage = 5;
         private int IndexUser = 0;
@@ -33,7 +32,6 @@ namespace CursovayaApp.WPF.ViewModels
         }
         public AdminViewModel()
         {
-            BtnChangeContent = "История изменения книг";
             GetUsers();
         }
         private void GetUsers()
@@ -91,18 +89,6 @@ namespace CursovayaApp.WPF.ViewModels
             {
                 _selectedUser = value;
                 OnPropertyChanged("SelectedUser");
-            }
-        }
-
-        private string _btnChangeContent;
-
-        public string BtnChangeContent
-        {
-            get => _btnChangeContent;
-            set
-            {
-                _btnChangeContent = value;
-                OnPropertyChanged("BtnChangeContent");
             }
         }
 
@@ -250,16 +236,7 @@ namespace CursovayaApp.WPF.ViewModels
             {
                 return _changeCommand ??= new RelayCommand(obj =>
                 {
-                    if (IsUsersPage)
-                    {
-                        BtnChangeContent = "Редактировать пользователей";
-                        IsUsersPage = false;
-                    }
-                    else
-                    {
-                        BtnChangeContent = "История изменения книг";
-                        IsUsersPage = true;
-                    }
+                    MyFrame.frame.Navigate(new BooksPage());
                 });
             }
         }

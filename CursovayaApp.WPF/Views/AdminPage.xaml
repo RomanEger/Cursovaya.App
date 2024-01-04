@@ -17,7 +17,7 @@
         </StackPanel>
         <StackPanel VerticalAlignment="Top"
                     HorizontalAlignment="Left">
-            <Button Content="{Binding BtnChangeContent}"
+            <Button Content="Каталог книг"
                     Command="{Binding ChangeCommand}"
                     Name="BtnChange"/>
         </StackPanel>
@@ -32,7 +32,6 @@
                 CanUserResizeColumns="False"
                 AutoGenerateColumns="False"
                 MaxWidth="550"
-                MaxHeight="250"
                 SelectedItem="{Binding SelectedUser}"
                 ItemsSource="{Binding Users}">
                 <DataGrid.Columns>
