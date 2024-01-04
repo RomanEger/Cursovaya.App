@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using System.IO;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -47,7 +48,18 @@ namespace CursovayaApp.WPF
                 MessageBoxImage.Asterisk);
             if (a == MessageBoxResult.Yes)
             {
-                DbClass.entities.SaveChanges();
+                try
+                {
+                    DbClass.entities.SaveChanges();
+                }
+                catch (Exception ex)
+                {
+                    string fileName = $@"C:\Users\error{DateTime.Now}.txt";
+                    FileStream fileStream = new FileStream(fileName, FileMode.Create);
+                    StreamWriter sw = new StreamWriter(fileStream);
+                    sw.Write(ex.Message);
+                    sw.Close();
+                }
             }
             else if (a == MessageBoxResult.Cancel) 
             {

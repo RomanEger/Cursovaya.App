@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -41,6 +42,8 @@ namespace CursovayaApp.WPF.ViewModels
             {
                 return _loginCommand ??= new RelayCommand(obj =>
                     {
+                        try
+                        {
                                var q = DbClass.entities.Users.FirstOrDefault(x => x.Login == ThisUser.Login && x.Password == ThisUser.Password) ?? new User();
                                if (q.RoleId == 1)
                                    MyFrame.Navigate(new AdminPage());
@@ -49,6 +52,15 @@ namespace CursovayaApp.WPF.ViewModels
                                else
                                    MessageBox.Show("Неправильный логин или пароль");
                                ThisUser.Password = null;
+                        }
+                        catch (Exception ex)
+                        {
+                            string fileName = $@"C:\Users\error{DateTime.Now}.txt";
+                            FileStream fileStream = new FileStream(fileName, FileMode.Create);
+                            StreamWriter sw = new StreamWriter(fileStream);
+                            sw.Write(ex.Message);
+                            sw.Close();
+                        }
                     })
 ;
             }

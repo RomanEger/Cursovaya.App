@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -32,7 +33,18 @@ namespace CursovayaApp.WPF.ViewModels
         }
         public AdminViewModel()
         {
-            GetUsers();
+            try
+            {
+                GetUsers();
+            }
+            catch (Exception ex)
+            {
+                string fileName = $@"C:\Users\error{DateTime.Now}.txt";
+                FileStream fileStream = new FileStream(fileName, FileMode.Create);
+                StreamWriter sw = new StreamWriter(fileStream);
+                sw.Write(ex.Message);
+                sw.Close();
+            }
         }
         private void GetUsers()
         {
@@ -47,26 +59,37 @@ namespace CursovayaApp.WPF.ViewModels
         }
         private void InsertToUsers()
         {
-            if (listUsers.Count <= UsersAtPage)
+            try
             {
-                Users = new ObservableCollection<User>(listUsers);
-                return;
-            }
+                if (listUsers.Count <= UsersAtPage)
+                {
+                    Users = new ObservableCollection<User>(listUsers);
+                    return;
+                }
 
 
-            var i = listUsers.Count - IndexUser;
-            if (i <= 0)
-            {
-                if (UsersAtPage <= IndexUser)
-                    IndexUser -= UsersAtPage;
+                var i = listUsers.Count - IndexUser;
+                if (i <= 0)
+                {
+                    if (UsersAtPage <= IndexUser)
+                        IndexUser -= UsersAtPage;
+                    else
+                        IndexUser = 0; 
+                    i = UsersAtPage;
+                }
+                if (UsersAtPage > i)
+                    Users = new ObservableCollection<User>(listUsers.GetRange(IndexUser, i));
                 else
-                    IndexUser = 0; 
-                i = UsersAtPage;
+                    Users = new ObservableCollection<User>(listUsers.GetRange(IndexUser, UsersAtPage));
             }
-            if (UsersAtPage > i)
-                Users = new ObservableCollection<User>(listUsers.GetRange(IndexUser, i));
-            else
-                Users = new ObservableCollection<User>(listUsers.GetRange(IndexUser, UsersAtPage));
+            catch (Exception ex)
+            {
+                string fileName = $@"C:\Users\error{DateTime.Now}.txt";
+                FileStream fileStream = new FileStream(fileName, FileMode.Create);
+                StreamWriter sw = new StreamWriter(fileStream);
+                sw.Write(ex.Message);
+                sw.Close();
+            }
         }
 
         private User _selectedUser;
@@ -163,14 +186,25 @@ namespace CursovayaApp.WPF.ViewModels
             {
                 return _saveCommand ??= new RelayCommand(obj =>
                 {
-                    var a = DbClass.entities.Users.ToList();
-                    foreach (var item in Users)
+                    try
                     {
-                        DbClass.entities.Users.AddOrUpdate(item);
-                    }
+                        var a = DbClass.entities.Users.ToList();
+                        foreach (var item in Users)
+                        {
+                            DbClass.entities.Users.AddOrUpdate(item);
+                        }
 
-                    DbClass.entities.SaveChanges();
-                    MessageBox.Show("Изменения успешно сохранены");
+                        DbClass.entities.SaveChanges();
+                        MessageBox.Show("Изменения успешно сохранены");
+                    }
+                    catch (Exception ex)
+                    {
+                        string fileName = $@"C:\Users\error{DateTime.Now}.txt";
+                        FileStream fileStream = new FileStream(fileName, FileMode.Create);
+                        StreamWriter sw = new StreamWriter(fileStream);
+                        sw.Write(ex.Message);
+                        sw.Close();
+                    }
                 });
             }
         }
@@ -213,17 +247,28 @@ namespace CursovayaApp.WPF.ViewModels
                             MessageBoxButton.YesNo,
                             MessageBoxImage.Exclamation) == MessageBoxResult.Yes)
                     {
-                        if(DbClass.entities.Users.Any(x => x.Id == SelectedUser.Id))
-                            DbClass.entities.Users.Remove(SelectedUser);
-                        var s = listUsers.IndexOf(SelectedUser);
-                        listUsers.Remove(SelectedUser);
-                        if (s >= listUsers.Count && s > 0)
-                            SelectedUser = listUsers[--s];
-                        else
-                            SelectedUser = listUsers[s];
-                        InsertToUsers();
-                        SetCount();
-                        MessageBox.Show("Пользователь удален");
+                        try
+                        {
+                            if (DbClass.entities.Users.Any(x => x.Id == SelectedUser.Id))
+                                DbClass.entities.Users.Remove(SelectedUser);
+                            var s = listUsers.IndexOf(SelectedUser);
+                            listUsers.Remove(SelectedUser);
+                            if (s >= listUsers.Count && s > 0)
+                                SelectedUser = listUsers[--s];
+                            else
+                                SelectedUser = listUsers[s];
+                            InsertToUsers();
+                            SetCount();
+                            MessageBox.Show("Пользователь удален");
+                        }
+                        catch (Exception ex)
+                        {
+                            string fileName = $@"C:\Users\error{DateTime.Now}.txt";
+                            FileStream fileStream = new FileStream(fileName, FileMode.Create);
+                            StreamWriter sw = new StreamWriter(fileStream);
+                            sw.Write(ex.Message);
+                            sw.Close();
+                        }
                     }
                 });
             }
@@ -254,13 +299,24 @@ namespace CursovayaApp.WPF.ViewModels
                             MessageBoxButton.YesNo,
                             MessageBoxImage.Asterisk) == MessageBoxResult.Yes)
                     {
-                        var a = MessageBox.Show("Хотите ли вы сохранить изменения?", "", MessageBoxButton.YesNoCancel, MessageBoxImage.Question);
-                        if (a == MessageBoxResult.Yes)
-                            DbClass.entities.SaveChanges();
-                        else if(a == MessageBoxResult.Cancel)
-                            return;
-                        MyFrame.Navigate(new LoginPage());
-                        MyFrame.ClearHistory();
+                        try
+                        {
+                            var a = MessageBox.Show("Хотите ли вы сохранить изменения?", "", MessageBoxButton.YesNoCancel, MessageBoxImage.Question);
+                            if (a == MessageBoxResult.Yes)
+                                DbClass.entities.SaveChanges();
+                            else if(a == MessageBoxResult.Cancel)
+                                return;
+                            MyFrame.Navigate(new LoginPage());
+                            MyFrame.ClearHistory();
+                        }
+                        catch (Exception ex)
+                        {
+                            string fileName = $@"C:\Users\error{DateTime.Now}.txt";
+                            FileStream fileStream = new FileStream(fileName, FileMode.Create);
+                            StreamWriter sw = new StreamWriter(fileStream);
+                            sw.Write(ex.Message);
+                            sw.Close();
+                        }
                     }
                 });
             }
