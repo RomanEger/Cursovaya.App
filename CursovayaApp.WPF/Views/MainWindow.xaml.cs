@@ -39,7 +39,7 @@ namespace CursovayaApp.WPF
         private void MainWindow_OnClosing(object? sender, CancelEventArgs e)
         {
             var x = MyFrame.frame.Content as Page;
-            if(x == l)
+            if(l.GetType() == x?.GetType())
                 return;
 
             var a = MessageBox.Show(
