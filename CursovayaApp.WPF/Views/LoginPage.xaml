@@ -19,28 +19,31 @@
                     Margin="0 0 0 0">
 
 
+            <StackPanel
+                DataContext="{Binding ThisUser}">
+                <StackPanel HorizontalAlignment="Center"
+                            Margin="0 5">
 
-            <StackPanel HorizontalAlignment="Center"
-                        Margin="0 5">
+                    <Label Content="Логин"
+                           FontSize="14pt"
+                           HorizontalAlignment="Center"/>
+                    <TextBox Style="{StaticResource TbLoginStyle}"
+                             Text="{Binding Login, UpdateSourceTrigger=PropertyChanged}"
+                             Name="TbLogin"/>
 
-                <Label Content="Логин"
-                       FontSize="14pt"
-                       HorizontalAlignment="Center"/>
-                <TextBox Style="{StaticResource TbLoginStyle}"
-                         Text="{Binding Login, UpdateSourceTrigger=PropertyChanged}"
-                         Name="TbLogin"/>
+                </StackPanel>
 
-            </StackPanel>
+                <StackPanel HorizontalAlignment="Center"
+                            Margin="0 5">
+                    <Label Content="Пароль"
+                           HorizontalAlignment="Center"
+                           FontSize="14pt"/>
+                    <TextBox Style="{StaticResource TbLoginStyle}"
+                             Name="TbPass"
+                             Text="{Binding Password, UpdateSourceTrigger=PropertyChanged}"
+                    />
+                </StackPanel>
 
-            <StackPanel HorizontalAlignment="Center"
-                        Margin="0 5">
-                <Label Content="Пароль"
-                       HorizontalAlignment="Center"
-                       FontSize="14pt"/>
-                <TextBox Style="{StaticResource TbLoginStyle}"
-                         Name="TbPass"
-                         Text="{Binding Password, UpdateSourceTrigger=PropertyChanged}"
-                />
             </StackPanel>
 
             <StackPanel

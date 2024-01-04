@@ -23,15 +23,16 @@ namespace CursovayaApp.WPF
     /// </summary>
     public partial class MainWindow : Window
     {
-        LoginPage l = new LoginPage();
+        LoginPage l;
         public MainWindow()
         {
             InitializeComponent();
             ResizeMode =  ResizeMode.CanMinimize;
-            MyFrame.frame = MainFrame;
-            MyFrame.Navigate(l);
             DbClass.entities = new ApplicationContext();
+            MyFrame.frame = MainFrame;
             Title = "Библиотека \"Читайка\"";
+            l = new LoginPage();
+            MyFrame.Navigate(l);
         }
 
         private void MainWindow_OnClosing(object? sender, CancelEventArgs e)

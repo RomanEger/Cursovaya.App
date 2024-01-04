@@ -17,31 +17,70 @@ namespace CursovayaApp.WPF.ViewModels
     public class AdminViewModel : ViewModelBase
     {
         private bool IsUsersPage = true;
+        private List<User> listUsers;
+        private readonly int UsersAtPage = 5;
+        private int IndexUser = 0;
+        private int _count;
 
+        public int Count
+        {
+            get => _count;
+            set
+            {
+                _count = value;
+                OnPropertyChanged("Count");
+            }
+        }
         public AdminViewModel()
         {
             BtnChangeContent = "История изменения книг";
             GetUsers();
         }
-
-        private async void GetUsers()
+        private void GetUsers()
         {
-            var list = DbClass.entities.Users.ToList();
-            Users = new ObservableCollection<User>(list);
+            listUsers =  DbClass.entities.Users.ToList();
+            SetCount();
+            InsertToUsers();
+        }
+
+        private void SetCount()
+        {
+            Count = (int)Math.Ceiling(listUsers.Count * 1.0 / UsersAtPage);
+        }
+        private void InsertToUsers()
+        {
+            //if (i <= 0)
+            //    IndexUser -= UsersAtPage;
+            //if (IndexUser < 0)
+            //    IndexUser = 0;
+            //if (UsersAtPage > i)
+            //{
+            //    if (i == 0)
+            //        i = listUsers.Count - IndexUser;
+            //    Users = new ObservableCollection<User>(listUsers.GetRange(IndexUser, i));
+            //}
+
+            //else
+            //    Users = new ObservableCollection<User>(listUsers.GetRange(IndexUser, UsersAtPage));
+
+            var i = listUsers.Count - IndexUser;
+            if (UsersAtPage > i)
+                Users = new ObservableCollection<User>(listUsers.GetRange(IndexUser, i));
+            else
+                Users = new ObservableCollection<User>(listUsers.GetRange(IndexUser, UsersAtPage));
         }
 
         private User _selectedUser;
 
+        private ObservableCollection<User> _users;
         public ObservableCollection<User> Users
         {
-            get;
-            set;
-        }
-
-        private ObservableCollection<User> NewUsers
-        {
-            get; 
-            set; 
+            get => _users;
+            set
+            {
+                _users = value;
+                OnPropertyChanged("Users");
+            }
         }
 
         public User SelectedUser
@@ -66,8 +105,73 @@ namespace CursovayaApp.WPF.ViewModels
             }
         }
 
-        private RelayCommand _saveCommand;
+        private RelayCommand _firstUsersCommand;
 
+        public RelayCommand FirstUsersCommand
+        {
+            get
+            {
+                return _firstUsersCommand ??= new RelayCommand(obj =>
+                {
+                    IndexUser = 0;
+                    InsertToUsers();
+                });
+            }
+        }
+
+        private RelayCommand _backUsersCommand;
+        public RelayCommand BackUsersCommand
+        {
+            get
+            {
+                return _backUsersCommand ??= new RelayCommand(obj =>
+                {
+                    if (IndexUser < 5)
+                        IndexUser = 0;
+                    else
+                        IndexUser -= UsersAtPage;
+                    InsertToUsers();
+                });
+            }
+        }
+
+        private RelayCommand _forwardUsersCommand;
+        public RelayCommand ForwardUsersCommand
+        {
+            get
+            {
+                return _forwardUsersCommand ??= new RelayCommand(obj =>
+                {
+                    var i = listUsers.Count - IndexUser;
+                    var canGoForward = i >= 5;
+                    if (canGoForward)
+                        IndexUser += UsersAtPage;
+                    else
+                        IndexUser += i;
+                    InsertToUsers();
+                });
+            }
+        }
+
+        private RelayCommand _lastUsersCommand;
+        public RelayCommand LastUsersCommand
+        {
+            get
+            {
+                return _lastUsersCommand ??= new RelayCommand(obj =>
+                {
+                    IndexUser = listUsers.Count - UsersAtPage;
+                    if(IndexUser <= 0)
+                        IndexUser = 0;
+                    else if (IndexUser < 5)
+                        IndexUser = listUsers.Count - IndexUser;
+                    InsertToUsers();
+                });
+            }
+        }
+
+
+        private RelayCommand _saveCommand;
         public RelayCommand SaveCommand
         {
             get
@@ -87,7 +191,6 @@ namespace CursovayaApp.WPF.ViewModels
         }
 
         private RelayCommand _addCommand;
-
         public RelayCommand AddCommand
         {
             get
@@ -95,20 +198,33 @@ namespace CursovayaApp.WPF.ViewModels
                 return _addCommand ??= new RelayCommand(obj =>
                 {
                     var newUser = new User();
-                    Users.Add(newUser);
+                    listUsers.Add(newUser);
+                    var i = listUsers.Count - IndexUser;
+                    var canGoForward = i > UsersAtPage;
+                    if (canGoForward)
+                        IndexUser += UsersAtPage;
+                    //else
+                    //    IndexUser += i;
+                    InsertToUsers();
+                    //InsertToUsers();
                     SelectedUser = newUser;
+                    SetCount();
                 });
             }
         }
         
         private RelayCommand _deleteCommand;
-
         public RelayCommand DeleteCommand
         {
             get
             {
                 return _deleteCommand ??= new RelayCommand(obj =>
                 {
+                    if (SelectedUser == null)
+                    {
+                        MessageBox.Show("Сначала выберите пользователя");
+                        return;
+                    }
                     if (MessageBox.Show(
                             "Вы уверены, что хотите удалить пользователя?",
                             "Удаление",
@@ -117,7 +233,26 @@ namespace CursovayaApp.WPF.ViewModels
                     {
                         if(DbClass.entities.Users.Any(x => x.Id == SelectedUser.Id))
                             DbClass.entities.Users.Remove(SelectedUser);
-                        Users.Remove(SelectedUser);
+                        var s = listUsers.IndexOf(SelectedUser);
+                        listUsers.Remove(SelectedUser);
+                        if (s >= listUsers.Count && s > 0)
+                            SelectedUser = listUsers[--s];
+                        else
+                            SelectedUser = listUsers[s];
+                        InsertToUsers();
+                        SetCount();
+                        if (!Users.Any())
+                        {
+                                RelayCommand command;
+                                command = new RelayCommand(obj =>
+                                {
+                                    if (IndexUser < 5)
+                                        IndexUser = 0;
+                                    else
+                                        IndexUser -= UsersAtPage;
+                                    InsertToUsers();
+                                });
+                        }
                         MessageBox.Show("Пользователь удален");
                     }
                 });
@@ -125,7 +260,6 @@ namespace CursovayaApp.WPF.ViewModels
         }
 
         private RelayCommand _changeCommand;
-
         public RelayCommand ChangeCommand
         {
             get
@@ -146,9 +280,7 @@ namespace CursovayaApp.WPF.ViewModels
             }
         }
 
-
         private RelayCommand _exitCommand;
-
         public RelayCommand ExitCommand
         {
             get

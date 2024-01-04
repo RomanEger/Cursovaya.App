@@ -22,14 +22,12 @@
         <StackPanel VerticalAlignment="Top"
                     HorizontalAlignment="Right">
             <Button Content="Выход"
-                    Padding="15 0"
                     Command="{Binding ExitCommand}"
                     Name="BtnExit"/>
         </StackPanel>
         <StackPanel VerticalAlignment="Top"
                     HorizontalAlignment="Left">
-            <Button Padding="15 0"
-                    Content="{Binding BtnChangeContent}"
+            <Button Content="{Binding BtnChangeContent}"
                     Command="{Binding ChangeCommand}"
                     Name="BtnChange"/>
         </StackPanel>
@@ -37,16 +35,15 @@
             Margin="15 60"
             VerticalAlignment="Top"
             HorizontalAlignment="Center">
-            <StackPanel Orientation="Horizontal">
-                <DataGrid
-                    FontWeight="DemiBold"
-                    CanUserAddRows="False"
-                    CanUserResizeColumns="False"
-                    AutoGenerateColumns="False"
-                    MaxWidth="550"
-                    MaxHeight="250"
-                    SelectedItem="{Binding SelectedUser}"
-                    ItemsSource="{Binding Users}">
+            <DataGrid
+                FontWeight="DemiBold"
+                CanUserAddRows="False"
+                CanUserResizeColumns="False"
+                AutoGenerateColumns="False"
+                MaxWidth="550"
+                MaxHeight="250"
+                SelectedItem="{Binding SelectedUser}"
+                ItemsSource="{Binding Users}">
                 <DataGrid.Columns>
                     <DataGridTextColumn 
                         Header="ФИО"
@@ -79,8 +76,22 @@
                     <TextBlock Text="Id роли" />
                     <TextBox Text="{Binding RoleId, UpdateSourceTrigger=PropertyChanged}" />
                 </StackPanel>-->
+            <StackPanel 
+                HorizontalAlignment="Center"
+                Orientation="Horizontal">
+                <Button
+                    Command="{Binding FirstUsersCommand}"
+                    Content="1"/>
+                <Button
+                    Command="{Binding BackUsersCommand}"
+                    Content="&lt;"/>
+                <Button
+                    Command="{Binding ForwardUsersCommand}"
+                    Content="&gt;"/>
+                <Button
+                    Command="{Binding LastUsersCommand}"
+                    Content="{Binding Count}"/>
             </StackPanel>
-            
             <StackPanel Orientation="Horizontal"
                         HorizontalAlignment="Center">
                 <Button

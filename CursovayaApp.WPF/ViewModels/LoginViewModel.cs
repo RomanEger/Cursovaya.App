@@ -20,9 +20,18 @@ namespace CursovayaApp.WPF.ViewModels
 {
     public class LoginViewModel : ViewModelBase
     {
-        private string _login;
+        private User _thisUser;
 
-        private string _password;
+        public User ThisUser
+        {
+            get => _thisUser;
+            set
+            {
+                _thisUser = value;
+                OnPropertyChanged("User");
+            }
+        }
+
 
         private RelayCommand _loginCommand;
 
@@ -31,38 +40,24 @@ namespace CursovayaApp.WPF.ViewModels
             get
             {
                 return _loginCommand ??= new RelayCommand(obj =>
-                           {
-                               var q = DbClass.entities.Users.FirstOrDefault(x => x.Login == Login && x.Password == Password) ?? new User();
+                    {
+                               var q = DbClass.entities.Users.FirstOrDefault(x => x.Login == ThisUser.Login && x.Password == ThisUser.Password) ?? new User();
                                if (q.RoleId == 1)
                                    MyFrame.Navigate(new AdminPage());
                                else if (q.RoleId == 2)
-                                   MessageBox.Show("Библиотекарь");
+                                   MyFrame.Navigate(new BooksPage());
                                else
                                    MessageBox.Show("Неправильный логин или пароль");
-                           })
+                               ThisUser.Password = null;
+                    })
 ;
             }
 
         }
 
-        public string Login
+        public LoginViewModel()
         {
-            get => _login;
-            set
-            {
-                _login = value;
-                OnPropertyChanged("Login");
-            }
+            ThisUser = new User();
         }
-        public string Password
-        {
-            get => _password;
-            set
-            {
-                _password = value;
-                OnPropertyChanged("Password");
-            }
-        }
-
     }
 }
