@@ -80,7 +80,7 @@
                     Content="&gt;"/>
                 <Button
                     Command="{Binding LastUsersCommand}"
-                    Content="{Binding Count}"/>
+                    Content="{Binding Pagination.Count}"/>
             </StackPanel>
             <StackPanel Orientation="Horizontal"
                         HorizontalAlignment="Center">

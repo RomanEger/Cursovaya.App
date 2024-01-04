@@ -18,21 +18,22 @@ namespace CursovayaApp.WPF.ViewModels
     public class AdminViewModel : ViewModelBase
     {
         private List<User> listUsers;
-        private readonly int UsersAtPage = 5;
-        private int IndexUser = 0;
-        private int _count;
 
-        public int Count
+        private PaginationService<User> _pagination;
+
+        public PaginationService<User> Pagination
         {
-            get => _count;
+            get => _pagination;
             set
             {
-                _count = value;
-                OnPropertyChanged("Count");
-            }
+                _pagination = value;
+                OnPropertyChanged("Pagination");
+            } 
         }
+
         public AdminViewModel()
         {
+            Pagination = new PaginationService<User>(7);
             try
             {
                 GetUsers();
@@ -50,52 +51,19 @@ namespace CursovayaApp.WPF.ViewModels
         {
             listUsers =  DbClass.entities.Users.ToList();
             SetCount();
-            InsertToUsers();
+            Pagination.InsertToUsers(ref _users, listUsers);
         }
 
         private void SetCount()
         {
-            Count = (int)Math.Ceiling(listUsers.Count * 1.0 / UsersAtPage);
+            Pagination.Count = (int)Math.Ceiling(listUsers.Count * 1.0 / Pagination.TsAtPage);
         }
-        private void InsertToUsers()
-        {
-            try
-            {
-                if (listUsers.Count <= UsersAtPage)
-                {
-                    Users = new ObservableCollection<User>(listUsers);
-                    return;
-                }
-
-
-                var i = listUsers.Count - IndexUser;
-                if (i <= 0)
-                {
-                    if (UsersAtPage <= IndexUser)
-                        IndexUser -= UsersAtPage;
-                    else
-                        IndexUser = 0; 
-                    i = UsersAtPage;
-                }
-                if (UsersAtPage > i)
-                    Users = new ObservableCollection<User>(listUsers.GetRange(IndexUser, i));
-                else
-                    Users = new ObservableCollection<User>(listUsers.GetRange(IndexUser, UsersAtPage));
-            }
-            catch (Exception ex)
-            {
-                string fileName = $@"C:\Users\error{DateTime.Now}.txt";
-                FileStream fileStream = new FileStream(fileName, FileMode.Create);
-                StreamWriter sw = new StreamWriter(fileStream);
-                sw.Write(ex.Message);
-                sw.Close();
-            }
-        }
+        
 
         private User _selectedUser;
 
-        private ObservableCollection<User> _users;
-        public ObservableCollection<User> Users
+        private ICollection<User> _users;
+        public ICollection<User> Users
         {
             get => _users;
             set
@@ -123,8 +91,7 @@ namespace CursovayaApp.WPF.ViewModels
             {
                 return _firstUsersCommand ??= new RelayCommand(obj =>
                 {
-                    IndexUser = 0;
-                    InsertToUsers();
+                    Pagination.FirstT(ref _users, listUsers);
                 });
             }
         }
@@ -136,11 +103,7 @@ namespace CursovayaApp.WPF.ViewModels
             {
                 return _backUsersCommand ??= new RelayCommand(obj =>
                 {
-                    if (IndexUser < 5)
-                        IndexUser = 0;
-                    else
-                        IndexUser -= UsersAtPage;
-                    InsertToUsers();
+                    Pagination.BackT(ref _users, listUsers);
                 });
             }
         }
@@ -152,11 +115,7 @@ namespace CursovayaApp.WPF.ViewModels
             {
                 return _forwardUsersCommand ??= new RelayCommand(obj =>
                 {
-                    var i = listUsers.Count - IndexUser;
-                    var canGoForward = i >= 5;
-                    if (canGoForward)
-                        IndexUser += UsersAtPage;
-                    InsertToUsers();
+                    Pagination.ForwardT(ref _users, listUsers);
                 });
             }
         }
@@ -168,12 +127,7 @@ namespace CursovayaApp.WPF.ViewModels
             {
                 return _lastUsersCommand ??= new RelayCommand(obj =>
                 {
-                    IndexUser = listUsers.Count - UsersAtPage;
-                    if(IndexUser <= 0)
-                        IndexUser = 0;
-                    else if (IndexUser < 5)
-                        IndexUser = listUsers.Count - IndexUser;
-                    InsertToUsers();
+                    Pagination.LastT(ref _users, listUsers);
                 });
             }
         }
@@ -218,11 +172,11 @@ namespace CursovayaApp.WPF.ViewModels
                 {
                     var newUser = new User();
                     listUsers.Add(newUser);
-                    var i = listUsers.Count - IndexUser;
-                    var canGoForward = i > UsersAtPage;
+                    var i = listUsers.Count - Pagination.IndexT;
+                    var canGoForward = i > Pagination.TsAtPage;
                     if (canGoForward)
-                        IndexUser += UsersAtPage;
-                    InsertToUsers();
+                        Pagination.IndexT += Pagination.TsAtPage;
+                    Pagination.InsertToUsers(ref _users, listUsers);
                     SelectedUser = newUser;
                     SetCount();
                 });
@@ -257,7 +211,7 @@ namespace CursovayaApp.WPF.ViewModels
                                 SelectedUser = listUsers[--s];
                             else
                                 SelectedUser = listUsers[s];
-                            InsertToUsers();
+                            Pagination.InsertToUsers(ref _users, listUsers);
                             SetCount();
                             MessageBox.Show("Пользователь удален");
                         }
