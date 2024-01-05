@@ -58,7 +58,7 @@ namespace CursovayaApp.WPF.Models.DbModels
             //Book
             modelBuilder.Entity<Book>().ToTable(x => x.HasCheckConstraint("Title", "LEN(Title)>0 AND Title<>''"));
             modelBuilder.Entity<Book>().ToTable(x => x.HasCheckConstraint("Quantity", "Quantity>=0"));
-            modelBuilder.Entity<Book>().HasIndex(x => new{ x.Title, IdAuthor = x.AuthorId, IdPublishing = x.PublishingId}).IsUnique();
+            modelBuilder.Entity<Book>().HasIndex(x => new{ x.Title, x.AuthorId, x.PublishingHouseId}).IsUnique();
 
             //DeregBook
             modelBuilder.Entity<DeregBook>().Property(x => x.DateOfDereg).HasDefaultValueSql("GETDATE()");
@@ -70,6 +70,7 @@ namespace CursovayaApp.WPF.Models.DbModels
             //PublishingHouse
             modelBuilder.Entity<PublishingHouse>().Property(x => x.Name).HasMaxLength(120);
             modelBuilder.Entity<PublishingHouse>().ToTable(x => x.HasCheckConstraint("Name", "LEN(Name)>0 AND Name<>''"));
+            modelBuilder.Entity<PublishingHouse>().HasIndex(x => x.Name).IsUnique();
 
             //ReasonDereg
             modelBuilder.Entity<ReasonDereg>().Property(x => x.Name).HasMaxLength(120);
@@ -87,6 +88,7 @@ namespace CursovayaApp.WPF.Models.DbModels
 
             //RentalBook
             modelBuilder.Entity<RentalBook>().ToTable(x => x.HasCheckConstraint("DateStart", "DateStart<=DateEnd"));
+            modelBuilder.Entity<RentalBook>().HasIndex(x => new { x.BookId, x.DateStart }).IsUnique();
 
             //Role
             modelBuilder.Entity<Role>().Property(x => x.Name).HasMaxLength(50);
@@ -113,9 +115,11 @@ namespace CursovayaApp.WPF.Models.DbModels
             Role client = new() { Id = 4, Name = "Клиент" };
 
             User admUser = new() { Id = 1, FullName = "СТАРТОВЫЙ АДМИНИСТРАТОР", Login = "_admin123", Password = "1234", RoleId = adm.Id };
+            User librUser = new() {Id = 2, FullName = "СТАРТОВЫЙ БИБЛИОТЕКАРЬ", Login = "_libr123", Password = "1234", RoleId = libr.Id };
+            User stockUser = new() { Id = 3, FullName = "СТАРТОВЫЙ КЛАДОВЩИК", Login = "_stock123", Password = "1234", RoleId = stockMan.Id };
 
             modelBuilder.Entity<Role>().HasData(adm, libr, stockMan, client);
-            modelBuilder.Entity<User>().HasData(admUser);
+            modelBuilder.Entity<User>().HasData(admUser, librUser, stockUser);
         }
     }
 }
