@@ -70,6 +70,45 @@
                             Binding="{Binding Quantity, UpdateSourceTrigger=PropertyChanged}"/>
                     </DataGrid.Columns>
                 </DataGrid>
+                <StackPanel 
+                    HorizontalAlignment="Center"
+                    Orientation="Horizontal">
+                    <Button
+                        Command="{Binding FirstBooksCommand}"
+                        Content="1"/>
+                    <Button
+                        Command="{Binding BackBooksCommand}"
+                        Content="&lt;"/>
+                    <Button
+                        Command="{Binding ForwardBooksCommand}"
+                        Content="&gt;"/>
+                    <Button
+                        Command="{Binding LastBooksCommand}"
+                        Content="{Binding Pagination.Count}"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal"
+                            HorizontalAlignment="Center">
+                    <Button
+                        Content="Сохранить"
+                        Background="DodgerBlue"
+                        Foreground="White"
+                        BorderBrush="Transparent"
+                        Command="{Binding SaveCommand}"
+                        Width="140"/>
+                    <Button
+                        Content="Добавить"
+                        BorderBrush="DodgerBlue"
+                        Foreground="DodgerBlue"
+                        Command="{Binding AddCommand}"
+                        Width="140"/>
+                    <Button
+                        Content="Удалить"
+                        Foreground="Red"
+                        BorderBrush="Transparent"
+                        Command="{Binding DeleteCommand}"
+                        Width="140"/>
+
+                </StackPanel>
             </StackPanel>
         </StackPanel>
     </Grid>
