@@ -1,19 +1,76 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 
 namespace CursovayaApp.WPF.Models.DbModels
 {
-    public class BookView : TableBase
+    [NotMapped]
+    public class BookView : TableBase, INotifyPropertyChanged
     {
-        public override int Id { get; set; }
-        public string Title { get; set; }
-        public string AuthorFullName { get; set; }
-        public int Quantity { get; set; }
-        public string Publishing { get; set; }
+        private int _id;
+
+        public override int Id
+        {
+            get => _id;
+            set
+            {
+                _id = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private string _title;
+        public string Title
+        {
+            get => _title; 
+            set
+            {
+                _title = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private string _authorFullName;
+
+        public string AuthorFullName
+        {
+            get => _authorFullName;
+            set
+            {
+                _authorFullName = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private int _quantity;
+
+        public int Quantity
+        {
+            get => _quantity;
+            set
+            {
+                _quantity = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private string _publishing;
+
+        public string Publishing
+        {
+            get=>_publishing;
+            set
+            {
+                _publishing = value;
+                OnPropertyChanged();
+            }
+        }
 
         public int AddBook()
         {
@@ -77,6 +134,13 @@ namespace CursovayaApp.WPF.Models.DbModels
                 await transaction.RollbackAsync();
                 return -1;
             }
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+        public virtual void OnPropertyChanged([CallerMemberName] string prop = "")
+        {
+            if (PropertyChanged != null)
+                PropertyChanged(this, new PropertyChangedEventArgs(prop));
         }
     }
 }
