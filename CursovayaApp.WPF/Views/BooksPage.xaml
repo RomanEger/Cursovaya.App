@@ -9,29 +9,68 @@
       Title="BooksPage">
 
     <Grid>
-        <StackPanel VerticalAlignment="Top"
-                    Orientation="Horizontal"
-                    Margin="15">
+        <StackPanel>
+            <StackPanel VerticalAlignment="Top"
+                        Orientation="Horizontal"
+                        Margin="15">
 
-            <Button Content="Назад"
-                    Command="{Binding GoBackCommand}"
-                    Margin="0"
-                    Name="BtnBack"/>
+                <Button Content="Назад"
+                        Command="{Binding GoBackCommand}"
+                        Margin="0"
+                        Name="BtnBack"/>
 
-            <Label Content="Автор"
-                   Margin="5 0"
-                   VerticalAlignment="Center"
-                   FontSize="14pt"/>
+                <Label Content="Автор"
+                       Margin="5 0"
+                       VerticalAlignment="Center"
+                       FontSize="14pt"/>
 
-            <ComboBox Width="140"
-                      VerticalAlignment="Center"
-                      Height="30"
-                      Margin="5 0"
-                      Name="CmbAuthor"/>
-
-            <TextBox Style="{StaticResource TbLoginStyle}"
-                     Width="450"
-                     Name="TbSearch"/>
+                <ComboBox ItemsSource="{Binding Authors}"
+                          Width="200"
+                          SelectedItem="{Binding SelectedAuthor}"
+                          VerticalContentAlignment="Center"
+                          VerticalAlignment="Center"
+                          Height="30"
+                          Margin="5 0"
+                          Name="CmbAuthor"/>
+                <Label  Content="Название"
+                        Margin="5 0"
+                        VerticalAlignment="Center"
+                        FontSize="14pt"/>
+                <TextBox Style="{StaticResource TbLoginStyle}"
+                         Width="288"
+                         Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"
+                         Name="TbSearch"/>
+            </StackPanel>
+            <StackPanel VerticalAlignment="Center">
+                <DataGrid
+                    CanUserSortColumns="False"
+                    FontWeight="DemiBold"
+                    CanUserAddRows="False"
+                    CanUserResizeColumns="False"
+                    AutoGenerateColumns="False"
+                    MaxWidth="550"
+                    SelectedItem="{Binding SelectedBook}"
+                    ItemsSource="{Binding Books}">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn 
+                            Header="Название"
+                            Width="3*"
+                            Binding="{Binding Title, UpdateSourceTrigger=PropertyChanged}"/>
+                        <DataGridTextColumn 
+                            Header="Автор"
+                            Width="3*"
+                            Binding="{Binding AuthorFullName, UpdateSourceTrigger=PropertyChanged}"/>
+                        <DataGridTextColumn 
+                            Header="Издательство"
+                            Width="2*"
+                            Binding="{Binding Publishing, UpdateSourceTrigger=PropertyChanged}"/>
+                        <DataGridTextColumn 
+                            Header="Кол-во"
+                            Width="*"
+                            Binding="{Binding Quantity, UpdateSourceTrigger=PropertyChanged}"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </StackPanel>
         </StackPanel>
     </Grid>
 </Page>
