@@ -61,18 +61,6 @@ namespace CursovayaApp.WPF.ViewModels
         
 
         private User _selectedUser;
-
-        private ICollection<User> _users;
-        public ICollection<User> Users
-        {
-            get => _users;
-            set
-            {
-                _users = value;
-                OnPropertyChanged("Users");
-            }
-        }
-
         public User SelectedUser
         {
             get => _selectedUser;
@@ -82,6 +70,22 @@ namespace CursovayaApp.WPF.ViewModels
                 OnPropertyChanged("SelectedUser");
             }
         }
+
+        private ICollection<User> _users;
+        public ICollection<User> Users
+        {
+            get
+            {
+                GetUsers();
+                return _users;
+            }
+            set
+            {
+                _users = value;
+                OnPropertyChanged("Users");
+            }
+        }
+
 
         private RelayCommand _firstUsersCommand;
 
