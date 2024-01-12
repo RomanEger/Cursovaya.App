@@ -17,12 +17,6 @@ namespace CursovayaApp.WPF.Services
         public readonly int TsAtPage;
         public int IndexT = 0;
         private int _count;
-
-        public PaginationService(int TatPage)
-        {
-            TsAtPage = TatPage;
-        }
-        
         public int Count
         {
             get => _count;
@@ -32,6 +26,12 @@ namespace CursovayaApp.WPF.Services
                 OnPropertyChanged("Count");
             }
         }
+
+        public PaginationService(int entitiesAtPage)
+        {
+            TsAtPage = entitiesAtPage;
+        }
+        
 
         public void InsertToUsers(ref ICollection<T> Tcollection, List<T> listT)
         {
