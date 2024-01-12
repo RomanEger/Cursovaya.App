@@ -43,6 +43,7 @@
             </StackPanel>
             <StackPanel VerticalAlignment="Center">
                 <DataGrid
+                    IsReadOnly="True"
                     CanUserSortColumns="False"
                     FontWeight="DemiBold"
                     CanUserAddRows="False"
