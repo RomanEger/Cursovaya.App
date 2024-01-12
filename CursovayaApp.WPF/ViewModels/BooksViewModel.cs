@@ -43,6 +43,7 @@ namespace CursovayaApp.WPF.ViewModels
             {
                 _selectedAuthor = value;
                 Sort();
+                SetCount();
                 OnPropertyChanged("SelectedAuthor");
             }
         }
@@ -178,7 +179,7 @@ namespace CursovayaApp.WPF.ViewModels
 
         public BooksViewModel()
         {
-            Pagination = new PaginationService<BookView>(1);
+            Pagination = new PaginationService<BookView>(7);
             try
             {
                 GetData();
@@ -203,18 +204,6 @@ namespace CursovayaApp.WPF.ViewModels
             }
         }
 
-        private RelayCommand _firstUsersCommand;
-        public RelayCommand FirstUsersCommand
-        {
-            get
-            {
-                return _firstUsersCommand ??= new RelayCommand(obj =>
-                {
-                    Pagination.FirstT(ref _books, listBooks);
-                });
-            }
-        }
-
         private RelayCommand _saveCommand;
         public RelayCommand SaveCommand
         {
@@ -227,16 +216,18 @@ namespace CursovayaApp.WPF.ViewModels
                         var a = DbClass.entities.Books.ToList();
                         foreach (var item in Books)
                         {
-                            var pId = DbClass.entities.PublishingHouses.Where(x => x.Name == item.Title).Select(x => x.Id).First();
-                            var aId = DbClass.entities.Authors.Where(x => x.FullName== item.AuthorFullName).Select(x => x.Id).First();
+                            var pId = DbClass.entities.PublishingHouses.Where(x => x.Name == item.Publishing).Select(x => x.Id).FirstOrDefault();
+                            var aId = DbClass.entities.Authors.Where(x => x.FullName== item.AuthorFullName).Select(x => x.Id).FirstOrDefault();
                             var book = new Book()
                             {
+                                Id = item.Id,
                                 Quantity = item.Quantity,
                                 Title = item.Title,
                                 PublishingHouseId = pId,
                                 AuthorId = aId
                             };
                             DbClass.entities.Books.AddOrUpdate(book);
+                            
                         }
 
                         DbClass.entities.SaveChanges();
@@ -244,48 +235,60 @@ namespace CursovayaApp.WPF.ViewModels
                     }
                     catch (Exception ex)
                     {
-                        string fileName = $@"C:\Users\error{DateTime.Now}.txt";
-                        FileStream fileStream = new FileStream(fileName, FileMode.Create);
-                        StreamWriter sw = new StreamWriter(fileStream);
-                        sw.Write(ex.Message);
-                        sw.Close();
+                        //string fileName = $@"C:\Users\error{DateTime.Now}.txt";
+                        //FileStream fileStream = new FileStream(fileName, FileMode.Create);
+                        //StreamWriter sw = new StreamWriter(fileStream);
+                        //sw.Write(ex.Message);
+                        //sw.Close();
                     }
                 });
             }
         }
 
-        private RelayCommand _backUsersCommand;
-        public RelayCommand BackUsersCommand
+        private RelayCommand _firstBooksCommand;
+        public RelayCommand FirstBooksCommand
         {
             get
             {
-                return _backUsersCommand ??= new RelayCommand(obj =>
+                return _firstBooksCommand ??= new RelayCommand(obj =>
                 {
-                    Pagination.BackT(ref _books, listBooks);
+                    Pagination.FirstT(ref _books, sortedListBooks);
                 });
             }
         }
 
-        private RelayCommand _forwardUsersCommand;
-        public RelayCommand ForwardUsersCommand
+        private RelayCommand _backBooksCommand;
+        public RelayCommand BackBooksCommand
         {
             get
             {
-                return _forwardUsersCommand ??= new RelayCommand(obj =>
+                return _backBooksCommand ??= new RelayCommand(obj =>
                 {
-                    Pagination.ForwardT(ref _books, listBooks);
+                    Pagination.BackT(ref _books, sortedListBooks);
                 });
             }
         }
 
-        private RelayCommand _lastUsersCommand;
-        public RelayCommand LastUsersCommand
+        private RelayCommand _forwardBooksCommand;
+        public RelayCommand ForwardBooksCommand
         {
             get
             {
-                return _lastUsersCommand ??= new RelayCommand(obj =>
+                return _forwardBooksCommand ??= new RelayCommand(obj =>
                 {
-                    Pagination.LastT(ref _books, listBooks);
+                    Pagination.ForwardT(ref _books, sortedListBooks);
+                });
+            }
+        }
+
+        private RelayCommand _lastBooksCommand;
+        public RelayCommand LastBooksCommand
+        {
+            get
+            {
+                return _lastBooksCommand ??= new RelayCommand(obj =>
+                {
+                    Pagination.LastT(ref _books, sortedListBooks);
                 });
             }
         }

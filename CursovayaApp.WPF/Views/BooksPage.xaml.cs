@@ -12,6 +12,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using CursovayaApp.WPF.Models;
+using CursovayaApp.WPF.Models.DbModels;
 using CursovayaApp.WPF.ViewModels;
 
 namespace CursovayaApp.WPF.Views
@@ -25,6 +27,25 @@ namespace CursovayaApp.WPF.Views
         {
             InitializeComponent();
             DataContext = new BooksViewModel();
+        }
+
+
+        private void BooksPage_OnLoaded(object sender, RoutedEventArgs e)
+        {
+            LoggedUser loggedUser = new();
+            if (loggedUser.CurrentUser.RoleId == 1)
+            {
+                StackPanelForStock.Visibility = Visibility.Collapsed;
+            }
+            else if (loggedUser.CurrentUser.RoleId == 2)
+            {
+                StackPanelForStock.Visibility = Visibility.Collapsed;
+
+            }
+            else if (loggedUser.CurrentUser.RoleId == 3)
+            {
+                StackPanelForStock.Visibility = Visibility.Visible;
+            }
         }
     }
 }

@@ -40,11 +40,11 @@ namespace CursovayaApp.WPF.ViewModels
             }
             catch (Exception ex)
             {
-                string fileName = $@"C:\Users\error{DateTime.Now}.txt";
-                FileStream fileStream = new FileStream(fileName, FileMode.Create);
-                StreamWriter sw = new StreamWriter(fileStream);
-                sw.Write(ex.Message);
-                sw.Close();
+                //string fileName = $@"C:\Users\error{DateTime.Now}.txt";
+                //FileStream fileStream = new FileStream(fileName, FileMode.Create);
+                //StreamWriter sw = new StreamWriter(fileStream);
+                //sw.Write(ex.Message);
+                //sw.Close();
             }
         }
         private void GetUsers()
@@ -157,11 +157,11 @@ namespace CursovayaApp.WPF.ViewModels
                     }
                     catch (Exception ex)
                     {
-                        string fileName = $@"C:\Users\error{DateTime.Now}.txt";
-                        FileStream fileStream = new FileStream(fileName, FileMode.Create);
-                        StreamWriter sw = new StreamWriter(fileStream);
-                        sw.Write(ex.Message);
-                        sw.Close();
+                        //string fileName = $@"C:\Users\error{DateTime.Now}.txt";
+                        //FileStream fileStream = new FileStream(fileName, FileMode.Create);
+                        //StreamWriter sw = new StreamWriter(fileStream);
+                        //sw.Write(ex.Message);
+                        //sw.Close();
                     }
                 });
             }
@@ -221,11 +221,11 @@ namespace CursovayaApp.WPF.ViewModels
                         }
                         catch (Exception ex)
                         {
-                            string fileName = $@"C:\Users\error{DateTime.Now}.txt";
-                            FileStream fileStream = new FileStream(fileName, FileMode.Create);
-                            StreamWriter sw = new StreamWriter(fileStream);
-                            sw.Write(ex.Message);
-                            sw.Close();
+                            //string fileName = $@"C:\Users\error{DateTime.Now}.txt";
+                            //FileStream fileStream = new FileStream(fileName, FileMode.Create);
+                            //StreamWriter sw = new StreamWriter(fileStream);
+                            //sw.Write(ex.Message);
+                            //sw.Close();
                         }
                     }
                 });
@@ -269,11 +269,11 @@ namespace CursovayaApp.WPF.ViewModels
                         }
                         catch (Exception ex)
                         {
-                            string fileName = $@"C:\Users\error{DateTime.Now}.txt";
-                            FileStream fileStream = new FileStream(fileName, FileMode.Create);
-                            StreamWriter sw = new StreamWriter(fileStream);
-                            sw.Write(ex.Message);
-                            sw.Close();
+                            //string fileName = $@"C:\Users\error{DateTime.Now}.txt";
+                            //FileStream fileStream = new FileStream(fileName, FileMode.Create);
+                            //StreamWriter sw = new StreamWriter(fileStream);
+                            //sw.Write(ex.Message);
+                            //sw.Close();
                         }
                     }
                 });
