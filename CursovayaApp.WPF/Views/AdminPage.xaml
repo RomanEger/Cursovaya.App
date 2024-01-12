@@ -76,10 +76,10 @@
                     Command="{Binding BackUsersCommand}"
                     Content="&lt;"/>
                 <Button
-                    Command="{Binding ForwardUsersCommand}"
+                    Command="{Binding ForwardBooksCommand}"
                     Content="&gt;"/>
                 <Button
-                    Command="{Binding LastUsersCommand}"
+                    Command="{Binding LastBooksCommand}"
                     Content="{Binding Pagination.Count}"/>
             </StackPanel>
             <StackPanel Orientation="Horizontal"

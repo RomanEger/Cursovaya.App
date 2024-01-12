@@ -45,6 +45,13 @@ namespace CursovayaApp.WPF.ViewModels
                         try
                         {
                                var q = DbClass.entities.Users.FirstOrDefault(x => x.Login == ThisUser.Login && x.Password == ThisUser.Password) ?? new User();
+                               LoggedUser loggedUser = new()
+                               {
+                                   CurrentUser = new User
+                                   {
+                                       RoleId = q.RoleId
+                                   }
+                               };
                                if (q.RoleId == 1)
                                    MyFrame.Navigate(new AdminPage());
                                else if (q.RoleId == 2)
@@ -55,11 +62,11 @@ namespace CursovayaApp.WPF.ViewModels
                         }
                         catch (Exception ex)
                         {
-                            string fileName = $@"C:\Users\error{DateTime.Now}.txt";
-                            FileStream fileStream = new FileStream(fileName, FileMode.Create);
-                            StreamWriter sw = new StreamWriter(fileStream);
-                            sw.Write(ex.Message);
-                            sw.Close();
+                            //string fileName = $@"C:\Users\error{DateTime.Now}.txt";
+                            //FileStream fileStream = new FileStream(fileName, FileMode.Create);
+                            //StreamWriter sw = new StreamWriter(fileStream);
+                            //sw.Write(ex.Message);
+                            //sw.Close();
                         }
                     })
 ;
