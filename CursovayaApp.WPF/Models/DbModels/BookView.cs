@@ -55,6 +55,16 @@ namespace CursovayaApp.WPF.Models.DbModels
             get => _quantity;
             set
             {
+                if (_quantity > value)
+                {
+                    QuantityToUpdate = _quantity - value;
+                    ForAdd = false;
+                }
+                else
+                {
+                    QuantityToUpdate = value - _quantity;
+                    ForAdd = true;
+                }
                 _quantity = value;
                 OnPropertyChanged();
             }
@@ -71,6 +81,20 @@ namespace CursovayaApp.WPF.Models.DbModels
                 OnPropertyChanged();
             }
         }
+
+        private int _quantityToUpdate;
+
+        public int QuantityToUpdate
+        {
+            get => _quantityToUpdate;
+            set
+            {
+                _quantityToUpdate = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public bool ForAdd = false;
 
         public int AddBook()
         {

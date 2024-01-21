@@ -104,14 +104,37 @@
                         Foreground="DodgerBlue"
                         Command="{Binding AddCommand}"
                         Width="140"/>
-                    <Button
-                        Content="Удалить"
-                        Foreground="Red"
-                        BorderBrush="Transparent"
-                        Command="{Binding DeleteCommand}"
+                     <Button
+                        Content="Изменить"
+                        BorderBrush="DodgerBlue"
+                        Foreground="DodgerBlue"
+                        Command="{Binding UpdateCommand}"
                         Width="140"/>
-
                 </StackPanel>
+                <StackPanel Orientation="Horizontal"
+                            Name="StackPanelForLibr"
+                            HorizontalAlignment="Center">
+                    <Button
+                        Content="Сохранить"
+                        Background="DodgerBlue"
+                        Foreground="White"
+                        BorderBrush="Transparent"
+                        Command="{Binding SaveCommand}"
+                        Width="170"/>
+                    <Button
+                        Content="Выдана клиенту"
+                        BorderBrush="DodgerBlue"
+                        Foreground="DodgerBlue"
+                        Command="{Binding GiveCommand}"
+                        Width="170"/>
+                    <Button
+                        Content="Сдана клиентом"
+                        BorderBrush="DodgerBlue"
+                        Foreground="DodgerBlue"
+                        Command="{Binding RecieveCommand}"
+                        Width="170"/>
+                </StackPanel>
+
             </StackPanel>
         </StackPanel>
     </Grid>
