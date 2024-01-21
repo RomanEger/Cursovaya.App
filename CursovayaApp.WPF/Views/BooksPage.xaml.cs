@@ -33,18 +33,20 @@ namespace CursovayaApp.WPF.Views
         private void BooksPage_OnLoaded(object sender, RoutedEventArgs e)
         {
             LoggedUser loggedUser = new();
-            if (loggedUser.CurrentUser.RoleId == 1)
+            if (loggedUser.CurrentUser.RoleId == 1)//админ
             {
                 StackPanelForStock.Visibility = Visibility.Collapsed;
+                StackPanelForLibr.Visibility = Visibility.Collapsed;
             }
-            else if (loggedUser.CurrentUser.RoleId == 2)
+            else if (loggedUser.CurrentUser.RoleId == 2)//библиотекарь
             {
+                StackPanelForLibr.Visibility = Visibility.Visible;
                 StackPanelForStock.Visibility = Visibility.Collapsed;
-
             }
-            else if (loggedUser.CurrentUser.RoleId == 3)
+            else if (loggedUser.CurrentUser.RoleId == 3)//кладовщик
             {
                 StackPanelForStock.Visibility = Visibility.Visible;
+                StackPanelForLibr.Visibility = Visibility.Collapsed;
             }
         }
     }

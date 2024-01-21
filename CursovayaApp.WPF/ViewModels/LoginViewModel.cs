@@ -54,7 +54,7 @@ namespace CursovayaApp.WPF.ViewModels
                                };
                                if (q.RoleId == 1)
                                    MyFrame.Navigate(new AdminPage());
-                               else if (q.RoleId == 2)
+                               else if (q.RoleId == 2 || q.RoleId == 3)
                                    MyFrame.Navigate(new BooksPage());
                                else
                                    MessageBox.Show("Неправильный логин или пароль");

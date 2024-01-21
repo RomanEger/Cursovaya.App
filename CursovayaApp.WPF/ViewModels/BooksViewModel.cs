@@ -1,22 +1,61 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.ObjectModel;
 using System.Windows;
 using CursovayaApp.WPF.Commands;
 using CursovayaApp.WPF.Models;
 using CursovayaApp.WPF.Models.DbModels;
 using CursovayaApp.WPF.Services;
+using CursovayaApp.WPF.Views;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace CursovayaApp.WPF.ViewModels
 {
     public class BooksViewModel : ViewModelBase
     {
+        private ObservableCollection<string> _listReasons;
+        public ObservableCollection<string> ListReasons
+        {
+            get => _listReasons;
+            set
+            {
+                _listReasons = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private string _selectedReason;
+        public string SelectedReason
+        {
+            get => _selectedReason;
+            set
+            {
+                _selectedReason = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private ObservableCollection<string> _listPublishings;
+        public ObservableCollection<string> ListPublishings
+        {
+            get => _listPublishings;
+            set
+            {
+                _listPublishings = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private string _selectedPublishing;
+        public string SelectedPublishing
+        {
+            get => _selectedPublishing;
+            set
+            {
+                _selectedPublishing = value;
+                SelectedBook.Publishing = _selectedPublishing;
+                OnPropertyChanged();
+            }
+        }
+
         private string _searchText = string.Empty;
         public string SearchText
         {
@@ -29,9 +68,9 @@ namespace CursovayaApp.WPF.ViewModels
             }
         }
 
-        private List<BookView> listBooks;
+        private List<BookView> _listBooks;
 
-        private List<BookView> sortedListBooks;
+        private List<BookView> _sortedListBooks;
 
         public ObservableCollection<string> Authors { get; set; }
 
@@ -77,25 +116,27 @@ namespace CursovayaApp.WPF.ViewModels
             set
             {
                 _selectedBook = value;
+                GetReasons();
+                GetPublishings();
                 OnPropertyChanged("SelectedBook");
             }
         }
         
         private void Sort()
         {
-                sortedListBooks = listBooks;
+                _sortedListBooks = _listBooks;
                 if (!string.IsNullOrEmpty(SelectedAuthor) && SelectedAuthor != "Все")
-                    sortedListBooks = sortedListBooks.Where(x => x.AuthorFullName == SelectedAuthor).ToList();
-                sortedListBooks = sortedListBooks.Where(x => x.Title.ToLower().Contains(SearchText.ToLower())).ToList();
-                Pagination.InsertToUsers(ref _books, sortedListBooks);
+                    _sortedListBooks = _sortedListBooks.Where(x => x.AuthorFullName == SelectedAuthor).ToList();
+                _sortedListBooks = _sortedListBooks.Where(x => x.Title.ToLower().Contains(SearchText.ToLower())).ToList();
+                Pagination.InsertToUsers(ref _books, _sortedListBooks);
         }
 
         private void SetCount()
         {
-            Pagination.Count = (int)Math.Ceiling(sortedListBooks.Count * 1.0 / Pagination.TsAtPage);
+            Pagination.Count = (int)Math.Ceiling(_sortedListBooks.Count * 1.0 / Pagination.TsAtPage);
         }
 
-        private async void GetData()
+        private void GetData()
         {
             GetBooks();
             GetAuthors();
@@ -119,10 +160,10 @@ namespace CursovayaApp.WPF.ViewModels
                 Publishing=publishing.Name
                 }).ToListAsync();
             //List<BookView> list = new List<BookView>();
-            listBooks = new List<BookView>();
+            _listBooks = new List<BookView>();
             foreach (var item in l)
             {
-                listBooks.Add(new BookView()
+                _listBooks.Add(new BookView()
                 {
                     Id = item.Id,
                     Title=item.Title,
@@ -132,9 +173,29 @@ namespace CursovayaApp.WPF.ViewModels
                 });
             }
 
-            sortedListBooks = listBooks;
+            _sortedListBooks = _listBooks;
             Books = new ObservableCollection<BookView>();
-            Pagination.InsertToUsers(ref _books, listBooks);
+            Pagination.InsertToUsers(ref _books, _listBooks);
+        }
+
+        private void GetPublishings()
+        {
+            var l = DbClass.entities.PublishingHouses.Select(x => x.Name).ToList();
+            ListPublishings = new ObservableCollection<string>(l);
+        }
+
+        private void GetReasons()
+        {
+            if (SelectedBook.ForAdd)
+            {
+                var l = DbClass.entities.ReasonsReg.Select(x => x.Name).ToList();
+                ListReasons = new ObservableCollection<string>(l);
+            }
+            else
+            {
+                var l = DbClass.entities.ReasonsDereg.Select(x => x.Name).ToList();
+                ListReasons = new ObservableCollection<string>(l);
+            }
         }
 
         private void GetBooks()
@@ -153,10 +214,10 @@ namespace CursovayaApp.WPF.ViewModels
                     Quantity = book.Quantity,
                     Publishing = publishing.Name
                 }).ToList();
-            listBooks = new List<BookView>();
+            _listBooks = new List<BookView>();
             foreach (var item in l)
             {
-                listBooks.Add(new BookView()
+                _listBooks.Add(new BookView()
                 {
                     Id = item.Id,
                     Title = item.Title,
@@ -166,20 +227,22 @@ namespace CursovayaApp.WPF.ViewModels
                 });
             }
 
-            sortedListBooks = listBooks;
+            _sortedListBooks = _listBooks;
             Books = new ObservableCollection<BookView>();
-            Pagination.InsertToUsers(ref _books, listBooks);
+            Pagination.InsertToUsers(ref _books, _listBooks);
         }
 
         private void GetAuthors()
         {
-            Authors = new ObservableCollection<string>(listBooks.Select(x => x.AuthorFullName).Distinct());
+            Authors = new ObservableCollection<string>(_listBooks.Select(x => x.AuthorFullName).Distinct());
             Authors.Insert(0, "Все");
         }
 
+        private LoggedUser _loggedUser;
         public BooksViewModel()
         {
             Pagination = new PaginationService<BookView>(7);
+            _loggedUser = new();
             try
             {
                 GetData();
@@ -198,8 +261,25 @@ namespace CursovayaApp.WPF.ViewModels
             {
                 return _goBackCommand ??= new RelayCommand(obj =>
                 {
-                    if(MyFrame.frame.CanGoBack)
-                        MyFrame.frame.GoBack();
+                    if (MyFrame.frame.CanGoBack)
+                    {
+                        
+                        if (_loggedUser.CurrentUser.RoleId != 1)
+                        {
+                            if (MessageBox.Show(
+                                    "Это действие приведет к выходу из аккаунта. Вы уверены, что хотите продолжить?",
+                                    "Выход",
+                                    MessageBoxButton.YesNo, 
+                                    MessageBoxImage.Question) == MessageBoxResult.Yes)
+                            {
+                                MyFrame.frame.GoBack();
+                            }
+                        }
+                        else
+                        {
+                            MyFrame.frame.GoBack();
+                        }
+                    }
                 });
             }
         }
@@ -245,6 +325,34 @@ namespace CursovayaApp.WPF.ViewModels
             }
         }
 
+        private AddOrUpdateBooks newWindow;
+        private RelayCommand _addCommand;
+        public RelayCommand AddCommand
+        {
+            get
+            {
+                return _addCommand ??= new RelayCommand(obj =>
+                {
+                    newWindow = new(this);
+                    SelectedBook = new BookView();
+                    Books.Add(SelectedBook);
+                    newWindow.ShowDialog();
+                });
+            }
+        }
+        private RelayCommand _updateCommand;
+        public RelayCommand UpdateCommand
+        {
+            get
+            {
+                return _updateCommand ??= new RelayCommand(obj =>
+                {
+                    newWindow = new(this);
+                    newWindow.ShowDialog();
+                });
+            }
+        }
+
         private RelayCommand _firstBooksCommand;
         public RelayCommand FirstBooksCommand
         {
@@ -252,7 +360,7 @@ namespace CursovayaApp.WPF.ViewModels
             {
                 return _firstBooksCommand ??= new RelayCommand(obj =>
                 {
-                    Pagination.FirstT(ref _books, sortedListBooks);
+                    Pagination.FirstT(ref _books, _sortedListBooks);
                 });
             }
         }
@@ -264,7 +372,7 @@ namespace CursovayaApp.WPF.ViewModels
             {
                 return _backBooksCommand ??= new RelayCommand(obj =>
                 {
-                    Pagination.BackT(ref _books, sortedListBooks);
+                    Pagination.BackT(ref _books, _sortedListBooks);
                 });
             }
         }
@@ -276,7 +384,7 @@ namespace CursovayaApp.WPF.ViewModels
             {
                 return _forwardBooksCommand ??= new RelayCommand(obj =>
                 {
-                    Pagination.ForwardT(ref _books, sortedListBooks);
+                    Pagination.ForwardT(ref _books, _sortedListBooks);
                 });
             }
         }
@@ -288,7 +396,77 @@ namespace CursovayaApp.WPF.ViewModels
             {
                 return _lastBooksCommand ??= new RelayCommand(obj =>
                 {
-                    Pagination.LastT(ref _books, sortedListBooks);
+                    Pagination.LastT(ref _books, _sortedListBooks);
+                });
+            }
+        }
+
+        private RelayCommand _addOrUpdateBookCommand;
+
+        public RelayCommand AddOrUpdateBookCommand
+        {
+            get
+            {
+                return _addOrUpdateBookCommand ??= new RelayCommand(obj =>
+                {
+                    if (Books.Any(x => x.Id == SelectedBook.Id))
+                    {
+                        if (!Authors.Contains(SelectedBook.AuthorFullName))
+                        {
+                            if (MessageBox.Show(
+                                    "Данный автор еще не представлен в нашей библиотеке. Хотите его добавть?",
+                                    "",
+                                    MessageBoxButton.YesNo,
+                                    MessageBoxImage.Question) == MessageBoxResult.Yes)
+                            {
+                                //открытие окна с добавлением автора
+                            }
+                            else return;
+                        }
+
+                        var aId = DbClass.entities.Authors.Where(x => x.FullName == SelectedAuthor).Select(x => x.Id).FirstOrDefault();
+                        var pId = DbClass.entities.PublishingHouses.Where(x => x.Name == SelectedPublishing).Select(x => x.Id).FirstOrDefault();
+                        var book = new Book()
+                        {
+                            Id = SelectedBook.Id,
+                            Quantity = SelectedBook.Quantity,
+                            Title = SelectedBook.Title,
+                            AuthorId = aId,
+                            PublishingHouseId = pId
+                        };
+                        DbClass.entities.Books.Add(book);
+                        if (SelectedBook.ForAdd)
+                        {
+                            var rId = DbClass.entities.ReasonsReg.Where(x => x.Name == SelectedReason).Select(x => x.Id)
+                                .FirstOrDefault();
+                            var regBook = new RegBook()
+                            {
+                                BookId = book.Id,
+                                ReasonId = rId,
+                                DateOfReg = DateTime.Now,
+                                UserId = _loggedUser.CurrentUser.Id,
+                                RegQuantity = SelectedBook.QuantityToUpdate
+                            };
+                            DbClass.entities.RegBooks.Add(regBook);
+                        }
+                        else
+                        {
+                            var dId = DbClass.entities.ReasonsReg.Where(x => x.Name == SelectedReason).Select(x => x.Id)
+                                .FirstOrDefault();
+                            var deregBook = new DeregBook()
+                            {
+                                BookId = book.Id,
+                                ReasonId = dId,
+                                DateOfDereg = DateTime.Now,
+                                UserId = _loggedUser.CurrentUser.Id,
+                                DeregQuantity = SelectedBook.QuantityToUpdate
+                            };
+                            DbClass.entities.DeregBooks.Add(deregBook);
+                            
+                        }
+
+                        newWindow.Close();
+                    }
                 });
             }
         }
