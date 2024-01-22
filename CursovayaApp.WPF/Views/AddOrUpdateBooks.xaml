@@ -23,7 +23,7 @@
                 <TextBlock Text="Новое количество" />
                 <TextBox Text="{Binding Quantity, UpdateSourceTrigger=PropertyChanged}" />
                 <TextBlock Text="Издательство" />
-                <TextBox Text="{Binding Publishing, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="True"/>
+                <!--<TextBox Text="{Binding Publishing, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="True"/>-->
             </StackPanel>
                 <ComboBox 
                     ItemsSource="{Binding ListPublishings}"
@@ -31,7 +31,7 @@
                     Margin="0 5"/>
                 <TextBlock Text="Причина изменения"/>
                 <ComboBox 
-                    ItemsSource="{Binding ListReasons}"
+                    ItemsSource="{Binding SelectedBook.ListReasons}"
                     SelectedItem="{Binding SelectedReason}"
                     Margin="0 5"/>
             <Button

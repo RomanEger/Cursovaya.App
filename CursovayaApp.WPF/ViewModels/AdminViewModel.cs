@@ -49,7 +49,7 @@ namespace CursovayaApp.WPF.ViewModels
         }
         private void GetUsers()
         {
-            listUsers =  DbClass.entities.Users.ToList();
+            listUsers = DbClass.entities.Users.ToList();
             SetCount();
             Pagination.InsertToUsers(ref _users, listUsers);
         }
@@ -76,7 +76,7 @@ namespace CursovayaApp.WPF.ViewModels
         {
             get
             {
-                GetUsers();
+                //GetUsers();
                 return _users;
             }
             set
@@ -146,7 +146,7 @@ namespace CursovayaApp.WPF.ViewModels
                 {
                     try
                     {
-                        var a = DbClass.entities.Users.ToList();
+                        //var a = DbClass.entities.Users.ToList();
                         foreach (var item in Users)
                         {
                             DbClass.entities.Users.AddOrUpdate(item);
