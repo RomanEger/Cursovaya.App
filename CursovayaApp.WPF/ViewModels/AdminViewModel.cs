@@ -146,7 +146,6 @@ namespace CursovayaApp.WPF.ViewModels
                 {
                     try
                     {
-                        //var a = DbClass.entities.Users.ToList();
                         foreach (var item in Users)
                         {
                             DbClass.entities.Users.AddOrUpdate(item);
@@ -154,6 +153,7 @@ namespace CursovayaApp.WPF.ViewModels
 
                         DbClass.entities.SaveChanges();
                         MessageBox.Show("Изменения успешно сохранены");
+                        GetUsers();
                     }
                     catch (Exception ex)
                     {
