@@ -47,13 +47,10 @@ namespace CursovayaApp.WPF.ViewModels
                                var q = DbClass.entities.Users.FirstOrDefault(x => x.Login == ThisUser.Login && x.Password == ThisUser.Password) ?? new User();
                                LoggedUser loggedUser = new()
                                {
-                                   CurrentUser = new User
-                                   {
-                                       RoleId = q.RoleId
-                                   }
+                                   CurrentUser = q
                                };
                                if (q.RoleId == 1)
-                                   MyFrame.Navigate(new AdminPage());
+                                   MyFrame.Navigate(new AdminPageAlternative());
                                else if (q.RoleId == 2 || q.RoleId == 3)
                                    MyFrame.Navigate(new BooksPage());
                                else

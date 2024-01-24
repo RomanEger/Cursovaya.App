@@ -116,7 +116,7 @@ namespace CursovayaApp.WPF.ViewModels
             set
             {
                 _selectedBook = value;
-                GetReasons();
+                //GetReasons();
                 GetPublishings();
                 OnPropertyChanged("SelectedBook");
             }
@@ -163,7 +163,7 @@ namespace CursovayaApp.WPF.ViewModels
             _listBooks = new List<BookView>();
             foreach (var item in l)
             {
-                _listBooks.Add(new BookView()
+                _listBooks.Add(new BookView(item.Quantity)
                 {
                     Id = item.Id,
                     Title=item.Title,
@@ -184,19 +184,19 @@ namespace CursovayaApp.WPF.ViewModels
             ListPublishings = new ObservableCollection<string>(l);
         }
 
-        private void GetReasons()
-        {
-            if (SelectedBook.ForAdd)
-            {
-                var l = DbClass.entities.ReasonsReg.Select(x => x.Name).ToList();
-                ListReasons = new ObservableCollection<string>(l);
-            }
-            else
-            {
-                var l = DbClass.entities.ReasonsDereg.Select(x => x.Name).ToList();
-                ListReasons = new ObservableCollection<string>(l);
-            }
-        }
+        //private void GetReasons()
+        //{
+        //    if (SelectedBook.ForAdd)
+        //    {
+        //        var l = DbClass.entities.ReasonsReg.Select(x => x.Name).ToList();
+        //        SelectedBook.ListReasons = new ObservableCollection<string>(l);
+        //    }
+        //    else
+        //    {
+        //        var l = DbClass.entities.ReasonsDereg.Select(x => x.Name).ToList();
+        //        SelectedBook.ListReasons = new ObservableCollection<string>(l);
+        //    }
+        //}
 
         private void GetBooks()
         {
@@ -217,7 +217,7 @@ namespace CursovayaApp.WPF.ViewModels
             _listBooks = new List<BookView>();
             foreach (var item in l)
             {
-                _listBooks.Add(new BookView()
+                _listBooks.Add(new BookView(item.Quantity)
                 {
                     Id = item.Id,
                     Title = item.Title,
@@ -234,7 +234,8 @@ namespace CursovayaApp.WPF.ViewModels
 
         private void GetAuthors()
         {
-            Authors = new ObservableCollection<string>(_listBooks.Select(x => x.AuthorFullName).Distinct());
+            var l = DbClass.entities.Authors.Select(x => x.FullName).ToList();
+            Authors = new ObservableCollection<string>(l.Distinct());
             Authors.Insert(0, "Все");
         }
 
@@ -334,7 +335,7 @@ namespace CursovayaApp.WPF.ViewModels
                 return _addCommand ??= new RelayCommand(obj =>
                 {
                     newWindow = new(this);
-                    SelectedBook = new BookView();
+                    SelectedBook = new BookView(0);
                     Books.Add(SelectedBook);
                     newWindow.ShowDialog();
                 });
@@ -424,24 +425,26 @@ namespace CursovayaApp.WPF.ViewModels
                             else return;
                         }
 
-                        var aId = DbClass.entities.Authors.Where(x => x.FullName == SelectedAuthor).Select(x => x.Id).FirstOrDefault();
-                        var pId = DbClass.entities.PublishingHouses.Where(x => x.Name == SelectedPublishing).Select(x => x.Id).FirstOrDefault();
-                        var book = new Book()
-                        {
-                            Id = SelectedBook.Id,
-                            Quantity = SelectedBook.Quantity,
-                            Title = SelectedBook.Title,
-                            AuthorId = aId,
-                            PublishingHouseId = pId
-                        };
-                        DbClass.entities.Books.Add(book);
+                        var aId = DbClass.entities.Authors.Where(x => x.FullName == SelectedBook.AuthorFullName).Select(x => x.Id).FirstOrDefault();
+                        var pId = DbClass.entities.PublishingHouses.Where(x => x.Name == SelectedBook.Publishing).Select(x => x.Id).FirstOrDefault();
+                        
+                        var book = DbClass.entities.Books.Where(x => x.Id == SelectedBook.Id).FirstOrDefault();
+                        book.Id = SelectedBook.Id;
+                        book.Quantity = SelectedBook.Quantity;
+                        book.Title = SelectedBook.Title;
+                        book.AuthorId = aId;
+                        book.PublishingHouseId = pId;
+                        
+                        DbClass.entities.Books.AddOrUpdate(book);
+                        DbClass.entities.SaveChanges();
                         if (SelectedBook.ForAdd)
                         {
                             var rId = DbClass.entities.ReasonsReg.Where(x => x.Name == SelectedReason).Select(x => x.Id)
                                 .FirstOrDefault();
+                            var bId = DbClass.entities.Books.Where(x => x.AuthorId == book.AuthorId && x.Title == book.Title && x.PublishingHouseId == x.PublishingHouseId).Select(x => x.Id).FirstOrDefault();
                             var regBook = new RegBook()
                             {
-                                BookId = book.Id,
+                                BookId = bId,
                                 ReasonId = rId,
                                 DateOfReg = DateTime.Now,
                                 UserId = _loggedUser.CurrentUser.Id,
@@ -453,9 +456,10 @@ namespace CursovayaApp.WPF.ViewModels
                         {
                             var dId = DbClass.entities.ReasonsReg.Where(x => x.Name == SelectedReason).Select(x => x.Id)
                                 .FirstOrDefault();
+                            var bId = DbClass.entities.Books.Where(x => x.AuthorId == book.AuthorId && x.Title == book.Title && x.PublishingHouseId == x.PublishingHouseId).Select(x => x.Id).FirstOrDefault();
                             var deregBook = new DeregBook()
                             {
-                                BookId = book.Id,
+                                BookId = bId,
                                 ReasonId = dId,
                                 DateOfDereg = DateTime.Now,
                                 UserId = _loggedUser.CurrentUser.Id,
@@ -464,7 +468,7 @@ namespace CursovayaApp.WPF.ViewModels
                             DbClass.entities.DeregBooks.Add(deregBook);
                             
                         }
-
+                        DbClass.entities.SaveChanges();
                         newWindow.Close();
                     }
                 });

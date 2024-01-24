@@ -26,9 +26,12 @@ namespace CursovayaApp.WPF.Models
                 entities.Add(newEntity);
                 return 0;
             }
-            
-            return 1;
-            
+            else
+            {
+                var ent = entities.Where(x => x.Id == newEntity.Id).FirstOrDefault();
+                ent = newEntity;
+                return 1;
+            }
         }
     }
 }

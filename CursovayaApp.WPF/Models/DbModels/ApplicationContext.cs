@@ -118,8 +118,15 @@ namespace CursovayaApp.WPF.Models.DbModels
             User librUser = new() {Id = 2, FullName = "СТАРТОВЫЙ БИБЛИОТЕКАРЬ", Login = "_libr123", Password = "1234", RoleId = libr.Id };
             User stockUser = new() { Id = 3, FullName = "СТАРТОВЫЙ КЛАДОВЩИК", Login = "_stock123", Password = "1234", RoleId = stockMan.Id };
 
+            Author author = new() { Id = 1, FullName = "Пушкин Александр Сергеевич", BirthYear = 1799, DeathYear = 1837 };
+            PublishingHouse publishing = new() { Id = 1, Name = "АСТ" };
+
+            Book book = new() { Id = 1, AuthorId= author.Id, PublishingHouseId= publishing.Id, Quantity=10, Title="Руслан и Людмила" };
+
             modelBuilder.Entity<Role>().HasData(adm, libr, stockMan, client);
             modelBuilder.Entity<User>().HasData(admUser, librUser, stockUser);
+            modelBuilder.Entity<Author>().HasData(author);
+            modelBuilder.Entity<PublishingHouse>().HasData(publishing);
         }
     }
 }

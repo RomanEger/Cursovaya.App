@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
@@ -13,6 +14,11 @@ namespace CursovayaApp.WPF.Models.DbModels
     [NotMapped]
     public class BookView : TableBase, INotifyPropertyChanged
     {
+        public BookView(int quantity)
+        {
+            OldQuantity = quantity;
+        }
+
         private int _id;
 
         public override int Id
@@ -48,6 +54,13 @@ namespace CursovayaApp.WPF.Models.DbModels
             }
         }
 
+        private int _oldQuantity;
+        public int OldQuantity
+        {
+            get => _oldQuantity;
+            init => _oldQuantity = value;
+        }
+
         private int _quantity;
 
         public int Quantity
@@ -57,12 +70,12 @@ namespace CursovayaApp.WPF.Models.DbModels
             {
                 if (_quantity > value)
                 {
-                    QuantityToUpdate = _quantity - value;
+                    QuantityToUpdate = _oldQuantity - value;
                     ForAdd = false;
                 }
                 else
                 {
-                    QuantityToUpdate = value - _quantity;
+                    QuantityToUpdate = value - _oldQuantity;
                     ForAdd = true;
                 }
                 _quantity = value;
@@ -94,7 +107,32 @@ namespace CursovayaApp.WPF.Models.DbModels
             }
         }
 
-        public bool ForAdd = false;
+        private bool _forAdd = false;
+
+        public bool ForAdd
+        {
+            get => _forAdd;
+            set
+            {
+                _forAdd = value;
+                GetReasons();
+                OnPropertyChanged();
+            }
+        }
+
+        private void GetReasons()
+        {
+            if (ForAdd)
+            {
+                var l = DbClass.entities.ReasonsReg.Select(x => x.Name).ToList();
+                ListReasons = new ObservableCollection<string>(l);
+            }
+            else
+            {
+                var l = DbClass.entities.ReasonsDereg.Select(x => x.Name).ToList();
+                ListReasons = new ObservableCollection<string>(l);
+            }
+        }
 
         public int AddBook()
         {
@@ -165,6 +203,17 @@ namespace CursovayaApp.WPF.Models.DbModels
         {
             if (PropertyChanged != null)
                 PropertyChanged(this, new PropertyChangedEventArgs(prop));
+        }
+
+        private IEnumerable<string> _listReasons = new List<string>();
+        public IEnumerable<string> ListReasons
+        {
+            get => _listReasons;
+            set
+            {
+                _listReasons = value;
+                OnPropertyChanged();
+            }
         }
     }
 }
