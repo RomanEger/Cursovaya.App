@@ -32,6 +32,8 @@
                 CanUserResizeColumns="False"
                 AutoGenerateColumns="False"
                 MaxWidth="550"
+                HorizontalContentAlignment="Center"
+                VerticalContentAlignment="Center"
                 SelectedItem="{Binding SelectedUser}"
                 ItemsSource="{Binding Users}">
                 <DataGrid.Columns>
@@ -76,10 +78,10 @@
                     Command="{Binding BackUsersCommand}"
                     Content="&lt;"/>
                 <Button
-                    Command="{Binding ForwardBooksCommand}"
+                    Command="{Binding ForwardUsersCommand}"
                     Content="&gt;"/>
                 <Button
-                    Command="{Binding LastBooksCommand}"
+                    Command="{Binding LastUsersCommand}"
                     Content="{Binding Pagination.Count}"/>
             </StackPanel>
             <StackPanel Orientation="Horizontal"

@@ -32,13 +32,31 @@
                 AutoGenerateColumns="False"
                 CanUserAddRows="False"
                 CanUserResizeRows="False"
-                HeadersVisibility="None"
-                VerticalScrollBarVisibility="Visible"
                 Margin="15"
+                FontSize="14"
+                BorderThickness="0"
                 ItemsSource="{Binding Users}"
                 SelectedItem="{Binding SelectedUser}">
                 <DataGrid.Columns>
-                    <DataGridTemplateColumn MinWidth="250">
+                    <DataGridTextColumn
+                        Header="ФИО"
+                        Width="*"
+                        Binding="{Binding FullName}"/>
+                    <DataGridTextColumn
+                        Width="*"
+                        Header="Логин"
+                        Binding="{Binding Login}"/>
+                    <DataGridTextColumn
+                        Width="*"
+                        Header="Пароль"
+                        Binding="{Binding Password}"/>
+                    <DataGridTextColumn
+                        Width="*"
+                        Header="Id роли"
+                        Binding="{Binding RoleId}"/>
+                    <DataGridTemplateColumn
+                        Width="*"
+                        MinWidth="250">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <StackPanel>
@@ -46,25 +64,43 @@
                                     <StackPanel 
                                         Orientation="Horizontal">
                                         <Button
+                                            Width="110"
+                                            BorderBrush="DodgerBlue"
+                                            Foreground="DodgerBlue"
                                             Content="Изменить"/>
                                         <Button
+                                            Background="Transparent"
+                                            Foreground="Red"
+                                            
+                                            Command="{Binding DeleteCommand}"
+                                            BorderBrush="Transparent"
                                             Content="Удалить"/>
                                     </StackPanel>
                                 </StackPanel>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
-                    <DataGridTextColumn Binding="{Binding FullName}"/>
-                    <DataGridTextColumn Binding="{Binding Login}"/>
-                    <DataGridTextColumn Binding="{Binding Password}"/>
-                    <DataGridTextColumn Binding="{Binding RoleId}"/>
                 </DataGrid.Columns>
             </DataGrid>
-
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                <Button
+                    Command="{Binding FirstUsersCommand}"
+                    Content="1"/>
+                <Button
+                    Command="{Binding BackUsersCommand}"
+                    Content="&lt;"/>
+                <Button
+                    Command="{Binding ForwardUsersCommand}"
+                    Content="&gt;"/>
+                <Button
+                    Command="{Binding LastUsersCommand}"
+                    Content="{Binding Pagination.Count}"/>
+            </StackPanel>
         </StackPanel>
         <StackPanel Grid.Row="2">
             <Button HorizontalAlignment="Right"
                     Content="Добавить"
+                    Command="{Binding AddCommand}"
                     Background="DodgerBlue"
                     Foreground="White"/>
         </StackPanel>

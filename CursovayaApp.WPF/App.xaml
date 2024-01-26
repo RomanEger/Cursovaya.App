@@ -6,15 +6,15 @@
     <Application.Resources>
         <Style TargetType="{x:Type Control}" 
                x:Key="BaseStyle">
-            <Setter Property="FontSize" Value="14pt" />
+            <Setter Property="FontSize" Value="16" />
         </Style>
-
 
         <Style TargetType="TextBox" 
                x:Key="TbLoginStyle" 
                BasedOn="{StaticResource BaseStyle}">
             <Setter Property="Width" Value="250"/>
             <Setter Property="Height" Value="35"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
         </Style>
 
         <Style TargetType="PasswordBox" 
@@ -36,6 +36,31 @@
                     <Setter Property="Cursor" Value="Hand"/>
                 </Style>
             </Style.Resources>
+        </Style>
+
+        <Style TargetType="DataGridColumnHeader">
+            <Setter Property="Background" Value="Aqua"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+        </Style>
+
+        <Style TargetType="DataGridCell">
+            <Setter Property="TextBlock.TextAlignment" Value="Center"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="DataGridCell">
+                        <Grid Background="{TemplateBinding Background}">
+                            <ContentPresenter VerticalAlignment="Center"/>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style TargetType="ScrollBar">
+            <Setter Property="Background" Value="Transparent"/>
+        </Style>
+
+        <Style TargetType="DataGrid">
         </Style>
     </Application.Resources>
 </Application>

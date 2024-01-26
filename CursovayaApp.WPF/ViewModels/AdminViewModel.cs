@@ -33,7 +33,7 @@ namespace CursovayaApp.WPF.ViewModels
 
         public AdminViewModel()
         {
-            Pagination = new PaginationService<User>(7);
+            Pagination = new PaginationService<User>(3);
             try
             {
                 GetUsers();
