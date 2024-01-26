@@ -54,6 +54,10 @@
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
+                    <DataGridTextColumn Binding="{Binding FullName}"/>
+                    <DataGridTextColumn Binding="{Binding Login}"/>
+                    <DataGridTextColumn Binding="{Binding Password}"/>
+                    <DataGridTextColumn Binding="{Binding RoleId}"/>
                 </DataGrid.Columns>
             </DataGrid>
 

@@ -33,7 +33,7 @@ namespace CursovayaApp.WPF.Models.DbModels
             //Database.EnsureDeleted();
 
             //создание бд при ее отсутствии
-            Database.EnsureCreated();
+            //Database.EnsureCreated();
         }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
