@@ -23,7 +23,6 @@
                 <TextBlock Text="Новое количество" />
                 <TextBox Text="{Binding Quantity, UpdateSourceTrigger=PropertyChanged}" />
                 <TextBlock Text="Издательство" />
-                <!--<TextBox Text="{Binding Publishing, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="True"/>-->
             </StackPanel>
                 <ComboBox 
                     ItemsSource="{Binding ListPublishings}"
