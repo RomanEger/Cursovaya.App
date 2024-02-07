@@ -22,7 +22,7 @@ namespace CursovayaApp.WPF.ViewModels
                 OnPropertyChanged();
             }
         }
-        private BooksViewModel _vm;
+        private readonly BooksViewModel _vm;
         public AuthorViewModel(Author author, BooksViewModel vm)
         {
             SelectedAuthor = author;

@@ -134,7 +134,29 @@
                         Command="{Binding RecieveCommand}"
                         Width="170"/>
                 </StackPanel>
-
+                <StackPanel Orientation="Horizontal"
+                    Name="StackPanelForAdmin"
+                    HorizontalAlignment="Center">
+                    <Button
+                        Content="Сохранить"
+                        Background="DodgerBlue"
+                        Foreground="White"
+                        BorderBrush="Transparent"
+                        Command="{Binding SaveCommand}"
+                        Width="170"/>
+                    <Button
+                        Content="Ред. автора"
+                        BorderBrush="DodgerBlue"
+                        Foreground="DodgerBlue"
+                        Command="{Binding AddAuthorCommand}"
+                        Width="170"/>
+                    <Button
+                        Content="Ред. издательство"
+                        BorderBrush="DodgerBlue"
+                        Foreground="DodgerBlue"
+                        Command="{Binding AddPublishingCommand}"
+                        Width="170"/>
+                </StackPanel>
             </StackPanel>
         </StackPanel>
     </Grid>

@@ -209,9 +209,22 @@ namespace CursovayaApp.WPF.ViewModels
             {
                 return _addAuthorCommand ??= new RelayCommand(obj =>
                 {
-                    var author = new Author();
+                    var author = DbClass.entities.Authors.FirstOrDefault(x => x.FullName == SelectedAuthor) ?? new Author();
                     _addOrUpdateAuthorsView = new(author, this);
                     _addOrUpdateAuthorsView.ShowDialog();
+                });
+            }
+        }
+
+        private RelayCommand _addPublishingCommand;
+        public RelayCommand AddPublishingCommand
+        {
+            get
+            {
+                return _addPublishingCommand ??= new RelayCommand(obj =>
+                {
+                    var publishing = DbClass.entities.PublishingHouses.FirstOrDefault(x => x.Name == SelectedPublishing) ?? new PublishingHouse();
+                    _addOrUpdatePublishingsView = new(publishing, this);
                 });
             }
         }

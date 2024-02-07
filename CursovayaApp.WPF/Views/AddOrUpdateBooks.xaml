@@ -5,7 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:CursovayaApp.WPF.Views"
         mc:Ignorable="d"
-        WindowStartupLocation="CenterScreen"
+        WindowStartupLocation="CenterOwner"
+        ResizeMode="NoResize"
         Title="AddOrUpdateBooks" Height="auto" Width="500">
     <Window.Resources>
         <Style TargetType="TextBox">

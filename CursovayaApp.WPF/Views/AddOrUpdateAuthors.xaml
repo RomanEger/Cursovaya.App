@@ -5,7 +5,9 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:local="clr-namespace:CursovayaApp.WPF.Views"
         mc:Ignorable="d"
-        Title="AddOrUpdateAuthors" Height="auto" Width="500">
+        WindowStartupLocation="CenterOwner"
+        ResizeMode="NoResize"
+        Title="AddOrUpdateAuthors" Height="260" Width="500">
     <Window.Resources>
         <Style TargetType="TextBox">
             <Setter Property="Margin" Value="0 5"></Setter>
@@ -20,9 +22,12 @@
                 <TextBlock Text="ФИО"/>
                 <TextBox Text="{Binding FullName, UpdateSourceTrigger=PropertyChanged}"/>
                 <TextBlock Text="Год рождения"/>
-                <DatePicker Text="{Binding BirthYear, UpdateSourceTrigger=PropertyChanged}"/>
+                <TextBox
+                    Text="{Binding BirthYear, UpdateSourceTrigger=PropertyChanged}"/>
                 <TextBlock Text="Год смерти"/>
-                <DatePicker Name="dpDeath" Text="{Binding DeathYear, UpdateSourceTrigger=PropertyChanged}"/>
+                <TextBox
+                    Text="{Binding DeathYear, UpdateSourceTrigger=PropertyChanged}"
+                    Name="dpDeath" />
             </StackPanel>
             <CheckBox 
                 HorizontalAlignment="Right"

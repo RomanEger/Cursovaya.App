@@ -35,6 +35,7 @@ namespace CursovayaApp.WPF.Views
             LoggedUser loggedUser = new();
             if (loggedUser.CurrentUser.RoleId == 1)//админ
             {
+                StackPanelForAdmin.Visibility = Visibility.Visible;
                 StackPanelForStock.Visibility = Visibility.Collapsed;
                 StackPanelForLibr.Visibility = Visibility.Collapsed;
             }
@@ -42,11 +43,13 @@ namespace CursovayaApp.WPF.Views
             {
                 StackPanelForLibr.Visibility = Visibility.Visible;
                 StackPanelForStock.Visibility = Visibility.Collapsed;
+                StackPanelForAdmin.Visibility = Visibility.Collapsed;
             }
             else if (loggedUser.CurrentUser.RoleId == 3)//кладовщик
             {
                 StackPanelForStock.Visibility = Visibility.Visible;
                 StackPanelForLibr.Visibility = Visibility.Collapsed;
+                StackPanelForAdmin.Visibility = Visibility.Collapsed;
             }
         }
     }

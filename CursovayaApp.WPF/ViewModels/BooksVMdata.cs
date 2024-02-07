@@ -17,6 +17,8 @@ namespace CursovayaApp.WPF.ViewModels
 
         private AddOrUpdateAuthors _addOrUpdateAuthorsView;
 
+        private AddOrUpdatePublishings _addOrUpdatePublishingsView;
+
         private ObservableCollection<string> _listReasons;
         public ObservableCollection<string> ListReasons
         {
