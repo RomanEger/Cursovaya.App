@@ -29,7 +29,8 @@ namespace CursovayaApp.WPF.ViewModels
             SetCount();
         }
 
-        private void GetPublishings() => ListPublishings = new ObservableCollection<string>(DbClass.entities.PublishingHouses.Select(x => x.Name).ToList());
+        private void GetPublishings() 
+            => ListPublishings = new ObservableCollection<string>(DbClass.entities.PublishingHouses.Select(x => x.Name).ToList());
         
         private void GetBooks()
         {
@@ -69,6 +70,7 @@ namespace CursovayaApp.WPF.ViewModels
         {
             var l = DbClass.entities.Authors.Select(x => x.FullName).ToList();
             Authors = new ObservableCollection<string>(l.Distinct());
+            AuthorsForAdd = new ObservableCollection<string>(l.Distinct());
             Authors.Insert(0, "Все");
         }
 

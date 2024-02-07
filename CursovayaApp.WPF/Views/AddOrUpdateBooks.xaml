@@ -14,16 +14,41 @@
     </Window.Resources>
     <Grid>
         <StackPanel Margin="10">
+            <TextBlock Text="Автор" />
+            <StackPanel
+                Height="30"
+                HorizontalAlignment="Center"
+                Orientation="Horizontal">
+                <ComboBox Height="22"
+                          Name="cb"
+                          FontSize="11"
+                          IsTextSearchEnabled="False"
+                          IsEditable="True"
+                          SelectedItem="{Binding SelectedBook.AuthorFullName}"
+                          TextBoxBase.TextChanged="ComboBox_TextChanged"
+                          ItemsSource="{Binding AuthorsForAdd}"
+                          Width="374"/>
+                <Button
+                    Style="{StaticResource BaseStyle}"
+                    Command="{Binding AddAuthorCommand}"
+                    Background="Transparent"
+                    Cursor="Hand"
+                    VerticalAlignment="Center"
+                    HorizontalAlignment="Right"
+                    Content="Добавить"
+                    FontSize="13"
+                    Height="20"
+                    Width="85"
+                    Margin="5 5 0 5"/>
+            </StackPanel>
             <StackPanel
                         DataContext="{Binding SelectedBook}">
                 <TextBlock Text="Название" />
                 <TextBox Text="{Binding Title, UpdateSourceTrigger=PropertyChanged}" />
-                <TextBlock Text="Автор" />
-                <TextBox Text="{Binding AuthorFullName, UpdateSourceTrigger=PropertyChanged}"/>
                 <TextBlock Text="Новое количество" />
                 <TextBox Text="{Binding Quantity, UpdateSourceTrigger=PropertyChanged}" />
-                <TextBlock Text="Издательство" />
             </StackPanel>
+                <TextBlock Text="Издательство" />
                 <ComboBox 
                     ItemsSource="{Binding ListPublishings}"
                     SelectedItem="{Binding SelectedBook.Publishing}"
@@ -33,13 +58,22 @@
                     ItemsSource="{Binding SelectedBook.ListReasons}"
                     SelectedItem="{Binding SelectedReason}"
                     Margin="0 5"/>
-            <Button
-                Content="Сохранить"
-                Background="DodgerBlue"
-                Foreground="White"
-                BorderBrush="Transparent"
-                Command="{Binding AddOrUpdateBookCommand}"
-                Width="140"/>
+            <StackPanel
+                HorizontalAlignment="Center"
+                Orientation="Horizontal">
+                <Button
+                    Content="Сохранить"
+                    Background="DodgerBlue"
+                    Foreground="White"
+                    BorderBrush="Transparent"
+                    Command="{Binding AddOrUpdateBookCommand}"
+                    Width="110"/>
+                <Button
+                    Content="Отменить"
+                    Command="{Binding CancelCommand}"
+                    Width="110"/>
+
+            </StackPanel>
         </StackPanel>
     </Grid>
 </Window>

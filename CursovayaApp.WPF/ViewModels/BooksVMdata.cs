@@ -80,6 +80,8 @@ namespace CursovayaApp.WPF.ViewModels
 
         public ObservableCollection<string> Authors { get; set; }
 
+        public ObservableCollection<string> AuthorsForAdd { get; set; }
+
         private string _selectedAuthor = string.Empty;
         public string SelectedAuthor
         {

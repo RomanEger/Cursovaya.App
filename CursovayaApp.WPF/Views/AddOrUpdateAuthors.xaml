@@ -16,26 +16,37 @@
     </Window.Resources>
     <Grid>
         <StackPanel VerticalAlignment="Center" Margin="10">
-            <StackPanel DataContext="SelectedAuthor">
+            <StackPanel DataContext="{Binding SelectedAuthor}">
                 <TextBlock Text="ФИО"/>
                 <TextBox Text="{Binding FullName, UpdateSourceTrigger=PropertyChanged}"/>
                 <TextBlock Text="Год рождения"/>
                 <DatePicker Text="{Binding BirthYear, UpdateSourceTrigger=PropertyChanged}"/>
                 <TextBlock Text="Год смерти"/>
-                <DatePicker Text="{Binding DeathYear, UpdateSourceTrigger=PropertyChanged}"/>
+                <DatePicker Name="dpDeath" Text="{Binding DeathYear, UpdateSourceTrigger=PropertyChanged}"/>
             </StackPanel>
             <CheckBox 
                 HorizontalAlignment="Right"
+                Click="CheckBox_Click"
+                Command="{Binding DeathYearCommand}"
                 Content="По н.в."
                 Height="20"
                 Margin="5"/>
-            <Button
-                Content="Сохранить"
-                Background="DodgerBlue"
-                Foreground="White"
-                BorderBrush="Transparent"
-                Command="{Binding AddOrUpdateAuthorCommand}"
-                Width="140"/>
+            <StackPanel
+                HorizontalAlignment="Center"
+                Orientation="Horizontal">
+                <Button
+                    Content="Сохранить"
+                    Background="DodgerBlue"
+                    Foreground="White"
+                    BorderBrush="Transparent"
+                    Command="{Binding AddOrUpdateAuthorCommand}"
+                    Width="110"/>
+                <Button
+                    Content="Отменить"
+                    Command="{Binding CancelCommand}"
+                    Width="110"/>
+
+            </StackPanel>
         </StackPanel>
     </Grid>
 </Window>

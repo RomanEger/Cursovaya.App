@@ -134,15 +134,20 @@ namespace CursovayaApp.WPF.ViewModels
                 {
                     if (Books.Any(x => x.Id == SelectedBook.Id))
                     {
-                        if (!Authors.Contains(SelectedBook.AuthorFullName))
+                        if (!AuthorsForAdd.Contains(SelectedBook.AuthorFullName))
                         {
                             if (MessageBox.Show(
-                                    "Данный автор еще не представлен в нашей библиотеке. Хотите его добавть?",
+                                    "Данный автор еще не представлен в нашей библиотеке. Хотите его добавить?",
                                     "",
                                     MessageBoxButton.YesNo,
                                     MessageBoxImage.Question) == MessageBoxResult.Yes)
                             {
-                                //открытие окна с добавлением автора
+                                var author = new Author()
+                                {
+                                    FullName = SelectedBook.AuthorFullName
+                                };
+                                _addOrUpdateAuthorsView = new(author, this);
+                                _addOrUpdateAuthorsView.ShowDialog();
                             }
                             else return;
                         }
@@ -150,7 +155,7 @@ namespace CursovayaApp.WPF.ViewModels
                         var aId = DbClass.entities.Authors.Where(x => x.FullName == SelectedBook.AuthorFullName).Select(x => x.Id).FirstOrDefault();
                         var pId = DbClass.entities.PublishingHouses.Where(x => x.Name == SelectedBook.Publishing).Select(x => x.Id).FirstOrDefault();
 
-                        var book = DbClass.entities.Books.FirstOrDefault(x => x.Id == SelectedBook.Id);
+                        var book = DbClass.entities.Books.FirstOrDefault(x => x.Id == SelectedBook.Id) ?? new Book();
                         book.Id = SelectedBook.Id;
                         book.Quantity = SelectedBook.Quantity;
                         book.Title = SelectedBook.Title;
@@ -205,8 +210,28 @@ namespace CursovayaApp.WPF.ViewModels
                 return _addAuthorCommand ??= new RelayCommand(obj =>
                 {
                     var author = new Author();
-                    _addOrUpdateAuthorsView = new(author);
+                    _addOrUpdateAuthorsView = new(author, this);
                     _addOrUpdateAuthorsView.ShowDialog();
+                });
+            }
+        }
+
+        private RelayCommand _cancelCommand;
+        public RelayCommand CancelCommand
+        {
+            get
+            {
+                return _cancelCommand ??= new RelayCommand(obj =>
+                {
+                    if (MessageBox.Show("Вы уверены, что хотите отменить все изменения?\nЭто действие удалит текущую запись!",
+                        "Отмена изменений",
+                        MessageBoxButton.YesNo,
+                        MessageBoxImage.Question) == MessageBoxResult.No) return;
+                    
+                    int i = Books.ToList().IndexOf(SelectedBook)-1;
+                    Books.Remove(SelectedBook);
+                    SelectedBook = Books.ElementAt(i);
+                    _addOrUpdateBooksView?.Close();
                 });
             }
         }
