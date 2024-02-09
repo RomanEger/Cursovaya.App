@@ -18,6 +18,7 @@
                 ItemsSource="{Binding ListPublishings}"/>
             <Button
                 Width="100"
+                Margin="15 15 0 15"
                 Style="{StaticResource SecondaryButtonStyle}"
                 Content="Выбрать"
                 Command="{Binding AddPublishingCommand}"/>

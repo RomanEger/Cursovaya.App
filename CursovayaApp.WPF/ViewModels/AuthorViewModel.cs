@@ -1,6 +1,7 @@
 ﻿using CursovayaApp.WPF.Commands;
 using CursovayaApp.WPF.Models;
 using CursovayaApp.WPF.Models.DbModels;
+using System.Windows;
 
 namespace CursovayaApp.WPF.ViewModels
 {
@@ -17,7 +18,11 @@ namespace CursovayaApp.WPF.ViewModels
             }
         }
 
-        private readonly Author _author;
+        private Author _author
+        {
+            get;
+            init;
+        }
         private readonly bool _ForAdd;
         private readonly BooksViewModel _vm;
         public AuthorViewModel(Author author, BooksViewModel vm, bool ForAdd)
