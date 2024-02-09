@@ -25,11 +25,21 @@
         </Style>
 
         <Style TargetType="Button"
+               x:Key="DefaultButton"
                BasedOn="{StaticResource BaseStyle}">
             <Setter Property="Margin" Value="15"></Setter>
             <Setter Property="Height" Value="30"/>
             <Setter Property="Background" Value="White"/>
             <Setter Property="Padding" Value="15 0"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
             <Style.Resources>
                 <Style TargetType="Border">
                     <Setter Property="CornerRadius" Value="10"/>
@@ -37,6 +47,43 @@
                 </Style>
             </Style.Resources>
         </Style>
+
+        <Style TargetType="Button"
+               BasedOn="{StaticResource DefaultButton}"
+               x:Key="MainButtonStyle">
+            <Setter Property="Background" Value="DodgerBlue"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderBrush" Value="Transparent"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#FF26629C"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style TargetType="Button"
+               BasedOn="{StaticResource DefaultButton}"
+               x:Key="SecondaryButtonStyle">
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="GhostWhite"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style TargetType="Button"
+               BasedOn="{StaticResource DefaultButton}"
+               x:Key="DeleteButtonStyle">
+            <Setter Property="Foreground" Value="Red"/>
+            <Setter Property="BorderBrush" Value="Transparent"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="Red"/>
+                    <Setter Property="Foreground" Value="White"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
 
         <Style TargetType="DataGridColumnHeader">
             <Setter Property="Background" Value="Aqua"/>

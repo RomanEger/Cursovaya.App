@@ -7,8 +7,25 @@
         mc:Ignorable="d"
         WindowStartupLocation="CenterOwner"
         ResizeMode="NoResize"
-        Title="AddOrUpdatePublishings" Height="450" Width="800">
+        Title="AddOrUpdatePublishings" Height="150" Width="400">
     <Grid>
-        
+        <StackPanel>
+            <TextBox 
+                Margin="15"
+                Style="{StaticResource TbLoginStyle}"/>
+            <StackPanel 
+                HorizontalAlignment="Center"
+                Orientation="Horizontal">
+                <Button
+                    Content="Сохранить"
+                        Style="{StaticResource MainButtonStyle}"
+                    Command="{Binding SaveCommand}"
+                    Width="110"/>
+                <Button
+                        Style="{StaticResource SecondaryButtonStyle}"
+                    Content="Отмена"
+                    Width="110"/>
+            </StackPanel>
+        </StackPanel>
     </Grid>
 </Window>

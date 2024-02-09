@@ -50,12 +50,10 @@
                 Margin="0 25 0 0">
                 <Button Content="Войти"
                         Margin="0"
-                        BorderBrush="Transparent"
                         HorizontalAlignment="Center"
-                        Background="DodgerBlue"
                         Name="BtnLogin"
-                        Foreground="White"
                         Width="140"
+                        Style="{StaticResource MainButtonStyle}"
                         Command="{Binding LoginCommand}"/>
             </StackPanel>
         </StackPanel>

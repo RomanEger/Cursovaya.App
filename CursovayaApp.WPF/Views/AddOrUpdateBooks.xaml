@@ -30,7 +30,7 @@
                           ItemsSource="{Binding AuthorsForAdd}"
                           Width="374"/>
                 <Button
-                    Style="{StaticResource BaseStyle}"
+                    Style="{StaticResource SecondaryButtonStyle}"
                     Command="{Binding AddAuthorCommand}"
                     Background="Transparent"
                     Cursor="Hand"
@@ -63,6 +63,7 @@
                 HorizontalAlignment="Center"
                 Orientation="Horizontal">
                 <Button
+                        Style="{StaticResource MainButtonStyle}"
                     Content="Сохранить"
                     Background="DodgerBlue"
                     Foreground="White"
@@ -70,6 +71,7 @@
                     Command="{Binding AddOrUpdateBookCommand}"
                     Width="110"/>
                 <Button
+                        Style="{StaticResource SecondaryButtonStyle}"
                     Content="Отменить"
                     Command="{Binding CancelCommand}"
                     Width="110"/>

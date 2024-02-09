@@ -11,15 +11,21 @@
     <Grid>
         <StackPanel VerticalAlignment="Top"
                     HorizontalAlignment="Right">
-            <Button Content="Выход"
-                    Command="{Binding ExitCommand}"
-                    Name="BtnExit"/>
+            <Button 
+                Width="80"
+                Content="Выход"
+                        Style="{StaticResource SecondaryButtonStyle}"
+                Command="{Binding ExitCommand}"
+                Name="BtnExit"/>
         </StackPanel>
         <StackPanel VerticalAlignment="Top"
                     HorizontalAlignment="Left">
-            <Button Content="Каталог книг"
-                    Command="{Binding ChangeCommand}"
-                    Name="BtnChange"/>
+            <Button
+                Width="125"
+                Content="Каталог книг"
+                        Style="{StaticResource SecondaryButtonStyle}"
+                Command="{Binding ChangeCommand}"
+                Name="BtnChange"/>
         </StackPanel>
         <StackPanel 
             Margin="15 60"
@@ -72,15 +78,23 @@
                 HorizontalAlignment="Center"
                 Orientation="Horizontal">
                 <Button
+                        Style="{StaticResource SecondaryButtonStyle}"
+                    Width="32"
                     Command="{Binding FirstUsersCommand}"
                     Content="1"/>
                 <Button
+                        Style="{StaticResource SecondaryButtonStyle}"
+                    Width="43"
                     Command="{Binding BackUsersCommand}"
                     Content="&lt;"/>
                 <Button
+                        Style="{StaticResource SecondaryButtonStyle}"
+                    Width="43"
                     Command="{Binding ForwardUsersCommand}"
                     Content="&gt;"/>
                 <Button
+                        Style="{StaticResource SecondaryButtonStyle}"
+                    Width="32"
                     Command="{Binding LastUsersCommand}"
                     Content="{Binding Pagination.Count}"/>
             </StackPanel>
@@ -88,21 +102,19 @@
                         HorizontalAlignment="Center">
                 <Button
                     Content="Сохранить"
-                    Background="DodgerBlue"
-                    Foreground="White"
-                    BorderBrush="Transparent"
+                    Style="{StaticResource MainButtonStyle}"
                     Command="{Binding SaveCommand}"
                     Width="140"/>
                 <Button
                     Content="Добавить"
                     BorderBrush="DodgerBlue"
                     Foreground="DodgerBlue"
+                    Style="{StaticResource SecondaryButtonStyle}"
                     Command="{Binding AddCommand}"
                     Width="140"/>
                 <Button
                     Content="Удалить"
-                    Foreground="Red"
-                    BorderBrush="Transparent"
+                    Style="{StaticResource DeleteButtonStyle}"
                     Command="{Binding DeleteCommand}"
                     Width="140"/>
 
