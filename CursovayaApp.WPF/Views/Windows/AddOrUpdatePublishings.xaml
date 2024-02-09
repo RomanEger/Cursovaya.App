@@ -7,23 +7,26 @@
         mc:Ignorable="d"
         WindowStartupLocation="CenterOwner"
         ResizeMode="NoResize"
-        Title="AddOrUpdatePublishings" Height="150" Width="400">
+        SizeToContent="WidthAndHeight"
+        Title="AddOrUpdatePublishings" Height="100" Width="480">
     <Grid>
         <StackPanel>
-            <TextBox 
-                Margin="15"
-                Style="{StaticResource TbLoginStyle}"/>
             <StackPanel 
+                Margin="10 15"
                 HorizontalAlignment="Center"
                 Orientation="Horizontal">
-                <Button
+                <Label Content="Название:"
+                       VerticalAlignment="Center"/>
+                <TextBox 
+                    DataContext="{Binding Publishing}"
+                    Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}"
+                    Margin="0"
+                    Style="{StaticResource TbLoginStyle}"/>
+
+            <Button
                     Content="Сохранить"
-                        Style="{StaticResource MainButtonStyle}"
+                    Style="{StaticResource MainButtonStyle}"
                     Command="{Binding SaveCommand}"
-                    Width="110"/>
-                <Button
-                        Style="{StaticResource SecondaryButtonStyle}"
-                    Content="Отмена"
                     Width="110"/>
             </StackPanel>
         </StackPanel>

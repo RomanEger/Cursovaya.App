@@ -164,7 +164,7 @@
                         BorderBrush="DodgerBlue"
                         Foreground="DodgerBlue"
                         Style="{StaticResource SecondaryButtonStyle}"
-                        Command="{Binding AddPublishingCommand}"
+                        Command="{Binding AddOrUpdatePublishingCommand}"
                         Width="170"/>
                 </StackPanel>
             </StackPanel>

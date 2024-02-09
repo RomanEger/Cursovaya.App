@@ -12,6 +12,8 @@ public partial class AddOrUpdateAuthors : Window
     {
         InitializeComponent();
         DataContext = new AuthorViewModel(author, vm);
+        MinHeight = 260;
+        MinWidth = 500;
     }
 
     private void CheckBox_Click(object sender, RoutedEventArgs e)

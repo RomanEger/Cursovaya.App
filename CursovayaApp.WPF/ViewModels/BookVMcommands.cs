@@ -9,6 +9,7 @@ using CursovayaApp.WPF.Models;
 using CursovayaApp.WPF.Models.DbModels;
 using CursovayaApp.WPF.Services;
 using CursovayaApp.WPF.Views;
+using CursovayaApp.WPF.Views.Windows;
 
 namespace CursovayaApp.WPF.ViewModels
 {
@@ -20,12 +21,14 @@ namespace CursovayaApp.WPF.ViewModels
                 {
                     if (MyFrame.frame.CanGoBack)
                         if (_loggedUser.CurrentUser.RoleId != 1)
+                        {
                             if (MessageBox.Show(
                                     "Это действие приведет к выходу из аккаунта. Вы уверены, что хотите продолжить?",
                                     "Выход",
                                     MessageBoxButton.YesNo,
                                     MessageBoxImage.Question) == MessageBoxResult.Yes)
                                 MyFrame.frame.GoBack();
+                        }
                         else
                             MyFrame.frame.GoBack();
                 });
@@ -181,14 +184,34 @@ namespace CursovayaApp.WPF.ViewModels
                     _addOrUpdateAuthorsView.ShowDialog();
                 });
             
+        private RelayCommand _addOrUpdatePublishingCommand;
+        public RelayCommand AddOrUpdatePublishingCommand =>
+            _addOrUpdatePublishingCommand ??= new RelayCommand(obj =>
+                {
+                    var dialogResult = MessageBox.Show("Если Вы хотите добавить новое издательство -> Да\n" +
+                        "Если Вы хотите изменить существующее издательство? -> Нет", "", MessageBoxButton.YesNoCancel, MessageBoxImage.Question);
+                    if (dialogResult == MessageBoxResult.Yes)
+                    {
+                        var publishing = new PublishingHouse();
+                        _addOrUpdatePublishingsView = new(publishing, this);
+                        _addOrUpdatePublishingsView.ShowDialog();
+                    }
+                    else if(dialogResult == MessageBoxResult.No)
+                    {
+                        var window = new ChoosePublishing(this);
+                        window.ShowDialog();
+                    }
+                });
+
         private RelayCommand _addPublishingCommand;
         public RelayCommand AddPublishingCommand =>
             _addPublishingCommand ??= new RelayCommand(obj =>
-                {
-                    var publishing = DbClass.entities.PublishingHouses.FirstOrDefault(x => x.Name == SelectedPublishing) ?? new PublishingHouse();
-                    _addOrUpdatePublishingsView = new(publishing, this);
-                });
-            
+            {
+                var publishing = DbClass.entities.PublishingHouses.Where(x => x.Name == SelectedPublishing).FirstOrDefault() ?? new PublishingHouse();
+                _addOrUpdatePublishingsView = new(publishing, this);
+                _addOrUpdatePublishingsView.ShowDialog();
+            });
+
         private RelayCommand _cancelCommand;
         public RelayCommand CancelCommand =>
            _cancelCommand ??= new RelayCommand(obj =>

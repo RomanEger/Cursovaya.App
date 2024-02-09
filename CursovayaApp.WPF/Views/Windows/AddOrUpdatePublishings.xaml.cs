@@ -24,7 +24,8 @@ namespace CursovayaApp.WPF.Views
         public AddOrUpdatePublishings(PublishingHouse publishingHouse, BooksViewModel vm)
         {
             InitializeComponent();
-
+            var publishingVM = new PublishingViewModel(publishingHouse, vm);
+            DataContext = publishingVM;
         }
     }
 }

@@ -6,6 +6,7 @@
         xmlns:local="clr-namespace:CursovayaApp.WPF.Views"
         mc:Ignorable="d"
         WindowStartupLocation="CenterOwner"
+        SizeToContent="WidthAndHeight"
         ResizeMode="NoResize"
         Title="AddOrUpdateAuthors" Height="260" Width="500">
     <Window.Resources>
