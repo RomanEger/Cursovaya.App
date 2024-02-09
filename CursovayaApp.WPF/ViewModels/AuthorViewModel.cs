@@ -16,20 +16,35 @@ namespace CursovayaApp.WPF.ViewModels
                 OnPropertyChanged();
             }
         }
+
+        private readonly Author _author;
+        private readonly bool _ForAdd;
         private readonly BooksViewModel _vm;
-        public AuthorViewModel(Author author, BooksViewModel vm)
+        public AuthorViewModel(Author author, BooksViewModel vm, bool ForAdd)
         {
             SelectedAuthor = author;
+            _author = new Author()
+            {
+                Id = author.Id,
+                BirthYear = author.BirthYear,
+                DeathYear = author.DeathYear,
+                FullName = author.FullName,
+                Books = author.Books
+            };
             _vm = vm;
+            _ForAdd = ForAdd;
         }
 
         private RelayCommand _addOrUpdateAuthorCommand;
         public RelayCommand AddOrUpdateAuthorCommand =>
             _addOrUpdateAuthorCommand ??= new RelayCommand(obj =>
             {
-                DbClass.entities.Authors.Add(SelectedAuthor);
-                _vm.Authors.Add(SelectedAuthor.FullName);
-                _vm.AuthorsForAdd.Add(SelectedAuthor.FullName);
+                if (_ForAdd)
+                {
+                    DbClass.entities.Authors.Add(SelectedAuthor);
+                    _vm.Authors.Add(SelectedAuthor.FullName);
+                    _vm.AuthorsForAdd.Add(SelectedAuthor.FullName);
+                }
                 DbClass.entities.SaveChanges();
             });
 
@@ -37,7 +52,7 @@ namespace CursovayaApp.WPF.ViewModels
         public RelayCommand CancelCommand =>
             _cancelCommand ??= new RelayCommand(obj =>
             {
-
+                SelectedAuthor = _author;
             });
 
         private bool isCheched;

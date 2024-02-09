@@ -8,10 +8,10 @@ namespace CursovayaApp.WPF.Views;
 
 public partial class AddOrUpdateAuthors : Window
 {
-    public AddOrUpdateAuthors(Author author, BooksViewModel vm)
+    public AddOrUpdateAuthors(Author author, BooksViewModel vm, bool forAdd)
     {
         InitializeComponent();
-        DataContext = new AuthorViewModel(author, vm);
+        DataContext = new AuthorViewModel(author, vm, forAdd);
         MinHeight = 260;
         MinWidth = 500;
     }

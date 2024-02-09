@@ -121,7 +121,7 @@ namespace CursovayaApp.WPF.ViewModels
                                 {
                                     FullName = SelectedBook.AuthorFullName
                                 };
-                                _addOrUpdateAuthorsView = new(author, this);
+                                _addOrUpdateAuthorsView = new(author, this, false);
                                 _addOrUpdateAuthorsView.ShowDialog();
                             }
                             else return;
@@ -180,7 +180,7 @@ namespace CursovayaApp.WPF.ViewModels
             _addAuthorCommand ??= new RelayCommand(obj =>
                 {
                     var author = DbClass.entities.Authors.FirstOrDefault(x => x.FullName == SelectedAuthor) ?? new Author();
-                    _addOrUpdateAuthorsView = new(author, this);
+                    _addOrUpdateAuthorsView = new(author, this, true);
                     _addOrUpdateAuthorsView.ShowDialog();
                 });
             
