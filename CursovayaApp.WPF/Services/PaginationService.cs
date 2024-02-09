@@ -63,28 +63,22 @@ namespace CursovayaApp.WPF.Services
                 {
                     Tcollection?.Clear();
                     for (int index = IndexT; index < listT.Count; index++)
-                    {
                         Tcollection?.Add(listT[index]);
-                    }
-                    //Tcollection = new ObservableCollection<T>(listT.GetRange(IndexT, i));
                 }
                 else
                 {
                     Tcollection?.Clear();
                     for (int index = IndexT; index < IndexT+TsAtPage; index++)
-                    {
                         Tcollection?.Add(listT[index]);
-                    }
-                    //Tcollection = new ObservableCollection<T>(listT.GetRange(IndexT, TsAtPage));
                 }
             }
             catch (Exception ex)
             {
-                string fileName = $@"C:\Users\error{DateTime.Now}.txt";
-                FileStream fileStream = new FileStream(fileName, FileMode.Create);
-                StreamWriter sw = new StreamWriter(fileStream);
-                sw.Write(ex.Message);
-                sw.Close();
+                //string fileName = $@"C:\Users\error{DateTime.Now}.txt";
+                //FileStream fileStream = new FileStream(fileName, FileMode.Create);
+                //StreamWriter sw = new StreamWriter(fileStream);
+                //sw.Write(ex.Message);
+                //sw.Close();
             }
         }
 
@@ -120,9 +114,7 @@ namespace CursovayaApp.WPF.Services
             else if (IndexT < TsAtPage)
                 IndexT = listT.Count - IndexT;
             InsertToUsers(ref TCollection, listT);
-        }
-
-
+        } 
 
         public event PropertyChangedEventHandler PropertyChanged;
         public virtual void OnPropertyChanged([CallerMemberName] string prop = "")

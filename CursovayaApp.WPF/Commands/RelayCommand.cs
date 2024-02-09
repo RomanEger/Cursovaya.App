@@ -24,14 +24,12 @@ namespace CursovayaApp.WPF.Commands
             this.canExecute = canExecute;
         }
 
-        public bool CanExecute(object parameter)
-        {
-            return this.canExecute == null || this.canExecute(parameter);
-        }
+        public bool CanExecute(object parameter) =>
+            this.canExecute == null || this.canExecute(parameter);
+        
 
-        public void Execute(object parameter)
-        {
+        public void Execute(object parameter) =>
             this.execute(parameter);
-        }
+        
     }
 }

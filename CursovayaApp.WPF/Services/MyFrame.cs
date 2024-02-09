@@ -12,10 +12,8 @@ namespace CursovayaApp.WPF.Services
     {
         public static Frame frame;
 
-        public static bool Navigate(Page newPage)
-        {
-            return frame?.Navigate(newPage) ?? false;
-        }
+        public static bool Navigate(Page newPage) =>
+            frame?.Navigate(newPage) ?? false;
 
         public static void ClearHistory()
         {

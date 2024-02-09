@@ -1,16 +1,10 @@
 ﻿using CursovayaApp.WPF.Commands;
 using CursovayaApp.WPF.Models;
 using CursovayaApp.WPF.Models.DbModels;
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CursovayaApp.WPF.ViewModels
 {
-    class AuthorViewModel : ViewModelBase
+    internal class AuthorViewModel : ViewModelBase
     {
         private Author _selectedAuthor;
         public Author SelectedAuthor
@@ -30,50 +24,36 @@ namespace CursovayaApp.WPF.ViewModels
         }
 
         private RelayCommand _addOrUpdateAuthorCommand;
-        public RelayCommand AddOrUpdateAuthorCommand
-        {
-            get
+        public RelayCommand AddOrUpdateAuthorCommand =>
+            _addOrUpdateAuthorCommand ??= new RelayCommand(obj =>
             {
-                return _addOrUpdateAuthorCommand ??= new RelayCommand(obj =>
-                {
-                    DbClass.entities.Authors.Add(SelectedAuthor);
-                    _vm.Authors.Add(SelectedAuthor.FullName);
-                    _vm.AuthorsForAdd.Add(SelectedAuthor.FullName);
-                    DbClass.entities.SaveChanges();
-                });
-            }
-        }
+                DbClass.entities.Authors.Add(SelectedAuthor);
+                _vm.Authors.Add(SelectedAuthor.FullName);
+                _vm.AuthorsForAdd.Add(SelectedAuthor.FullName);
+                DbClass.entities.SaveChanges();
+            });
 
         private RelayCommand _cancelCommand;
-        public RelayCommand CancelCommand
-        {
-            get
+        public RelayCommand CancelCommand =>
+            _cancelCommand ??= new RelayCommand(obj =>
             {
-                return _cancelCommand ??= new RelayCommand(obj =>
-                {
 
-                });
-            }
-        }
+            });
 
-        bool isCheched;
+        private bool isCheched;
         private RelayCommand _deathYearCommand;
-        public RelayCommand DeathYearCommand
-        {
-            get
+        public RelayCommand DeathYearCommand =>
+            _deathYearCommand ??= new RelayCommand(obj =>
             {
-                return _deathYearCommand ??= new RelayCommand(obj =>
+                if (!isCheched)
                 {
-                    if (!isCheched)
-                    {
-                        SelectedAuthor.DeathYear = null;
-                        isCheched = true;
-                    }
-                    else
-                        isCheched = false;
-
-                });
-            }
-        }
+                    SelectedAuthor.DeathYear = null;
+                    isCheched = true;
+                }
+                else
+                {
+                    isCheched = false;
+                }
+            });
     }
 }

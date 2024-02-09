@@ -15,56 +15,39 @@ namespace CursovayaApp.WPF.ViewModels
     public partial class BooksViewModel
     {
         private RelayCommand _goBackCommand;
-        public RelayCommand GoBackCommand
-        {
-            get
-            {
-                return _goBackCommand ??= new RelayCommand(obj =>
+        public RelayCommand GoBackCommand =>
+            _goBackCommand ??= new RelayCommand(obj =>
                 {
                     if (MyFrame.frame.CanGoBack)
-                    {
-
                         if (_loggedUser.CurrentUser.RoleId != 1)
-                        {
                             if (MessageBox.Show(
                                     "Это действие приведет к выходу из аккаунта. Вы уверены, что хотите продолжить?",
                                     "Выход",
                                     MessageBoxButton.YesNo,
                                     MessageBoxImage.Question) == MessageBoxResult.Yes)
-                            {
                                 MyFrame.frame.GoBack();
-                            }
-                        }
                         else
-                        {
                             MyFrame.frame.GoBack();
-                        }
-                    }
                 });
-            }
-        }
 
         private RelayCommand _saveCommand;
-        public RelayCommand SaveCommand
-        {
-            get
-            {
-                return _saveCommand ??= new RelayCommand(obj =>
+        public RelayCommand SaveCommand =>
+            _saveCommand ??= new RelayCommand(obj =>
                 {
                     try
                     {
-                        var a = DbClass.entities.Books.ToList();
+                        var localBooksList = DbClass.entities.Books.ToList();
                         foreach (var item in Books)
                         {
-                            var pId = DbClass.entities.PublishingHouses.Where(x => x.Name == item.Publishing).Select(x => x.Id).FirstOrDefault();
-                            var aId = DbClass.entities.Authors.Where(x => x.FullName == item.AuthorFullName).Select(x => x.Id).FirstOrDefault();
+                            var publishingId = DbClass.entities.PublishingHouses.Where(x => x.Name == item.Publishing).Select(x => x.Id).FirstOrDefault();
+                            var authorId = DbClass.entities.Authors.Where(x => x.FullName == item.AuthorFullName).Select(x => x.Id).FirstOrDefault();
                             var book = new Book()
                             {
                                 Id = item.Id,
                                 Quantity = item.Quantity,
                                 Title = item.Title,
-                                PublishingHouseId = pId,
-                                AuthorId = aId
+                                PublishingHouseId = publishingId,
+                                AuthorId = authorId
                             };
                             DbClass.entities.Books.AddOrUpdate(book);
 
@@ -82,55 +65,44 @@ namespace CursovayaApp.WPF.ViewModels
                         //sw.Close();
                     }
                 });
-            }
-        }
 
         private RelayCommand _addCommand;
-        public RelayCommand AddCommand
-        {
-            get
-            {
-                return _addCommand ??= new RelayCommand(obj =>
+        public RelayCommand AddCommand =>
+            _addCommand ??= new RelayCommand(obj =>
                 {
                     _addOrUpdateBooksView = new(this);
                     SelectedBook = new BookView(0);
                     Books.Add(SelectedBook);
                     _addOrUpdateBooksView.ShowDialog();
                 });
-            }
-        }
 
         private RelayCommand _updateCommand;
-        public RelayCommand UpdateCommand
-        {
-            get
-            {
-                return _updateCommand ??= new RelayCommand(obj =>
+        public RelayCommand UpdateCommand =>
+            _updateCommand ??= new RelayCommand(obj =>
                 {
                     _addOrUpdateBooksView = new(this);
                     _addOrUpdateBooksView.ShowDialog();
                 });
-            }
-        }
 
         private RelayCommand _firstBooksCommand;
-        public RelayCommand FirstBooksCommand => _firstBooksCommand ??= new RelayCommand(obj => Pagination.FirstT(ref _books, _sortedListBooks));
+        public RelayCommand FirstBooksCommand =>
+            _firstBooksCommand ??= new RelayCommand(obj => Pagination.FirstT(ref _books, _sortedListBooks));
 
         private RelayCommand _backBooksCommand;
-        public RelayCommand BackBooksCommand => _backBooksCommand ??= new RelayCommand(obj => Pagination.BackT(ref _books, _sortedListBooks));
+        public RelayCommand BackBooksCommand =>
+            _backBooksCommand ??= new RelayCommand(obj => Pagination.BackT(ref _books, _sortedListBooks));
 
         private RelayCommand _forwardBooksCommand;
-        public RelayCommand ForwardBooksCommand => _forwardBooksCommand ??= new RelayCommand(obj => Pagination.ForwardT(ref _books, _sortedListBooks));
+        public RelayCommand ForwardBooksCommand =>
+            _forwardBooksCommand ??= new RelayCommand(obj => Pagination.ForwardT(ref _books, _sortedListBooks));
 
         private RelayCommand _lastBooksCommand;
-        public RelayCommand LastBooksCommand => _lastBooksCommand ??= new RelayCommand(obj => Pagination.LastT(ref _books, _sortedListBooks));
+        public RelayCommand LastBooksCommand =>
+            _lastBooksCommand ??= new RelayCommand(obj => Pagination.LastT(ref _books, _sortedListBooks));
 
         private RelayCommand _addOrUpdateBookCommand;
-        public RelayCommand AddOrUpdateBookCommand
-        {
-            get
-            {
-                return _addOrUpdateBookCommand ??= new RelayCommand(obj =>
+        public RelayCommand AddOrUpdateBookCommand =>
+            _addOrUpdateBookCommand ??= new RelayCommand(obj =>
                 {
                     if (Books.Any(x => x.Id == SelectedBook.Id))
                     {
@@ -199,42 +171,27 @@ namespace CursovayaApp.WPF.ViewModels
                         _addOrUpdateBooksView.Close();
                     }
                 });
-            }
-        }
 
         private RelayCommand _addAuthorCommand;
-        public RelayCommand AddAuthorCommand
-        {
-            get
-            {
-                return _addAuthorCommand ??= new RelayCommand(obj =>
+        public RelayCommand AddAuthorCommand =>
+            _addAuthorCommand ??= new RelayCommand(obj =>
                 {
                     var author = DbClass.entities.Authors.FirstOrDefault(x => x.FullName == SelectedAuthor) ?? new Author();
                     _addOrUpdateAuthorsView = new(author, this);
                     _addOrUpdateAuthorsView.ShowDialog();
                 });
-            }
-        }
-
+            
         private RelayCommand _addPublishingCommand;
-        public RelayCommand AddPublishingCommand
-        {
-            get
-            {
-                return _addPublishingCommand ??= new RelayCommand(obj =>
+        public RelayCommand AddPublishingCommand =>
+            _addPublishingCommand ??= new RelayCommand(obj =>
                 {
                     var publishing = DbClass.entities.PublishingHouses.FirstOrDefault(x => x.Name == SelectedPublishing) ?? new PublishingHouse();
                     _addOrUpdatePublishingsView = new(publishing, this);
                 });
-            }
-        }
-
+            
         private RelayCommand _cancelCommand;
-        public RelayCommand CancelCommand
-        {
-            get
-            {
-                return _cancelCommand ??= new RelayCommand(obj =>
+        public RelayCommand CancelCommand =>
+           _cancelCommand ??= new RelayCommand(obj =>
                 {
                     if (MessageBox.Show("Вы уверены, что хотите отменить все изменения?\nЭто действие удалит текущую запись!",
                         "Отмена изменений",
@@ -246,7 +203,5 @@ namespace CursovayaApp.WPF.ViewModels
                     SelectedBook = Books.ElementAt(i);
                     _addOrUpdateBooksView?.Close();
                 });
-            }
-        }
     }
 }
