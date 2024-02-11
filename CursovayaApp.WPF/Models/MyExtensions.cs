@@ -28,8 +28,30 @@ namespace CursovayaApp.WPF.Models
             }
             else
             {
-                var ent = entities.Where(x => x.Id == newEntity.Id).FirstOrDefault();
-                ent = newEntity;
+                newEntity = entities.FirstOrDefault(x => x.Id == newEntity.Id) ?? throw new InvalidOperationException();
+                return 1;
+            }
+        }
+
+        /// <summary>
+        /// return 0 if user has been added;
+        /// return 1 if user already exists;
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="entities"></param>
+        /// <param name="newEntity"></param>
+        /// <returns></returns>
+        public static async Task<int> AddOrUpdateAsync<T>(this DbSet<T> entities, T newEntity) where T : TableBase
+        {
+            var q = await entities.AnyAsync(x => x.Id == newEntity.Id);
+            if (!q)
+            {
+                await entities.AddAsync(newEntity);
+                return 0;
+            }
+            else
+            {
+                newEntity = await entities.FirstOrDefaultAsync(x => x.Id == newEntity.Id) ?? throw new InvalidOperationException();
                 return 1;
             }
         }
