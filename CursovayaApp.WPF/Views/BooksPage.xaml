@@ -54,7 +54,7 @@
                     AutoGenerateColumns="False"
                     MaxWidth="550"
                     SelectedItem="{Binding SelectedBook}"
-                    ItemsSource="{Binding Books}">
+                    ItemsSource="{Binding Books, IsAsync=True}">
                     <DataGrid.Columns>
                         <DataGridTextColumn 
                             Header="Название"

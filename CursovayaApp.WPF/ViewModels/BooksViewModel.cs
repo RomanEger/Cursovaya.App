@@ -21,10 +21,10 @@ namespace CursovayaApp.WPF.ViewModels
         private void SetCount() =>
             Pagination.Count = (int)Math.Ceiling(_sortedListBooks.Count * 1.0 / Pagination.TsAtPage);
         
-        private async void GetData()
+        private void GetData()
         {
-            await GetBooksAsync();
-            await GetAuthorsAsync();
+            GetBooks();
+            GetAuthors();
             SetCount();
         }
 
@@ -102,17 +102,11 @@ namespace CursovayaApp.WPF.ViewModels
 
         private void GetAuthors()
         {
-            List<string> l = DbClass.entities.Authors.Select(x => x.FullName).ToList();
-            Authors = new ObservableCollection<string>(l.Distinct());
-            AuthorsForAdd = new ObservableCollection<string>(l.Distinct());
-            Authors.Insert(0, "Все");
-        }
-        private async Task GetAuthorsAsync()
-        {
-            List<string> l = await DbClass.entities.Authors.Select(x => x.FullName).ToListAsync();
-            Authors = new ObservableCollection<string>(l.Distinct());
-            AuthorsForAdd = new ObservableCollection<string>(l.Distinct());
-            Authors.Insert(0, "Все");
+            Authors = new ObservableCollection<string> { "Все" };
+            var l =  Books.Select(x => x.AuthorFullName).Distinct().AsQueryable();
+            foreach (var item in l) 
+                Authors.Add(item);   
+            
         }
 
         public BooksViewModel()

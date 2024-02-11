@@ -1,6 +1,7 @@
 ﻿using CursovayaApp.WPF.Commands;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -100,6 +101,11 @@ namespace CursovayaApp.WPF.ViewModels
                 {
                     if (Books.Any(x => x.Id == SelectedBook.Id))
                     {
+                        if (AuthorsForAdd == null)
+                        {
+                            var listAuthors = DbClass.entities.Authors.ToList();
+                            AuthorsForAdd = new ObservableCollection<string>(listAuthors.Select(x => x.FullName).Distinct());
+                        }
                         if (!AuthorsForAdd.Contains(SelectedBook.AuthorFullName))
                         {
                             if (MessageBox.Show(

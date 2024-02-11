@@ -29,7 +29,7 @@ namespace CursovayaApp.WPF.ViewModels
             Pagination = new PaginationService<User>(3);
             try
             {
-                GetUsersAsync();
+                GetUsers();
             }
             catch (Exception)
             {
@@ -43,13 +43,6 @@ namespace CursovayaApp.WPF.ViewModels
         private void GetUsers()
         {
             listUsers = DbClass.entities.Users.ToList();
-            SetCount();
-            Pagination.InsertToUsers(ref _users, listUsers);
-        }
-
-        private async void GetUsersAsync()
-        {
-            listUsers = await DbClass.entities.Users.ToListAsync();
             SetCount();
             Pagination.InsertToUsers(ref _users, listUsers);
         }
@@ -105,7 +98,7 @@ namespace CursovayaApp.WPF.ViewModels
 
                     DbClass.entities.SaveChanges();
                     MessageBox.Show("Изменения успешно сохранены");
-                    GetUsersAsync();
+                    GetUsers();
                 }
                 catch (Exception)
                 {

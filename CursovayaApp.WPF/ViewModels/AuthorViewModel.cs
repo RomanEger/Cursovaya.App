@@ -1,4 +1,5 @@
-﻿using CursovayaApp.WPF.Commands;
+﻿using System.Collections.ObjectModel;
+using CursovayaApp.WPF.Commands;
 using CursovayaApp.WPF.Models;
 using CursovayaApp.WPF.Models.DbModels;
 using System.Windows;
@@ -46,7 +47,10 @@ namespace CursovayaApp.WPF.ViewModels
                 {
                     DbClass.entities.Authors.Add(SelectedAuthor);
                     _vm.Authors.Add(SelectedAuthor.FullName);
-                    _vm.AuthorsForAdd.Add(SelectedAuthor.FullName);
+                    if (_vm.AuthorsForAdd != null)
+                        _vm.AuthorsForAdd.Add(SelectedAuthor.FullName);
+                    else
+                        _vm.AuthorsForAdd = new ObservableCollection<string>(new List<string>() {SelectedAuthor.FullName});
                 }
                 DbClass.entities.SaveChanges();
             });
