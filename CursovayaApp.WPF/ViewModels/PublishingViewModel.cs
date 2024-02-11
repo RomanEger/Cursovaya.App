@@ -13,11 +13,7 @@ namespace CursovayaApp.WPF.ViewModels
 {
     class PublishingViewModel : ViewModelBase
     {
-        private bool ForAdd
-        {
-            get;
-            init;
-        }
+        private bool ForAdd { get; }
 
         private PublishingHouse _publishing;
 
@@ -41,9 +37,8 @@ namespace CursovayaApp.WPF.ViewModels
                 ForAdd = true;
         }
 
-        private RelayCommand _saveCommand;
         public RelayCommand SaveCommand =>
-            _saveCommand ??= new RelayCommand(obj =>
+            new (obj =>
             {
                 if (ForAdd)
                 {

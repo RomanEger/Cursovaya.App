@@ -19,16 +19,7 @@ namespace CursovayaApp.WPF.ViewModels
 
         private AddOrUpdatePublishings _addOrUpdatePublishingsView;
 
-        private ObservableCollection<string> _listReasons;
-        public ObservableCollection<string> ListReasons
-        {
-            get => _listReasons;
-            set
-            {
-                _listReasons = value;
-                OnPropertyChanged();
-            }
-        }
+        public ObservableCollection<string> ListReasons { get; set; }
 
         private string _selectedReason;
         public string SelectedReason
@@ -41,16 +32,7 @@ namespace CursovayaApp.WPF.ViewModels
             }
         }
 
-        private ObservableCollection<string> _listPublishings;
-        public ObservableCollection<string> ListPublishings
-        {
-            get => _listPublishings;
-            set
-            {
-                _listPublishings = value;
-                OnPropertyChanged();
-            }
-        }
+        public ObservableCollection<string> ListPublishings { get; set; }
 
         private string _selectedPublishing;
         public string SelectedPublishing

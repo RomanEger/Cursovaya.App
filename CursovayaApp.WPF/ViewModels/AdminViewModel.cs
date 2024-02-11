@@ -4,6 +4,7 @@ using CursovayaApp.WPF.Models.DbModels;
 using CursovayaApp.WPF.Services;
 using CursovayaApp.WPF.Views;
 using System.Windows;
+using Microsoft.EntityFrameworkCore;
 
 namespace CursovayaApp.WPF.ViewModels
 {
@@ -28,7 +29,7 @@ namespace CursovayaApp.WPF.ViewModels
             Pagination = new PaginationService<User>(3);
             try
             {
-                GetUsers();
+                GetUsersAsync();
             }
             catch (Exception)
             {
@@ -42,6 +43,13 @@ namespace CursovayaApp.WPF.ViewModels
         private void GetUsers()
         {
             listUsers = DbClass.entities.Users.ToList();
+            SetCount();
+            Pagination.InsertToUsers(ref _users, listUsers);
+        }
+
+        private async void GetUsersAsync()
+        {
+            listUsers = await DbClass.entities.Users.ToListAsync();
             SetCount();
             Pagination.InsertToUsers(ref _users, listUsers);
         }
@@ -73,30 +81,20 @@ namespace CursovayaApp.WPF.ViewModels
             }
         }
 
-
-        private RelayCommand _firstUsersCommand;
-
         public RelayCommand FirstUsersCommand =>
-            _firstUsersCommand ??= new RelayCommand(obj => Pagination.FirstT(ref _users, listUsers));
+            new (obj => Pagination.FirstT(ref _users, listUsers));
 
-        private RelayCommand _backUsersCommand;
         public RelayCommand BackUsersCommand =>
-            _backUsersCommand ??= new RelayCommand(obj => Pagination.BackT(ref _users, listUsers));
+             new (obj => Pagination.BackT(ref _users, listUsers));
 
-        private RelayCommand _forwardUsersCommand;
         public RelayCommand ForwardUsersCommand =>
-            _forwardUsersCommand ??=
-            new RelayCommand(obj => Pagination.ForwardT(ref _users, listUsers));
+            new (obj => Pagination.ForwardT(ref _users, listUsers));
 
-        private RelayCommand _lastUsersCommand;
         public RelayCommand LastUsersCommand =>
-            _lastUsersCommand ??=
-            new RelayCommand(obj => Pagination.LastT(ref _users, listUsers));
+            new (obj => Pagination.LastT(ref _users, listUsers));
 
-
-        private RelayCommand _saveCommand;
         public RelayCommand SaveCommand =>
-            _saveCommand ??= new RelayCommand(obj =>
+            new ( obj =>
             {
                 try
                 {
@@ -107,7 +105,7 @@ namespace CursovayaApp.WPF.ViewModels
 
                     DbClass.entities.SaveChanges();
                     MessageBox.Show("Изменения успешно сохранены");
-                    GetUsers();
+                    GetUsersAsync();
                 }
                 catch (Exception)
                 {
@@ -119,27 +117,23 @@ namespace CursovayaApp.WPF.ViewModels
                 }
             });
 
-        private RelayCommand _addCommand;
         public RelayCommand AddCommand =>
-            _addCommand ??= new RelayCommand(obj =>
+            new(obj =>
             {
                 User newUser = new User();
                 listUsers.Add(newUser);
                 int i = listUsers.Count - Pagination.IndexT;
                 bool canGoForward = i > Pagination.TsAtPage;
                 if (canGoForward)
-                {
                     Pagination.IndexT += Pagination.TsAtPage;
-                }
 
                 Pagination.InsertToUsers(ref _users, listUsers);
                 SelectedUser = newUser;
                 SetCount();
             });
 
-        private RelayCommand _deleteCommand;
         public RelayCommand DeleteCommand =>
-            _deleteCommand ??= new RelayCommand(obj =>
+            new (obj =>
             {
                 if (SelectedUser == null)
                 {
@@ -172,6 +166,7 @@ namespace CursovayaApp.WPF.ViewModels
 
                         Pagination.InsertToUsers(ref _users, listUsers);
                         SetCount();
+                        DbClass.entities.SaveChanges();
                         MessageBox.Show("Пользователь удален");
                     }
                     catch (Exception)
@@ -185,13 +180,11 @@ namespace CursovayaApp.WPF.ViewModels
                 }
             });
 
-        private RelayCommand _changeCommand;
         public RelayCommand ChangeCommand =>
-            _changeCommand ??= new RelayCommand(obj => MyFrame.frame.Navigate(new BooksPage()));
+            new (obj => MyFrame.frame.Navigate(new BooksPage()));
 
-        private RelayCommand _exitCommand;
         public RelayCommand ExitCommand =>
-            _exitCommand ??= new RelayCommand(obj =>
+            new (obj =>
             {
                 if (MessageBox.Show(
                         "Вы уверены, что хотите выйти из аккаунта?",

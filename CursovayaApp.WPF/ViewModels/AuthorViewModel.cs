@@ -18,17 +18,16 @@ namespace CursovayaApp.WPF.ViewModels
             }
         }
 
-        private Author _author
-        {
-            get;
-            init;
-        }
+        private Author Author { get; }
+
         private readonly bool _ForAdd;
+
         private readonly BooksViewModel _vm;
+
         public AuthorViewModel(Author author, BooksViewModel vm, bool ForAdd)
         {
             SelectedAuthor = author;
-            _author = new Author()
+            Author = new Author()
             {
                 Id = author.Id,
                 BirthYear = author.BirthYear,
@@ -40,9 +39,8 @@ namespace CursovayaApp.WPF.ViewModels
             _ForAdd = ForAdd;
         }
 
-        private RelayCommand _addOrUpdateAuthorCommand;
         public RelayCommand AddOrUpdateAuthorCommand =>
-            _addOrUpdateAuthorCommand ??= new RelayCommand(obj =>
+            new (obj =>
             {
                 if (_ForAdd)
                 {
@@ -53,26 +51,25 @@ namespace CursovayaApp.WPF.ViewModels
                 DbClass.entities.SaveChanges();
             });
 
-        private RelayCommand _cancelCommand;
         public RelayCommand CancelCommand =>
-            _cancelCommand ??= new RelayCommand(obj =>
+            new (obj =>
             {
-                SelectedAuthor = _author;
+                SelectedAuthor = Author;
             });
 
-        private bool isCheched;
-        private RelayCommand _deathYearCommand;
+        private bool _isChecked;
+
         public RelayCommand DeathYearCommand =>
-            _deathYearCommand ??= new RelayCommand(obj =>
+            new (obj =>
             {
-                if (!isCheched)
+                if (!_isChecked)
                 {
                     SelectedAuthor.DeathYear = null;
-                    isCheched = true;
+                    _isChecked = true;
                 }
                 else
                 {
-                    isCheched = false;
+                    _isChecked = false;
                 }
             });
     }

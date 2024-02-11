@@ -17,19 +17,17 @@ namespace CursovayaApp.WPF.ViewModels
             set
             {
                 _thisUser = value;
-                OnPropertyChanged("User");
+                OnPropertyChanged();
             }
         }
-
-
-        private RelayCommand _loginCommand;
-
+        
         public RelayCommand LoginCommand =>
-            _loginCommand ??= new RelayCommand(obj =>
+            new (obj =>
                 {
                     try
                     {
-                        User q = DbClass.entities.Users.FirstOrDefault(x => x.Login == ThisUser.Login && x.Password == ThisUser.Password) ?? new User();
+                        var q = DbClass.entities.Users.
+                            FirstOrDefault(x => x.Login == ThisUser.Login && x.Password == ThisUser.Password) ?? new User();
                         LoggedUser loggedUser = new()
                         {
                             CurrentUser = q
@@ -58,9 +56,6 @@ namespace CursovayaApp.WPF.ViewModels
                         //sw.Close();
                     }
                 });
-
-
-
 
         public LoginViewModel()
         {
