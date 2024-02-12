@@ -41,7 +41,8 @@ namespace CursovayaApp.WPF.ViewModels
             set
             {
                 _selectedPublishing = value;
-                SelectedBook.Publishing = _selectedPublishing;
+                if(SelectedBook != null)
+                    SelectedBook.Publishing = _selectedPublishing;
                 OnPropertyChanged();
             }
         }

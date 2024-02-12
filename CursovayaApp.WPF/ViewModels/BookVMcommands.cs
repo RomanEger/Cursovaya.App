@@ -118,7 +118,7 @@ namespace CursovayaApp.WPF.ViewModels
                                 {
                                     FullName = SelectedBook.AuthorFullName
                                 };
-                                _addOrUpdateAuthorsView = new(author, this, false);
+                                _addOrUpdateAuthorsView = new(author, this);
                                 _addOrUpdateAuthorsView.ShowDialog();
                             }
                             else return;
@@ -172,11 +172,29 @@ namespace CursovayaApp.WPF.ViewModels
                     }
                 });
 
+        public RelayCommand AddOrUpdateAuthorCommand =>
+            new (obj =>
+                {
+                    var dialogResult = MessageBox.Show("Если Вы хотите добавить нового автора -> Да\n" +
+                        "Если Вы хотите изменить существующего автора? -> Нет", "", MessageBoxButton.YesNoCancel, MessageBoxImage.Question);
+                    if (dialogResult == MessageBoxResult.Yes)
+                    {
+                        var author = new Author();
+                        _addOrUpdateAuthorsView = new(author, this);
+                        _addOrUpdateAuthorsView.ShowDialog();
+                    }
+                    else if(dialogResult == MessageBoxResult.No)
+                    {
+                        var window = new ChooseForAdd(this, true);
+                        window.ShowDialog();
+                    }
+                });
+
         public RelayCommand AddAuthorCommand =>
             new (obj =>
                 {
                     var author = DbClass.entities.Authors.FirstOrDefault(x => x.FullName == SelectedAuthor) ?? new Author();
-                    _addOrUpdateAuthorsView = new(author, this, true);
+                    _addOrUpdateAuthorsView = new(author, this);
                     _addOrUpdateAuthorsView.ShowDialog();
                 });
             
@@ -193,18 +211,18 @@ namespace CursovayaApp.WPF.ViewModels
                     }
                     else if(dialogResult == MessageBoxResult.No)
                     {
-                        var window = new ChoosePublishing(this);
+                        var window = new ChooseForAdd(this, false);
                         window.ShowDialog();
                     }
                 });
 
         public RelayCommand AddPublishingCommand =>
             new (obj =>
-            {
-                var publishing = DbClass.entities.PublishingHouses.FirstOrDefault(x => x.Name == SelectedPublishing) ?? new PublishingHouse();
-                _addOrUpdatePublishingsView = new(publishing, this);
-                _addOrUpdatePublishingsView.ShowDialog();
-            });
+                {
+                    var publishing = DbClass.entities.PublishingHouses.FirstOrDefault(x => x.Name == SelectedPublishing) ?? new PublishingHouse();
+                    _addOrUpdatePublishingsView = new(publishing, this);
+                    _addOrUpdatePublishingsView.ShowDialog();
+                });
 
         public RelayCommand CancelCommand =>
             new (obj =>

@@ -157,7 +157,7 @@
                         BorderBrush="DodgerBlue"
                         Foreground="DodgerBlue"
                         Style="{StaticResource SecondaryButtonStyle}"
-                        Command="{Binding AddAuthorCommand}"
+                        Command="{Binding AddOrUpdateAuthorCommand}"
                         Width="170"/>
                     <Button
                         Content="Ред. издательство"

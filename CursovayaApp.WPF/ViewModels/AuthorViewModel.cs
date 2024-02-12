@@ -21,11 +21,11 @@ namespace CursovayaApp.WPF.ViewModels
 
         private Author Author { get; }
 
-        private readonly bool _ForAdd;
+        private readonly bool _ForAdd = false;
 
         private readonly BooksViewModel _vm;
 
-        public AuthorViewModel(Author author, BooksViewModel vm, bool ForAdd)
+        public AuthorViewModel(Author author, BooksViewModel vm)
         {
             SelectedAuthor = author;
             Author = new Author()
@@ -37,7 +37,8 @@ namespace CursovayaApp.WPF.ViewModels
                 Books = author.Books
             };
             _vm = vm;
-            _ForAdd = ForAdd;
+            if (author.Id < 1)
+                _ForAdd = true;
         }
 
         public RelayCommand AddOrUpdateAuthorCommand =>
