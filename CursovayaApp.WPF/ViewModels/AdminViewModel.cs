@@ -12,6 +12,8 @@ namespace CursovayaApp.WPF.ViewModels
     {
         private List<User> listUsers;
 
+        private List<User> sortedListUsers;
+
         private PaginationService<User> _pagination;
 
         public PaginationService<User> Pagination
@@ -24,12 +26,54 @@ namespace CursovayaApp.WPF.ViewModels
             }
         }
 
+        private List<string> _listRolesStr;
+
+        public List<string> ListRolesStr
+        {
+            get => _listRolesStr;
+            set
+            {
+                _listRolesStr = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private List<Role> _listRoles;
+
+        private string _selectedRole;
+
+        public string SelectedRole
+        {
+            get => _selectedRole;
+            set
+            {
+                _selectedRole = value;
+                if(value == "Все")
+                {
+                    sortedListUsers = listUsers;
+                    SetCount();
+                    Pagination.InsertToUsers(ref _users, sortedListUsers);
+                }
+                else
+                {
+                    var v = _listRoles.Where(x => x.Name == value).Select(x => x.Id).FirstOrDefault();
+                    sortedListUsers = listUsers.Where(x => x.RoleId == v).ToList();
+                    SetCount();
+                    Pagination.InsertToUsers(ref _users, sortedListUsers);
+                }
+                OnPropertyChanged();
+            }
+        }
+
         public AdminViewModel()
         {
             Pagination = new PaginationService<User>(3);
             try
             {
                 GetUsers();
+                _listRoles = DbClass.entities.Roles.ToList();
+                ListRolesStr = new List<string>() { "Все" };
+                ListRolesStr.AddRange(_listRoles.Select(x => x.Name).ToList());
             }
             catch (Exception)
             {
@@ -43,12 +87,13 @@ namespace CursovayaApp.WPF.ViewModels
         private void GetUsers()
         {
             listUsers = DbClass.entities.Users.ToList();
+            sortedListUsers = listUsers;
             SetCount();
-            Pagination.InsertToUsers(ref _users, listUsers);
+            Pagination.InsertToUsers(ref _users, sortedListUsers);
         }
 
         private void SetCount() =>
-            Pagination.Count = (int)Math.Ceiling(listUsers.Count * 1.0 / Pagination.TsAtPage);
+            Pagination.Count = (int)Math.Ceiling(sortedListUsers.Count * 1.0 / Pagination.TsAtPage);
         
 
 

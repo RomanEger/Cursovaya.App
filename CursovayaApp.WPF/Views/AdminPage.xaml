@@ -31,6 +31,21 @@
             Margin="15 60"
             VerticalAlignment="Top"
             HorizontalAlignment="Center">
+
+            <StackPanel 
+                Margin="0 0 0 15"
+                Orientation="Horizontal"
+                HorizontalAlignment="Right">
+
+                <Label Content="Сортировка по ролям"
+                       VerticalAlignment="Top"/>
+                <ComboBox 
+                    Width="120"
+                    ItemsSource="{Binding ListRolesStr}"      
+                    SelectedItem="{Binding SelectedRole}"/>
+                
+            </StackPanel>
+
             <DataGrid
                 CanUserSortColumns="False"
                 FontWeight="DemiBold"
