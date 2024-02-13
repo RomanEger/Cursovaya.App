@@ -51,7 +51,7 @@ namespace CursovayaApp.WPF.Models.DbModels
 
             //Author
             modelBuilder.Entity<Author>().Property(x => x.FullName).HasMaxLength(120);
-            modelBuilder.Entity<Author>().HasIndex(x => new { x.FullName, x.BirthYear, x.DeathYear }).IsUnique();
+            modelBuilder.Entity<Author>().HasIndex(x => new { x.FullName}).IsUnique();
             modelBuilder.Entity<Author>().ToTable(x => x.HasCheckConstraint("BirthYear", "BirthYear<DeathYear"));
             modelBuilder.Entity<Author>().ToTable(x => x.HasCheckConstraint("DeathYear", "BirthYear<YEAR(GETDATE()) AND DeathYear<=YEAR(GETDATE())"));
 
