@@ -19,7 +19,7 @@ namespace CursovayaApp.WPF.ViewModels
             }
         }
 
-        private Author Author { get; }
+        private readonly Author Author;
 
         private readonly bool _ForAdd = false;
 
@@ -44,16 +44,23 @@ namespace CursovayaApp.WPF.ViewModels
         public RelayCommand AddOrUpdateAuthorCommand =>
             new (obj =>
             {
-                if (_ForAdd)
+                try
                 {
-                    DbClass.entities.Authors.Add(SelectedAuthor);
-                    _vm.Authors.Add(SelectedAuthor.FullName);
-                    if (_vm.AuthorsForAdd != null)
-                        _vm.AuthorsForAdd.Add(SelectedAuthor.FullName);
-                    else
-                        _vm.AuthorsForAdd = new ObservableCollection<string>(new List<string>() {SelectedAuthor.FullName});
+                    if (_ForAdd)
+                    {
+                        DbClass.entities.Authors.Add(SelectedAuthor);
+                        _vm.Authors.Add(SelectedAuthor.FullName);
+                        if (_vm.AuthorsForAdd != null)
+                            _vm.AuthorsForAdd.Add(SelectedAuthor.FullName);
+                        else
+                            _vm.AuthorsForAdd = new ObservableCollection<string>(new List<string>() {SelectedAuthor.FullName});
+                    }
+                    DbClass.entities.SaveChanges();
                 }
-                DbClass.entities.SaveChanges();
+                catch
+                {
+                    MessageBox.Show("Не удалось сохранить изменения");
+                }
             });
 
         public RelayCommand CancelCommand =>

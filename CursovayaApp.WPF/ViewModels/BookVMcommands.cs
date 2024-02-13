@@ -1,15 +1,9 @@
 ﻿using CursovayaApp.WPF.Commands;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using CursovayaApp.WPF.Models;
 using CursovayaApp.WPF.Models.DbModels;
 using CursovayaApp.WPF.Services;
-using CursovayaApp.WPF.Views;
 using CursovayaApp.WPF.Views.Windows;
 
 namespace CursovayaApp.WPF.ViewModels
@@ -237,5 +231,6 @@ namespace CursovayaApp.WPF.ViewModels
                     SelectedBook = Books.ElementAt(i);
                     _addOrUpdateBooksView?.Close();
                 });
+
     }
 }

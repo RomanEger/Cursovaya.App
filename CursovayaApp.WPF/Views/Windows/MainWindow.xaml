@@ -11,10 +11,10 @@
         Closing="MainWindow_OnClosing"
         Title="" Height="465.96" Width="800">
     <Grid>
-            
-            <Frame Name="MainFrame"
-                   NavigationUIVisibility="Hidden" 
-                   Height="450"/>
-        </Grid>
+        <Frame 
+            Name="MainFrame"
+            NavigationUIVisibility="Hidden" 
+            Height="450"/>
+    </Grid>
     
 </Window>

@@ -26,15 +26,17 @@ namespace CursovayaApp.WPF.ViewModels
                 OnPropertyChanged();
             }
         }
-
+        private readonly Lazy<string> _name;
         private readonly BooksViewModel _vm;
 
         public PublishingViewModel(PublishingHouse publishingHouse, BooksViewModel booksViewModel)
         {
             Publishing = publishingHouse;
             _vm = booksViewModel;
-            if(publishingHouse.Id < 1)
+            if (publishingHouse.Id < 1)
                 ForAdd = true;
+            else
+                _name = new Lazy<string>(Publishing.Name);
         }
 
         public RelayCommand SaveCommand =>
@@ -51,7 +53,9 @@ namespace CursovayaApp.WPF.ViewModels
                         }
 
                         DbClass.entities.PublishingHouses.Add(Publishing);
+                        _vm.ListPublishings.Add(Publishing.Name);
                         DbClass.entities.SaveChanges();
+                        MessageBox.Show("Сохранения успешно применены!");
                     }
                     catch (Exception ex)
                     {
@@ -66,6 +70,8 @@ namespace CursovayaApp.WPF.ViewModels
                     try
                     {
                         DbClass.entities.SaveChanges();
+                        _vm.GetPublishings();
+                        MessageBox.Show("Сохранения успешно применены!");
                     }
                     catch (Exception ex)
                     {

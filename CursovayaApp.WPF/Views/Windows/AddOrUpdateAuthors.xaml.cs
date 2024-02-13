@@ -1,5 +1,4 @@
-﻿using System.Collections.ObjectModel;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
 using CursovayaApp.WPF.Models.DbModels;
 using CursovayaApp.WPF.ViewModels;
