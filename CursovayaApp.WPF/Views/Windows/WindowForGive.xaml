@@ -5,10 +5,10 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:CursovayaApp.WPF.Views.Windows"
         mc:Ignorable="d"
-        Title="ForLibrPage" Height="350" Width="800">
+        Title="ForLibrPage" Height="250" Width="800">
     <Window.Resources>
         <Style TargetType="ComboBox">
-            <Setter Property="Width" Value="260"/>
+            <Setter Property="Width" Value="370"/>
             <Setter Property="Margin" Value="0 5"/>
             <Setter Property="Height" Value="25"/>
             <Setter Property="IsEditable" Value="True"/>
@@ -17,17 +17,9 @@
         </Style>
     </Window.Resources>
     <Grid>
-        <Button 
-            Width="80"
-            Content="Выход"
-            HorizontalAlignment="Right"
-            VerticalAlignment="Top"
-            Style="{StaticResource SecondaryButtonStyle}"
-            Command="{Binding ExitCommand}"
-            Name="BtnExit"/>
         <StackPanel
-            Margin="90 60"
-            HorizontalAlignment="Center"
+            Margin="0 20"
+            HorizontalAlignment="Right"
             Orientation="Horizontal">
             <StackPanel Margin="15">
                 <TextBlock 
@@ -56,7 +48,6 @@
             Content="Выдать"
             Style="{StaticResource MainButtonStyle}"
             Width="80"
-            Margin="120 60"
             VerticalAlignment="Bottom"
             HorizontalAlignment="Right"/>
     </Grid>
