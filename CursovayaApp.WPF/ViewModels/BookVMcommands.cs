@@ -11,7 +11,7 @@ namespace CursovayaApp.WPF.ViewModels
     public partial class BooksViewModel
     {
         public RelayCommand GoBackCommand =>
-            new (obj =>
+            new(obj =>
                 {
                     if (MyFrame.frame.CanGoBack)
                         if (_loggedUser.CurrentUser.RoleId != 1)
@@ -28,7 +28,7 @@ namespace CursovayaApp.WPF.ViewModels
                 });
 
         public RelayCommand SaveCommand =>
-            new (obj =>
+            new(obj =>
                 {
                     try
                     {
@@ -63,7 +63,7 @@ namespace CursovayaApp.WPF.ViewModels
                 });
 
         public RelayCommand AddCommand =>
-            new (obj =>
+            new(obj =>
                 {
                     _addOrUpdateBooksView = new(this);
                     SelectedBook = new BookView(0);
@@ -72,26 +72,26 @@ namespace CursovayaApp.WPF.ViewModels
                 });
 
         public RelayCommand UpdateCommand =>
-            new (obj =>
+            new(obj =>
                 {
                     _addOrUpdateBooksView = new(this);
                     _addOrUpdateBooksView.ShowDialog();
                 });
 
         public RelayCommand FirstBooksCommand =>
-            new (obj => Pagination.FirstT(ref _books, _sortedListBooks));
+            new(obj => Pagination.FirstT(ref _books, _sortedListBooks));
 
         public RelayCommand BackBooksCommand =>
-            new (obj => Pagination.BackT(ref _books, _sortedListBooks));
+            new(obj => Pagination.BackT(ref _books, _sortedListBooks));
 
         public RelayCommand ForwardBooksCommand =>
-            new (obj => Pagination.ForwardT(ref _books, _sortedListBooks));
+            new(obj => Pagination.ForwardT(ref _books, _sortedListBooks));
 
         public RelayCommand LastBooksCommand =>
-            new (obj => Pagination.LastT(ref _books, _sortedListBooks));
+            new(obj => Pagination.LastT(ref _books, _sortedListBooks));
 
         public RelayCommand AddOrUpdateBookCommand =>
-            new (obj =>
+            new(obj =>
                 {
                     if (Books.Any(x => x.Id == SelectedBook.Id))
                     {
@@ -167,7 +167,7 @@ namespace CursovayaApp.WPF.ViewModels
                 });
 
         public RelayCommand AddOrUpdateAuthorCommand =>
-            new (obj =>
+            new(obj =>
                 {
                     var dialogResult = MessageBox.Show("Если Вы хотите добавить нового автора -> Да\n" +
                         "Если Вы хотите изменить существующего автора? -> Нет", "", MessageBoxButton.YesNoCancel, MessageBoxImage.Question);
@@ -177,7 +177,7 @@ namespace CursovayaApp.WPF.ViewModels
                         _addOrUpdateAuthorsView = new(author, this);
                         _addOrUpdateAuthorsView.ShowDialog();
                     }
-                    else if(dialogResult == MessageBoxResult.No)
+                    else if (dialogResult == MessageBoxResult.No)
                     {
                         var window = new ChooseForAdd(this, true);
                         window.ShowDialog();
@@ -185,15 +185,15 @@ namespace CursovayaApp.WPF.ViewModels
                 });
 
         public RelayCommand AddAuthorCommand =>
-            new (obj =>
+            new(obj =>
                 {
                     var author = DbClass.entities.Authors.FirstOrDefault(x => x.FullName == SelectedAuthor) ?? new Author();
                     _addOrUpdateAuthorsView = new(author, this);
                     _addOrUpdateAuthorsView.ShowDialog();
                 });
-            
+
         public RelayCommand AddOrUpdatePublishingCommand =>
-            new (obj =>
+            new(obj =>
                 {
                     var dialogResult = MessageBox.Show("Если Вы хотите добавить новое издательство -> Да\n" +
                         "Если Вы хотите изменить существующее издательство? -> Нет", "", MessageBoxButton.YesNoCancel, MessageBoxImage.Question);
@@ -203,7 +203,7 @@ namespace CursovayaApp.WPF.ViewModels
                         _addOrUpdatePublishingsView = new(publishing, this);
                         _addOrUpdatePublishingsView.ShowDialog();
                     }
-                    else if(dialogResult == MessageBoxResult.No)
+                    else if (dialogResult == MessageBoxResult.No)
                     {
                         var window = new ChooseForAdd(this, false);
                         window.ShowDialog();
@@ -211,7 +211,7 @@ namespace CursovayaApp.WPF.ViewModels
                 });
 
         public RelayCommand AddPublishingCommand =>
-            new (obj =>
+            new(obj =>
                 {
                     var publishing = DbClass.entities.PublishingHouses.FirstOrDefault(x => x.Name == SelectedPublishing) ?? new PublishingHouse();
                     _addOrUpdatePublishingsView = new(publishing, this);
@@ -219,18 +219,31 @@ namespace CursovayaApp.WPF.ViewModels
                 });
 
         public RelayCommand CancelCommand =>
-            new (obj =>
+            new(obj =>
                 {
                     if (MessageBox.Show("Вы уверены, что хотите отменить все изменения?\nЭто действие удалит текущую запись!",
                         "Отмена изменений",
                         MessageBoxButton.YesNo,
                         MessageBoxImage.Question) == MessageBoxResult.No) return;
-                    
-                    int i = Books.ToList().IndexOf(SelectedBook)-1;
+
+                    int i = Books.ToList().IndexOf(SelectedBook) - 1;
                     Books.Remove(SelectedBook);
                     SelectedBook = Books.ElementAt(i);
                     _addOrUpdateBooksView?.Close();
                 });
 
+        public RelayCommand GiveCommand
+            => new(obj =>
+            {
+                _windowForGiveView = new();
+                _windowForGiveView.ShowDialog();
+            });
+
+        public RelayCommand RecieveCommand
+            => new(obj =>
+            {
+                //_windowForRecieve = new();
+                //_windowForRecieve.ShowDialog();
+            });
     }
 }

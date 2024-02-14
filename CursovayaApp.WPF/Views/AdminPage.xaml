@@ -14,7 +14,7 @@
             <Button 
                 Width="80"
                 Content="Выход"
-                        Style="{StaticResource SecondaryButtonStyle}"
+                Style="{StaticResource SecondaryButtonStyle}"
                 Command="{Binding ExitCommand}"
                 Name="BtnExit"/>
         </StackPanel>

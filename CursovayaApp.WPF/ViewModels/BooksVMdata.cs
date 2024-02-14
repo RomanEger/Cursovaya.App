@@ -3,6 +3,7 @@ using CursovayaApp.WPF.Models;
 using CursovayaApp.WPF.Services;
 using CursovayaApp.WPF.Views;
 using System.Collections.ObjectModel;
+using CursovayaApp.WPF.Views.Windows;
 
 namespace CursovayaApp.WPF.ViewModels
 {
@@ -13,6 +14,10 @@ namespace CursovayaApp.WPF.ViewModels
         private AddOrUpdateAuthors _addOrUpdateAuthorsView;
 
         private AddOrUpdatePublishings _addOrUpdatePublishingsView;
+
+        private WindowForGive _windowForGiveView;
+
+        //private WindowForRecieve _windowForRecieveView;
 
         public ObservableCollection<string> ListReasons { get; set; }
 
