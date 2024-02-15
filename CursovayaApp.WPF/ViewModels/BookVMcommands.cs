@@ -54,11 +54,7 @@ namespace CursovayaApp.WPF.ViewModels
                     }
                     catch (Exception ex)
                     {
-                        //string fileName = $@"C:\Users\error{DateTime.Now}.txt";
-                        //FileStream fileStream = new FileStream(fileName, FileMode.Create);
-                        //StreamWriter sw = new StreamWriter(fileStream);
-                        //sw.Write(ex.Message);
-                        //sw.Close();
+                        MessageBox.Show(ex.Message, "Не удалось сохранить изменения", MessageBoxButton.OK, MessageBoxImage.Error);
                     }
                 });
 
@@ -95,74 +91,81 @@ namespace CursovayaApp.WPF.ViewModels
                 {
                     if (Books.Any(x => x.Id == SelectedBook.Id))
                     {
-                        if (AuthorsForAdd == null)
+                        try
                         {
-                            var listAuthors = DbClass.entities.Authors.ToList();
-                            AuthorsForAdd = new ObservableCollection<string>(listAuthors.Select(x => x.FullName).Distinct());
-                        }
-                        if (!AuthorsForAdd.Contains(SelectedBook.AuthorFullName))
-                        {
-                            if (MessageBox.Show(
-                                    "Данный автор еще не представлен в нашей библиотеке. Хотите его добавить?",
-                                    "",
-                                    MessageBoxButton.YesNo,
-                                    MessageBoxImage.Question) == MessageBoxResult.Yes)
+                            if (AuthorsForAdd == null)
                             {
-                                var author = new Author()
-                                {
-                                    FullName = SelectedBook.AuthorFullName
-                                };
-                                _addOrUpdateAuthorsView = new(author, this);
-                                _addOrUpdateAuthorsView.ShowDialog();
+                                var listAuthors = DbClass.entities.Authors.ToList();
+                                AuthorsForAdd = new ObservableCollection<string>(listAuthors.Select(x => x.FullName).Distinct());
                             }
-                            else return;
-                        }
-
-                        var aId = DbClass.entities.Authors.Where(x => x.FullName == SelectedBook.AuthorFullName).Select(x => x.Id).FirstOrDefault();
-                        var pId = DbClass.entities.PublishingHouses.Where(x => x.Name == SelectedBook.Publishing).Select(x => x.Id).FirstOrDefault();
-
-                        var book = DbClass.entities.Books.FirstOrDefault(x => x.Id == SelectedBook.Id) ?? new Book();
-                        book.Id = SelectedBook.Id;
-                        book.Quantity = SelectedBook.Quantity;
-                        book.Title = SelectedBook.Title;
-                        book.AuthorId = aId;
-                        book.PublishingHouseId = pId;
-
-                        DbClass.entities.Books.AddOrUpdate(book);
-                        DbClass.entities.SaveChanges();
-                        if (SelectedBook.ForAdd)
-                        {
-                            var rId = DbClass.entities.ReasonsReg.Where(x => x.Name == SelectedReason).Select(x => x.Id)
-                                .FirstOrDefault();
-                            var bId = DbClass.entities.Books.Where(x => x.AuthorId == book.AuthorId && x.Title == book.Title && x.PublishingHouseId == x.PublishingHouseId).Select(x => x.Id).FirstOrDefault();
-                            var regBook = new RegBook()
+                            if (!AuthorsForAdd.Contains(SelectedBook.AuthorFullName))
                             {
-                                BookId = bId,
-                                ReasonId = rId,
-                                DateOfReg = DateTime.Now,
-                                UserId = _loggedUser.CurrentUser.Id,
-                                RegQuantity = SelectedBook.QuantityToUpdate
-                            };
-                            DbClass.entities.RegBooks.Add(regBook);
-                        }
-                        else
-                        {
-                            var dId = DbClass.entities.ReasonsReg.Where(x => x.Name == SelectedReason).Select(x => x.Id)
-                                .FirstOrDefault();
-                            var bId = DbClass.entities.Books.Where(x => x.AuthorId == book.AuthorId && x.Title == book.Title && x.PublishingHouseId == x.PublishingHouseId).Select(x => x.Id).FirstOrDefault();
-                            var deregBook = new DeregBook()
-                            {
-                                BookId = bId,
-                                ReasonId = dId,
-                                DateOfDereg = DateTime.Now,
-                                UserId = _loggedUser.CurrentUser.Id,
-                                DeregQuantity = SelectedBook.QuantityToUpdate
-                            };
-                            DbClass.entities.DeregBooks.Add(deregBook);
+                                if (MessageBox.Show(
+                                        "Данный автор еще не представлен в нашей библиотеке. Хотите его добавить?",
+                                        "",
+                                        MessageBoxButton.YesNo,
+                                        MessageBoxImage.Question) == MessageBoxResult.Yes)
+                                {
+                                    var author = new Author()
+                                    {
+                                        FullName = SelectedBook.AuthorFullName
+                                    };
+                                    _addOrUpdateAuthorsView = new(author, this);
+                                    _addOrUpdateAuthorsView.ShowDialog();
+                                }
+                                else return;
+                            }
 
+                            var aId = DbClass.entities.Authors.Where(x => x.FullName == SelectedBook.AuthorFullName).Select(x => x.Id).FirstOrDefault();
+                            var pId = DbClass.entities.PublishingHouses.Where(x => x.Name == SelectedBook.Publishing).Select(x => x.Id).FirstOrDefault();
+
+                            var book = DbClass.entities.Books.FirstOrDefault(x => x.Id == SelectedBook.Id) ?? new Book();
+                            book.Id = SelectedBook.Id;
+                            book.Quantity = SelectedBook.Quantity;
+                            book.Title = SelectedBook.Title;
+                            book.AuthorId = aId;
+                            book.PublishingHouseId = pId;
+
+                            DbClass.entities.Books.AddOrUpdate(book);
+                            DbClass.entities.SaveChanges();
+                            if (SelectedBook.ForAdd)
+                            {
+                                var rId = DbClass.entities.ReasonsReg.Where(x => x.Name == SelectedReason).Select(x => x.Id)
+                                    .FirstOrDefault();
+                                var bId = DbClass.entities.Books.Where(x => x.AuthorId == book.AuthorId && x.Title == book.Title && x.PublishingHouseId == x.PublishingHouseId).Select(x => x.Id).FirstOrDefault();
+                                var regBook = new RegBook()
+                                {
+                                    BookId = bId,
+                                    ReasonId = rId,
+                                    DateOfReg = DateTime.Now,
+                                    UserId = _loggedUser.CurrentUser.Id,
+                                    RegQuantity = SelectedBook.QuantityToUpdate
+                                };
+                                DbClass.entities.RegBooks.Add(regBook);
+                            }
+                            else
+                            {
+                                var dId = DbClass.entities.ReasonsReg.Where(x => x.Name == SelectedReason).Select(x => x.Id)
+                                    .FirstOrDefault();
+                                var bId = DbClass.entities.Books.Where(x => x.AuthorId == book.AuthorId && x.Title == book.Title && x.PublishingHouseId == x.PublishingHouseId).Select(x => x.Id).FirstOrDefault();
+                                var deregBook = new DeregBook()
+                                {
+                                    BookId = bId,
+                                    ReasonId = dId,
+                                    DateOfDereg = DateTime.Now,
+                                    UserId = _loggedUser.CurrentUser.Id,
+                                    DeregQuantity = SelectedBook.QuantityToUpdate
+                                };
+                                DbClass.entities.DeregBooks.Add(deregBook);
+
+                            }
+                            DbClass.entities.SaveChanges();
+                            _addOrUpdateBooksView.Close();
                         }
-                        DbClass.entities.SaveChanges();
-                        _addOrUpdateBooksView.Close();
+                        catch(Exception ex)
+                        {
+                            MessageBox.Show(ex.Message, "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                        }
                     }
                 });
 
@@ -213,9 +216,16 @@ namespace CursovayaApp.WPF.ViewModels
         public RelayCommand AddPublishingCommand =>
             new(obj =>
                 {
-                    var publishing = DbClass.entities.PublishingHouses.FirstOrDefault(x => x.Name == SelectedPublishing) ?? new PublishingHouse();
-                    _addOrUpdatePublishingsView = new(publishing, this);
-                    _addOrUpdatePublishingsView.ShowDialog();
+                    try
+                    {
+                        var publishing = DbClass.entities.PublishingHouses.FirstOrDefault(x => x.Name == SelectedPublishing) ?? new PublishingHouse();
+                        _addOrUpdatePublishingsView = new(publishing, this);
+                        _addOrUpdatePublishingsView.ShowDialog();
+                    }
+                    catch(Exception ex)
+                    {
+                        MessageBox.Show(ex.Message, "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
                 });
 
         public RelayCommand CancelCommand =>
