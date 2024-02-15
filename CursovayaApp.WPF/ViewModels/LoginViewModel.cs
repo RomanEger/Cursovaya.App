@@ -47,13 +47,9 @@ namespace CursovayaApp.WPF.ViewModels
 
                         ThisUser.Password = null;
                     }
-                    catch (Exception)
+                    catch (Exception ex)
                     {
-                        //string fileName = $@"C:\Users\error{DateTime.Now}.txt";
-                        //FileStream fileStream = new FileStream(fileName, FileMode.Create);
-                        //StreamWriter sw = new StreamWriter(fileStream);
-                        //sw.Write(ex.Message);
-                        //sw.Close();
+                        MessageBox.Show(ex.Message, "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
                     }
                 });
 

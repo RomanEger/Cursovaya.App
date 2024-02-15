@@ -7,6 +7,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using Microsoft.EntityFrameworkCore;
 
 namespace CursovayaApp.WPF.Models.DbModels
@@ -122,15 +123,22 @@ namespace CursovayaApp.WPF.Models.DbModels
 
         private void GetReasons()
         {
-            if (ForAdd)
+            try
             {
-                var l = DbClass.entities.ReasonsReg.Select(x => x.Name).ToList();
-                ListReasons = new ObservableCollection<string>(l);
+                if (ForAdd)
+                {
+                    var l = DbClass.entities.ReasonsReg.Select(x => x.Name).ToList();
+                    ListReasons = new ObservableCollection<string>(l);
+                }
+                else
+                {
+                    var l = DbClass.entities.ReasonsDereg.Select(x => x.Name).ToList();
+                    ListReasons = new ObservableCollection<string>(l);
+                }
             }
-            else
+            catch(Exception ex)
             {
-                var l = DbClass.entities.ReasonsDereg.Select(x => x.Name).ToList();
-                ListReasons = new ObservableCollection<string>(l);
+                MessageBox.Show(ex.Message, "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 

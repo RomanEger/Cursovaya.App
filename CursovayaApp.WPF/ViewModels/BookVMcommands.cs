@@ -232,8 +232,8 @@ namespace CursovayaApp.WPF.ViewModels
                     _addOrUpdateBooksView?.Close();
                 });
 
-        public RelayCommand GiveCommand
-            => new(obj =>
+        public RelayCommand GiveCommand =>
+            new(obj =>
             {
                 _windowForGiveView = new();
                 _windowForGiveView.ShowDialog();

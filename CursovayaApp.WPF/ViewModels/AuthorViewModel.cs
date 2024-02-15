@@ -57,9 +57,9 @@ namespace CursovayaApp.WPF.ViewModels
                     }
                     DbClass.entities.SaveChanges();
                 }
-                catch
+                catch (Exception ex) 
                 {
-                    MessageBox.Show("Не удалось сохранить изменения");
+                    MessageBox.Show(ex.Message, "Не удалось сохранить изменения", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             });
 

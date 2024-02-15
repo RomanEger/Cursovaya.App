@@ -75,21 +75,24 @@ namespace CursovayaApp.WPF.ViewModels
                 ListRolesStr = new List<string>() { "Все" };
                 ListRolesStr.AddRange(_listRoles.Select(x => x.Name).ToList());
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                //string fileName = $@"C:\Users\error{DateTime.Now}.txt";
-                //FileStream fileStream = new FileStream(fileName, FileMode.Create);
-                //StreamWriter sw = new StreamWriter(fileStream);
-                //sw.Write(ex.Message);
-                //sw.Close();
+                MessageBox.Show(ex.Message, "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
         private void GetUsers()
         {
-            listUsers = DbClass.entities.Users.ToList();
-            sortedListUsers = listUsers;
-            SetCount();
-            Pagination.InsertToUsers(ref _users, sortedListUsers);
+            try
+            {
+                listUsers = DbClass.entities.Users.ToList();
+                sortedListUsers = listUsers;
+                SetCount();
+                Pagination.InsertToUsers(ref _users, sortedListUsers);
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         private void SetCount() =>
@@ -145,13 +148,9 @@ namespace CursovayaApp.WPF.ViewModels
                     MessageBox.Show("Изменения успешно сохранены");
                     GetUsers();
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
-                    //string fileName = $@"C:\Users\error{DateTime.Now}.txt";
-                    //FileStream fileStream = new FileStream(fileName, FileMode.Create);
-                    //StreamWriter sw = new StreamWriter(fileStream);
-                    //sw.Write(ex.Message);
-                    //sw.Close();
+                    MessageBox.Show(ex.Message, "Не удалось сохранить изменения", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             });
 
@@ -207,13 +206,9 @@ namespace CursovayaApp.WPF.ViewModels
                         DbClass.entities.SaveChanges();
                         MessageBox.Show("Пользователь удален");
                     }
-                    catch (Exception)
+                    catch (Exception ex)
                     {
-                        //string fileName = $@"C:\Users\error{DateTime.Now}.txt";
-                        //FileStream fileStream = new FileStream(fileName, FileMode.Create);
-                        //StreamWriter sw = new StreamWriter(fileStream);
-                        //sw.Write(ex.Message);
-                        //sw.Close();
+                        MessageBox.Show(ex.Message, "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
                     }
                 }
             });
@@ -245,13 +240,9 @@ namespace CursovayaApp.WPF.ViewModels
                         MyFrame.Navigate(new LoginPage());
                         MyFrame.ClearHistory();
                     }
-                    catch (Exception)
+                    catch (Exception ex)
                     {
-                        //string fileName = $@"C:\Users\error{DateTime.Now}.txt";
-                        //FileStream fileStream = new FileStream(fileName, FileMode.Create);
-                        //StreamWriter sw = new StreamWriter(fileStream);
-                        //sw.Write(ex.Message);
-                        //sw.Close();
+                        MessageBox.Show(ex.Message, "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
                     }
                 }
             });

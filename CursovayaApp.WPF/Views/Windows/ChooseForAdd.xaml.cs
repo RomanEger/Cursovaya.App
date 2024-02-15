@@ -26,13 +26,10 @@ namespace CursovayaApp.WPF.Views.Windows
             {
                 SetAuthors();
 
-                //bindingIS.ElementName = "cmb";
                 bindingIS.Path = new PropertyPath("AuthorsForAdd");
                 cmb.SetBinding(ComboBox.ItemsSourceProperty, bindingIS);
-                //bindingSI.ElementName = "cmb";
                 bindingSI.Path = new PropertyPath("SelectedAuthor");
                 cmb.SetBinding(ComboBox.SelectedItemProperty, bindingSI);
-                //bindingC.ElementName = "btn";
                 bindingC.Path = new PropertyPath("AddAuthorCommand");
                 btn.SetBinding(Button.CommandProperty, bindingC);
             }
@@ -40,13 +37,10 @@ namespace CursovayaApp.WPF.Views.Windows
             {
                 SetPublishings();
 
-                //bindingIS.ElementName = "cmb";
                 bindingIS.Path = new PropertyPath("ListPublishings");
                 cmb.SetBinding(ComboBox.ItemsSourceProperty, bindingIS);
-                //bindingSI.ElementName = "cmb";
                 bindingSI.Path = new PropertyPath("SelectedPublishing");
                 cmb.SetBinding(ComboBox.SelectedItemProperty, bindingSI);
-                //bindingC.ElementName = "btn";
                 bindingC.Path = new PropertyPath("AddPublishingCommand");
                 btn.SetBinding(Button.CommandProperty, bindingC);
             }
@@ -60,9 +54,9 @@ namespace CursovayaApp.WPF.Views.Windows
                 List<string> list = DbClass.entities.PublishingHouses.Select(x => x.Name).ToList();
                 _vm.ListPublishings = new System.Collections.ObjectModel.ObservableCollection<string>(list);
             }
-            catch
+            catch (Exception ex) 
             {
-                MessageBox.Show("Не удалось получить список издательств!");
+                MessageBox.Show(ex.Message, "Не удалось получить список издательств!", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -75,9 +69,9 @@ namespace CursovayaApp.WPF.Views.Windows
                 List<string> list = DbClass.entities.Authors.Select(x => x.FullName).ToList();
                 _vm.AuthorsForAdd = new System.Collections.ObjectModel.ObservableCollection<string>(list);
             }
-            catch
+            catch (Exception ex)
             {
-                MessageBox.Show("Не удалось получить список авторов!");
+                MessageBox.Show(ex.Message, "Не удалось получить список авторов!", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
     }

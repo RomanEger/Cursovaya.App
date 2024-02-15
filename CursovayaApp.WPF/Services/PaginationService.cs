@@ -1,14 +1,8 @@
-﻿using CursovayaApp.WPF.Commands;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
+﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 using CursovayaApp.WPF.Models.DbModels;
 using System.Collections.ObjectModel;
-using System.IO;
+using System.Windows;
 
 namespace CursovayaApp.WPF.Services
 {
@@ -74,11 +68,7 @@ namespace CursovayaApp.WPF.Services
             }
             catch (Exception ex)
             {
-                //string fileName = $@"C:\Users\error{DateTime.Now}.txt";
-                //FileStream fileStream = new FileStream(fileName, FileMode.Create);
-                //StreamWriter sw = new StreamWriter(fileStream);
-                //sw.Write(ex.Message);
-                //sw.Close();
+                MessageBox.Show(ex.Message, "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 

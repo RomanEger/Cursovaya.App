@@ -51,6 +51,12 @@ namespace CursovayaApp.WPF.Views
                 StackPanelForLibr.Visibility = Visibility.Collapsed;
                 StackPanelForAdmin.Visibility = Visibility.Collapsed;
             }
+            else//клиент, если будет
+            {
+                StackPanelForStock.Visibility = Visibility.Collapsed;
+                StackPanelForLibr.Visibility = Visibility.Collapsed;
+                StackPanelForAdmin.Visibility = Visibility.Collapsed;
+            }
         }
     }
 }

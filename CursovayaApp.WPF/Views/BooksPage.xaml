@@ -130,14 +130,14 @@
                         Command="{Binding SaveCommand}"
                         Width="170"/>
                     <Button
-                        Content="Выдана клиенту"
+                        Content="Выдать книгу"
                         BorderBrush="DodgerBlue"
                         Foreground="DodgerBlue"
                         Style="{StaticResource SecondaryButtonStyle}"
                         Command="{Binding GiveCommand}"
                         Width="170"/>
                     <Button
-                        Content="Сдана клиентом"
+                        Content="Принять книгу"
                         BorderBrush="DodgerBlue"
                         Foreground="DodgerBlue"
                         Style="{StaticResource SecondaryButtonStyle}"
