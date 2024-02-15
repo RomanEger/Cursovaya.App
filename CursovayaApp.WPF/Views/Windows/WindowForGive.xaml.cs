@@ -17,9 +17,8 @@ namespace CursovayaApp.WPF.Views.Windows
             DataContext = vm;
         }
 
-        private void CmbClient_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
+        private void CmbClient_TextChanged(object sender, TextChangedEventArgs e)
         {
-            CmbClients.IsDropDownOpen = true;
             var tb = (TextBox)e.OriginalSource;
             if (tb.SelectionStart != 0)
                 CmbClients.SelectedItem = null;
@@ -34,9 +33,8 @@ namespace CursovayaApp.WPF.Views.Windows
             }
         }
 
-        private void CmbBooks_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
+        private void CmbBooks_TextChanged(object sender, TextChangedEventArgs e)
         {
-            CmbBooks.IsDropDownOpen = true;
             var tb = (TextBox)e.OriginalSource;
             if (tb.SelectionStart != 0)
                 CmbBooks.SelectedItem = null;
