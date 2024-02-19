@@ -116,12 +116,11 @@ namespace CursovayaApp.WPF.Models.DbModels
             set
             {
                 _forAdd = value;
-                GetReasons();
                 OnPropertyChanged();
             }
         }
 
-        private void GetReasons()
+        public void GetReasons()
         {
             try
             {

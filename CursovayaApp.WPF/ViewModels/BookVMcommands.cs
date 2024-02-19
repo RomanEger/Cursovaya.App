@@ -64,6 +64,7 @@ namespace CursovayaApp.WPF.ViewModels
                     _addOrUpdateBooksView = new(this);
                     SelectedBook = new BookView(0);
                     Books.Add(SelectedBook);
+                    SelectedBook.GetReasons();
                     _addOrUpdateBooksView.ShowDialog();
                 });
 
@@ -245,15 +246,15 @@ namespace CursovayaApp.WPF.ViewModels
         public RelayCommand GiveCommand =>
             new(obj =>
             {
-                _windowForGiveView = new();
+                _windowForGiveView = new(true);
                 _windowForGiveView.ShowDialog();
             });
 
         public RelayCommand RecieveCommand
             => new(obj =>
             {
-                //_windowForRecieve = new();
-                //_windowForRecieve.ShowDialog();
+                _windowForGiveView = new(false);
+                _windowForGiveView.ShowDialog();
             });
     }
 }

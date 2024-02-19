@@ -41,7 +41,6 @@ namespace CursovayaApp.WPF.ViewModels
             }            
         }
 
-        
         private void GetBooks()
         {
             try

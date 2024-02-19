@@ -15,7 +15,7 @@ namespace CursovayaApp.WPF.ViewModels
 
         private AddOrUpdatePublishings _addOrUpdatePublishingsView;
 
-        private WindowForGive _windowForGiveView;
+        private WindowForLibr _windowForGiveView;
 
         //private WindowForRecieve _windowForRecieveView;
 

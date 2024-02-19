@@ -8,13 +8,21 @@ namespace CursovayaApp.WPF.Views.Windows
     /// <summary>
     /// Логика взаимодействия для ForLibrPage.xaml
     /// </summary>
-    public partial class WindowForGive : Window
+    public partial class WindowForLibr : Window
     {
-        public WindowForGive()
+        public WindowForLibr(bool forGive)
         {
-            InitializeComponent();
-            var vm = new RentalBookViewModel();
+            var vm = new RentalBookViewModel(forGive);
             DataContext = vm;
+            InitializeComponent();
+            if (forGive)
+            {
+                btn.Content = "Выдать";
+            }
+            else
+            {
+                btn.Content = "Принять";
+            }
         }
 
         private void CmbClient_TextChanged(object sender, TextChangedEventArgs e)
