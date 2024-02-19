@@ -68,6 +68,8 @@ namespace CursovayaApp.WPF.ViewModels
                     _addOrUpdateBooksView.ShowDialog();
                 });
 
+
+
         public RelayCommand UpdateCommand =>
             new(obj =>
                 {

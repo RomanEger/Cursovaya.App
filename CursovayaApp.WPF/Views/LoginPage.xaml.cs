@@ -24,7 +24,7 @@ namespace CursovayaApp.WPF.Views
         public LoginPage()
         {
             InitializeComponent();
-            DataContext = new LoginViewModel();
+            DataContext = new UserViewModel();
         }
 
     }

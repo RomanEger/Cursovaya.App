@@ -4,15 +4,19 @@ using CursovayaApp.WPF.Models.DbModels;
 using CursovayaApp.WPF.Services;
 using CursovayaApp.WPF.Views;
 using System.Windows;
+using CursovayaApp.WPF.Repository;
+using CursovayaApp.WPF.Repository.Contracts;
 using Microsoft.EntityFrameworkCore;
 
 namespace CursovayaApp.WPF.ViewModels
 {
     public class AdminViewModel : ViewModelBase
     {
-        private List<User> listUsers;
+        private readonly IUserRepository _userRepository;
 
-        private List<User> sortedListUsers;
+        private List<User> _listUsers;
+
+        private List<User> _sortedListUsers;
 
         private PaginationService<User> _pagination;
 
@@ -50,16 +54,16 @@ namespace CursovayaApp.WPF.ViewModels
                 _selectedRole = value;
                 if(value == "Все")
                 {
-                    sortedListUsers = listUsers;
+                    _sortedListUsers = _listUsers;
                     SetCount();
-                    Pagination.InsertToUsers(ref _users, sortedListUsers);
+                    Pagination.InsertToUsers(ref _users, _sortedListUsers);
                 }
                 else
                 {
                     var v = _listRoles.Where(x => x.Name == value).Select(x => x.Id).FirstOrDefault();
-                    sortedListUsers = listUsers.Where(x => x.RoleId == v).ToList();
+                    _sortedListUsers = _listUsers.Where(x => x.RoleId == v).ToList();
                     SetCount();
-                    Pagination.InsertToUsers(ref _users, sortedListUsers);
+                    Pagination.InsertToUsers(ref _users, _sortedListUsers);
                 }
                 OnPropertyChanged();
             }
@@ -67,11 +71,13 @@ namespace CursovayaApp.WPF.ViewModels
 
         public AdminViewModel()
         {
+            _userRepository = new UserRepository(new ApplicationContext());
+            IRoleRepository roleRepository = new RoleRepository(new ApplicationContext());
             Pagination = new PaginationService<User>(3);
             try
             {
                 GetUsers();
-                _listRoles = DbClass.entities.Roles.ToList();
+                _listRoles = roleRepository.GetAll().ToList();
                 ListRolesStr = new List<string>() { "Все" };
                 ListRolesStr.AddRange(_listRoles.Select(x => x.Name).ToList());
             }
@@ -84,10 +90,10 @@ namespace CursovayaApp.WPF.ViewModels
         {
             try
             {
-                listUsers = DbClass.entities.Users.ToList();
-                sortedListUsers = listUsers;
+                _listUsers = _userRepository.GetAll().ToList();
+                _sortedListUsers = _listUsers;
                 SetCount();
-                Pagination.InsertToUsers(ref _users, sortedListUsers);
+                Pagination.InsertToUsers(ref _users, _sortedListUsers);
             }
             catch(Exception ex)
             {
@@ -96,7 +102,7 @@ namespace CursovayaApp.WPF.ViewModels
         }
 
         private void SetCount() =>
-            Pagination.Count = (int)Math.Ceiling(sortedListUsers.Count * 1.0 / Pagination.TsAtPage);
+            Pagination.Count = (int)Math.Ceiling(_sortedListUsers.Count * 1.0 / Pagination.TsAtPage);
         
 
 
@@ -123,16 +129,16 @@ namespace CursovayaApp.WPF.ViewModels
         }
 
         public RelayCommand FirstUsersCommand =>
-            new (obj => Pagination.FirstT(ref _users, listUsers));
+            new (obj => Pagination.FirstT(ref _users, _listUsers));
 
         public RelayCommand BackUsersCommand =>
-             new (obj => Pagination.BackT(ref _users, listUsers));
+             new (obj => Pagination.BackT(ref _users, _listUsers));
 
         public RelayCommand ForwardUsersCommand =>
-            new (obj => Pagination.ForwardT(ref _users, listUsers));
+            new (obj => Pagination.ForwardT(ref _users, _listUsers));
 
         public RelayCommand LastUsersCommand =>
-            new (obj => Pagination.LastT(ref _users, listUsers));
+            new (obj => Pagination.LastT(ref _users, _listUsers));
 
         public RelayCommand SaveCommand =>
             new ( obj =>
@@ -141,10 +147,8 @@ namespace CursovayaApp.WPF.ViewModels
                 {
                     foreach (User item in Users)
                     {
-                        DbClass.entities.Users.AddOrUpdate(item);
+                        _userRepository.AddOrUpdate(item);
                     }
-
-                    DbClass.entities.SaveChanges();
                     MessageBox.Show("Изменения успешно сохранены");
                     GetUsers();
                 }
@@ -158,13 +162,13 @@ namespace CursovayaApp.WPF.ViewModels
             new(obj =>
             {
                 User newUser = new User();
-                listUsers.Add(newUser);
-                int i = listUsers.Count - Pagination.IndexT;
+                _listUsers.Add(newUser);
+                int i = _listUsers.Count - Pagination.IndexT;
                 bool canGoForward = i > Pagination.TsAtPage;
                 if (canGoForward)
                     Pagination.IndexT += Pagination.TsAtPage;
 
-                Pagination.InsertToUsers(ref _users, listUsers);
+                Pagination.InsertToUsers(ref _users, _listUsers);
                 SelectedUser = newUser;
                 SetCount();
             });
@@ -185,25 +189,24 @@ namespace CursovayaApp.WPF.ViewModels
                 {
                     try
                     {
-                        if (DbClass.entities.Users.Any(x => x.Id == SelectedUser.Id))
+                        if (_userRepository.Any(SelectedUser.Id))
                         {
-                            DbClass.entities.Users.Remove(SelectedUser);
+                            _userRepository.Delete(SelectedUser);
                         }
 
-                        int s = listUsers.IndexOf(SelectedUser);
-                        listUsers.Remove(SelectedUser);
-                        if (s >= listUsers.Count && s > 0)
+                        int s = _listUsers.IndexOf(SelectedUser);
+                        _listUsers.Remove(SelectedUser);
+                        if (s >= _listUsers.Count && s > 0)
                         {
-                            SelectedUser = listUsers[--s];
+                            SelectedUser = _listUsers[--s];
                         }
                         else
                         {
-                            SelectedUser = listUsers[s];
+                            SelectedUser = _listUsers[s];
                         }
 
-                        Pagination.InsertToUsers(ref _users, listUsers);
+                        Pagination.InsertToUsers(ref _users, _listUsers);
                         SetCount();
-                        DbClass.entities.SaveChanges();
                         MessageBox.Show("Пользователь удален");
                     }
                     catch (Exception ex)
@@ -230,7 +233,7 @@ namespace CursovayaApp.WPF.ViewModels
                         MessageBoxResult a = MessageBox.Show("Хотите ли вы сохранить изменения?", "", MessageBoxButton.YesNoCancel, MessageBoxImage.Question);
                         if (a == MessageBoxResult.Yes)
                         {
-                            DbClass.entities.SaveChanges();
+                            _userRepository.Save();
                         }
                         else if (a == MessageBoxResult.Cancel)
                         {

@@ -4,11 +4,15 @@ using CursovayaApp.WPF.Models.DbModels;
 using CursovayaApp.WPF.Services;
 using CursovayaApp.WPF.Views;
 using System.Windows;
+using CursovayaApp.WPF.Repository;
+using CursovayaApp.WPF.Repository.Contracts;
 
 namespace CursovayaApp.WPF.ViewModels
 {
-    public class LoginViewModel : ViewModelBase
+    public class UserViewModel : ViewModelBase
     {
+        private IUserRepository _repository;
+        
         private User _thisUser;
 
         public User ThisUser
@@ -26,8 +30,7 @@ namespace CursovayaApp.WPF.ViewModels
                 {
                     try
                     {
-                        var q = DbClass.entities.Users.
-                            FirstOrDefault(x => x.Login == ThisUser.Login && x.Password == ThisUser.Password) ?? new User();
+                        var q = _repository.Get(login: ThisUser.Login, password: ThisUser.Password);
                         LoggedUser loggedUser = new()
                         {
                             CurrentUser = q
@@ -54,10 +57,11 @@ namespace CursovayaApp.WPF.ViewModels
                 });
 
 #pragma warning disable CS8618 // Поле, не допускающее значения NULL, должно содержать значение, отличное от NULL, при выходе из конструктора. Возможно, стоит объявить поле как допускающее значения NULL.
-        public LoginViewModel()
+        public UserViewModel()
 #pragma warning restore CS8618
         {
             ThisUser = new User();
+            _repository = new UserRepository(new ApplicationContext());
         }
     }
 }
