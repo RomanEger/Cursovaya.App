@@ -157,5 +157,43 @@ namespace CursovayaApp.WPF.ViewModels
                     MessageBox.Show(ex.Message, "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             });
+
+        public RelayCommand RecieveCommand =>
+            new(obj =>
+            {
+                try
+                {
+                    var bookName = SelectedBook.Split(separator)[0];
+                    var author = SelectedBook.Split(separator)[1];
+                    var bookView =
+                                (from books in DbClass.entities.Books
+                                 join authors in DbClass.entities.Authors
+                                 on books.AuthorId equals authors.Id
+                                 select new
+                                 {
+                                     books.Id,
+                                     books.Title,
+                                     authors.FullName,
+                                 }).FirstOrDefault(x => x.Title == bookName && x.FullName == author);
+
+                    var clientFullName = SelectedClient.Split(separator)[0];
+
+                    var clientLogin = SelectedClient.Split(separator)[1];
+
+                    var client = DbClass.entities.Users.FirstOrDefault(x => x.RoleId == 4 && x.FullName == clientFullName && x.Login == clientLogin);
+
+                    var entitie = DbClass.entities.RentalBooks.FirstOrDefault(x => x.BookId == bookView.Id && x.UserId == client.Id);
+
+                    entitie.IsRentalEnd = true;
+
+                    DbClass.entities.SaveChanges();
+
+                    MessageBox.Show("Книга принята! Изменения сохранены!");
+                }
+                catch (Exception ex )
+                {
+                    MessageBox.Show(ex.Message, "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            });
     }
 }
