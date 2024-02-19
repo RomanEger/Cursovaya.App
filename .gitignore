@@ -363,3 +363,6 @@ MigrationBackup/
 FodyWeavers.xsd
 /CursovayaApp.WPF/appsettings.json
 /CursovayaApp.WPF/appsettings.json
+
+#IDEA
+.idea/

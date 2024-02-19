@@ -127,7 +127,9 @@ namespace CursovayaApp.WPF.ViewModels
                                     authors.FullName,
                                 }).FirstOrDefault(x => x.Title == bookName && x.FullName == author);
 
-                    var canGive = Books.Count > DbClass.entities.RentalBooks.Where(x => x.IsRentalEnd == false && x.BookId == bookView.Id).Count();
+                    var count = DbClass.entities.RentalBooks.Count(x =>
+                        x.IsRentalEnd == false && x.BookId == bookView.Id);
+                    var canGive = Books.Count > count;
                     if (!canGive)
                     {
                         MessageBox.Show("Нет доступных книг!");

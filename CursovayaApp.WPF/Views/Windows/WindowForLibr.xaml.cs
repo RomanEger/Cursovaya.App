@@ -1,6 +1,7 @@
 ﻿using CursovayaApp.WPF.ViewModels;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Data;
 
 namespace CursovayaApp.WPF.Views.Windows
@@ -15,13 +16,21 @@ namespace CursovayaApp.WPF.Views.Windows
             var vm = new RentalBookViewModel(forGive);
             DataContext = vm;
             InitializeComponent();
+            Binding binding = new()
+            {
+                Source = DataContext
+            };
             if (forGive)
             {
                 btn.Content = "Выдать";
+                binding.Path = new PropertyPath("GiveCommand");
+                btn.SetBinding(ButtonBase.CommandProperty, binding);
             }
             else
             {
                 btn.Content = "Принять";
+                binding.Path = new PropertyPath("RecieveCommand");
+                btn.SetBinding(ButtonBase.CommandProperty, binding);
             }
         }
 

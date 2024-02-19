@@ -49,7 +49,6 @@
             Content="Выдать"
             Style="{StaticResource MainButtonStyle}"
             Width="80"
-            Command="{Binding GiveCommand}"
             VerticalAlignment="Bottom"
             HorizontalAlignment="Right"/>
     </Grid>
