@@ -59,12 +59,15 @@ public class UserFixture : IFixture<User>
 
         var count = list.Count;
 
-        if(newUser.Id > 0 &&
-           !list.Any(x => x.Id == newUser.Id) &&
-           newUser.FullName?.Length >= 4 &&
-           newUser.Login?.Length >= 4 &&
-           !list.Any(x => x.Login == newUser.Login) &&
-           newUser.Password?.Length >= 4)
+        if(newUser.Login == null ||
+           newUser.Password == null ||
+           newUser.FullName == null ||
+           newUser.Id < 0 ||
+           list.Any(x => x.Id == newUser.Id) ||
+           newUser.FullName?.Length < 4 ||
+           newUser.Login?.Length < 4 ||
+           list.Any(x => x.Login == newUser.Login) ||
+           newUser.Password?.Length < 4)
         {
             return 0;
         }

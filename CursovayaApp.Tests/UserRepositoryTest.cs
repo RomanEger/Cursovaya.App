@@ -25,8 +25,8 @@ namespace CursovayaApp.Tests
             
             var user = new User()
             {
-                FullName = "hello",
-                Login = "login",
+                FullName = "hellos",
+                Login = "login111",
                 Password = "qwerty",
                 RoleId = 1
             };
@@ -38,6 +38,42 @@ namespace CursovayaApp.Tests
             var repo = _mockUserRepository.Object;
 
             Assert.Equal(1, repo.Add(user));
+        }
+        
+        [Fact]
+        public void TestBadAdd()
+        {
+            
+            var user = new User()
+            {
+                FullName = "",
+                Login = "",
+                Password = "",
+                RoleId = 1
+            };
+
+            var add = _fixture.Add(user);
+
+            _mockUserRepository.Setup(x => x.Add(user)).Returns(add);
+
+            var repo = _mockUserRepository.Object;
+
+            Assert.Equal(0, repo.Add(user));
+        }
+        
+        [Fact]
+        public void TestBadAdd1()
+        {
+
+            var user = new User();
+
+            var add = _fixture.Add(user);
+
+            _mockUserRepository.Setup(x => x.Add(user)).Returns(add);
+
+            var repo = _mockUserRepository.Object;
+
+            Assert.Equal(0, repo.Add(user));
         }
 
         [Fact]
