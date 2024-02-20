@@ -56,8 +56,21 @@ public class UserFixture : IFixture<User>
     public int Add(User newUser)
     {
         var list = GetTestData().ToList();
+
         var count = list.Count;
+
+        if(newUser.Id > 0 &&
+           !list.Any(x => x.Id == newUser.Id) &&
+           newUser.FullName?.Length >= 4 &&
+           newUser.Login?.Length >= 4 &&
+           !list.Any(x => x.Login == newUser.Login) &&
+           newUser.Password?.Length >= 4)
+        {
+            return 0;
+        }
+
         list.Add(newUser);
+
         return list.Count - count;
     }
 }

@@ -10,10 +10,12 @@ namespace CursovayaApp.Tests
     {
         private Mock<IUserRepository> _mockUserRepository;
         private IFixture<User> _fixture;
+        private ApplicationContext _dbContext;
         
         public UserRepositoryTest()
         {
             _mockUserRepository = new Mock<IUserRepository>();
+            _dbContext = new ApplicationContext();
             _fixture = new UserFixture();
         }
 
@@ -63,7 +65,7 @@ namespace CursovayaApp.Tests
         {
             int expectedCount = 6;
 
-            var repo = new UserRepository();
+            var repo = new UserRepository(_dbContext);
 
             var result = repo.GetAll();
 
@@ -95,7 +97,7 @@ namespace CursovayaApp.Tests
         {
             int id = 1001;
 
-            var repo = new UserRepository();
+            var repo = new UserRepository(_dbContext);
 
             var user = repo.Get(id);
 
@@ -111,7 +113,7 @@ namespace CursovayaApp.Tests
             
             const string password = "test";
 
-            var repo = new UserRepository();
+            var repo = new UserRepository(_dbContext);
 
             var user = repo.Get(login, password);
 
@@ -127,7 +129,7 @@ namespace CursovayaApp.Tests
 
             const string password = "1234";
 
-            var repo = new UserRepository();
+            var repo = new UserRepository(_dbContext);
 
             var user = repo.Get(login, password);
 

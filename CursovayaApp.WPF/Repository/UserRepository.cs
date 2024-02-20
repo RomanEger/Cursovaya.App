@@ -7,6 +7,10 @@ namespace CursovayaApp.WPF.Repository;
 
 public class UserRepository : GenericRepository<User>, IUserRepository
 {
+    public UserRepository(DbContext dbContext) : base(dbContext)
+    {
+    }
+
     public User Get(string login, string password) =>
         _dbContext.Set<User>().FirstOrDefault(x => x.Login == login && x.Password == password) ?? new User();
 

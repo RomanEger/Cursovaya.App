@@ -9,9 +9,9 @@ public class GenericRepository<T> : IGenericRepository<T> where T: TableBase
 {
     protected readonly DbContext _dbContext;
 
-    public GenericRepository()
+    public GenericRepository(DbContext dbContext)
     {
-        _dbContext = new ApplicationContext();
+        _dbContext = dbContext;
     }
 
     public int Save() =>
