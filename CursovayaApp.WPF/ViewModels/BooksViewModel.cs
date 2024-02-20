@@ -4,6 +4,7 @@ using CursovayaApp.WPF.Services;
 using System.Collections.ObjectModel;
 using Microsoft.EntityFrameworkCore;
 using System.Windows;
+using CursovayaApp.WPF.Repository;
 
 namespace CursovayaApp.WPF.ViewModels
 {
@@ -140,6 +141,7 @@ namespace CursovayaApp.WPF.ViewModels
         {
             Pagination = new PaginationService<BookView>(7);
             _loggedUser = new();
+            _repositoryBook = new GenericRepository<Book>(new ApplicationContext());
             try
             {
                 GetData();

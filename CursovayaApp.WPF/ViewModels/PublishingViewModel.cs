@@ -2,13 +2,8 @@
 using CursovayaApp.WPF.Models;
 using CursovayaApp.WPF.Models.DbModels;
 using CursovayaApp.WPF.Repository;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
+using CursovayaApp.WPF.Repository.Contracts;
 
 namespace CursovayaApp.WPF.ViewModels
 {
@@ -50,15 +45,15 @@ namespace CursovayaApp.WPF.ViewModels
                 {
                     try
                     {
-                        if (_publishing.Any(x => x.Name == Publishing.Name))
+                        if (_repository.Any(x => x.Name == Publishing.Name))
                         {
                             MessageBox.Show("Такое издательство уже существует!");
                             return;
                         }
 
-                        DbClass.entities.PublishingHouses.Add(Publishing);
+                        _repository.Add(Publishing);
                         _vm.ListPublishings.Add(Publishing.Name);
-                        DbClass.entities.SaveChanges();
+                        _repository.Save();
                         MessageBox.Show("Сохранения успешно применены!");
                     }
                     catch (Exception ex)
@@ -73,7 +68,7 @@ namespace CursovayaApp.WPF.ViewModels
                 {
                     try
                     {
-                        DbClass.entities.SaveChanges();
+                        _repository.Save();
                         _vm.GetPublishings();
                         MessageBox.Show("Сохранения успешно применены!");
                     }

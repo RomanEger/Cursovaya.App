@@ -3,12 +3,15 @@ using CursovayaApp.WPF.Models;
 using CursovayaApp.WPF.Services;
 using CursovayaApp.WPF.Views;
 using System.Collections.ObjectModel;
+using CursovayaApp.WPF.Repository.Contracts;
 using CursovayaApp.WPF.Views.Windows;
 
 namespace CursovayaApp.WPF.ViewModels
 {
     public partial class BooksViewModel
     {
+        private IGenericRepository<Book> _repositoryBook;
+        
         private AddOrUpdateBooks _addOrUpdateBooksView;
 
         private AddOrUpdateAuthors _addOrUpdateAuthorsView;

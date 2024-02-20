@@ -32,7 +32,7 @@ namespace CursovayaApp.WPF.ViewModels
                 {
                     try
                     {
-                        var localBooksList = DbClass.entities.Books.ToList();
+                        var localBooksList = _repositoryBook.GetAll();
                         foreach (var item in Books)
                         {
                             var publishingId = DbClass.entities.PublishingHouses.Where(x => x.Name == item.Publishing).Select(x => x.Id).FirstOrDefault();
@@ -45,11 +45,11 @@ namespace CursovayaApp.WPF.ViewModels
                                 PublishingHouseId = publishingId,
                                 AuthorId = authorId
                             };
-                            DbClass.entities.Books.AddOrUpdate(book);
+                            _repositoryBook.AddOrUpdate(book);
 
                         }
 
-                        DbClass.entities.SaveChanges();
+                        _repositoryBook.Save();
                         MessageBox.Show("Изменения успешно сохранены");
                     }
                     catch (Exception ex)
@@ -122,15 +122,15 @@ namespace CursovayaApp.WPF.ViewModels
                             var aId = DbClass.entities.Authors.Where(x => x.FullName == SelectedBook.AuthorFullName).Select(x => x.Id).FirstOrDefault();
                             var pId = DbClass.entities.PublishingHouses.Where(x => x.Name == SelectedBook.Publishing).Select(x => x.Id).FirstOrDefault();
 
-                            var book = DbClass.entities.Books.FirstOrDefault(x => x.Id == SelectedBook.Id) ?? new Book();
+                            var book = _repositoryBook.Get(SelectedBook.Id);
                             book.Id = SelectedBook.Id;
                             book.Quantity = SelectedBook.Quantity;
                             book.Title = SelectedBook.Title;
                             book.AuthorId = aId;
                             book.PublishingHouseId = pId;
 
-                            DbClass.entities.Books.AddOrUpdate(book);
-                            DbClass.entities.SaveChanges();
+                            _repositoryBook.AddOrUpdate(book);
+                            _repositoryBook.Save();
                             if (SelectedBook.ForAdd)
                             {
                                 var rId = DbClass.entities.ReasonsReg.Where(x => x.Name == SelectedReason).Select(x => x.Id)
@@ -162,7 +162,7 @@ namespace CursovayaApp.WPF.ViewModels
                                 DbClass.entities.DeregBooks.Add(deregBook);
 
                             }
-                            DbClass.entities.SaveChanges();
+                            _repositoryBook.Save();
                             _addOrUpdateBooksView.Close();
                         }
                         catch(Exception ex)
