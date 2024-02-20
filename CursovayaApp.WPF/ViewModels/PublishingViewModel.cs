@@ -1,6 +1,7 @@
 ﻿using CursovayaApp.WPF.Commands;
 using CursovayaApp.WPF.Models;
 using CursovayaApp.WPF.Models.DbModels;
+using CursovayaApp.WPF.Repository;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -13,6 +14,8 @@ namespace CursovayaApp.WPF.ViewModels
 {
     class PublishingViewModel : ViewModelBase
     {
+        private readonly IGenericRepository<PublishingHouse> _repository;
+
         private bool ForAdd { get; }
 
         private PublishingHouse _publishing;
@@ -31,6 +34,7 @@ namespace CursovayaApp.WPF.ViewModels
 
         public PublishingViewModel(PublishingHouse publishingHouse, BooksViewModel booksViewModel)
         {
+            _repository = new GenericRepository<PublishingHouse>(new ApplicationContext());
             Publishing = publishingHouse;
             _vm = booksViewModel;
             if (publishingHouse.Id < 1)
@@ -46,7 +50,7 @@ namespace CursovayaApp.WPF.ViewModels
                 {
                     try
                     {
-                        if (DbClass.entities.PublishingHouses.Any(x => x.Name == Publishing.Name))
+                        if (_publishing.Any(x => x.Name == Publishing.Name))
                         {
                             MessageBox.Show("Такое издательство уже существует!");
                             return;

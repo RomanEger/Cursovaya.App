@@ -10,4 +10,5 @@ public interface IGenericRepository<T> :IRepository where T: TableBase
     int AddOrUpdate(T item);
     int Delete(T item);
     bool Any(int id);
+    bool Any(Func<T, bool> predicate);
 }

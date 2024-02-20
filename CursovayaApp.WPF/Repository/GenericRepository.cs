@@ -45,4 +45,7 @@ public class GenericRepository<T> : IGenericRepository<T> where T: TableBase
     public bool Any(int id) =>
         _dbContext.Set<T>().Any(x => x.Id == id);
 
+    public bool Any(Func<T, bool> predicate) =>
+        _dbContext.Set<T>().Any(predicate);
+
 }
