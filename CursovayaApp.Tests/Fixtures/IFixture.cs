@@ -7,4 +7,6 @@ public interface IFixture<T> where T : TableBase
     IEnumerable<T> GetRandomData(int count);
 
     IEnumerable<T> GetTestData();
+
+    int Add(T item);
 }

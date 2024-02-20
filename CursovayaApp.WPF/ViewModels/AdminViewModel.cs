@@ -72,7 +72,7 @@ namespace CursovayaApp.WPF.ViewModels
         public AdminViewModel()
         {
             _userRepository = new UserRepository(/*new ApplicationContext()*/);
-            IRoleRepository roleRepository = new RoleRepository(new ApplicationContext());
+            IGenericRepository<Role> roleRepository = new GenericRepository<Role>();
             Pagination = new PaginationService<User>(3);
             try
             {

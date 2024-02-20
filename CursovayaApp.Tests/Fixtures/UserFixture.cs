@@ -21,17 +21,43 @@ public class UserFixture : IFixture<User>
         {
             new User()
             {
+                Id=1,
                 FullName = "hello",
-                Login = "login",
+                Login = "loginADM",
+                Password = "qwerty",
+                RoleId = 1
+            },
+            new User()
+            {
+                Id=2,
+                FullName = "hello",
+                Login = "login123",
                 Password = "qwerty",
                 RoleId = 2
             },
             new User()
             {
+                Id=3,
                 FullName = "hello",
-                Login = "admin",
+                Login = "login",
                 Password = "qwerty",
-                RoleId = 1
+                RoleId = 3
+            },
+            new User()
+            {
+                Id=4,
+                FullName = "helslo",
+                Login = "client",
+                Password = "qwerty",
+                RoleId = 4
             }
         };
+
+    public int Add(User newUser)
+    {
+        var list = GetTestData().ToList();
+        var count = list.Count;
+        list.Add(newUser);
+        return list.Count - count;
+    }
 }

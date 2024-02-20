@@ -2,11 +2,12 @@
 
 namespace CursovayaApp.WPF.Repository.Contracts;
 
-public interface IGenericRepository<T> where T: TableBase
+public interface IGenericRepository<T> :IRepository where T: TableBase
 {
     IEnumerable<T> GetAll();
     T Get(int id);
-    int Add(T newEntitie);
-    int Update(T entitie);
-    int Delete(T entitie);
+    int Add(T item);
+    int AddOrUpdate(T item);
+    int Delete(T item);
+    bool Any(int id);
 }

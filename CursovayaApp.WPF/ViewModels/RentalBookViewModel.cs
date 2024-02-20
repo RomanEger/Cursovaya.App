@@ -167,6 +167,7 @@ namespace CursovayaApp.WPF.ViewModels
                 {
                     var bookName = SelectedBook.Split(separator)[0];
                     var author = SelectedBook.Split(separator)[1];
+                    
                     var bookView =
                                 (from books in DbClass.entities.Books
                                  join authors in DbClass.entities.Authors

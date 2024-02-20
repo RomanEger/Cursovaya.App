@@ -2,13 +2,7 @@
 
 namespace CursovayaApp.WPF.Repository.Contracts;
 
-public interface IUserRepository : IRepository
+public interface IUserRepository : IGenericRepository<User>
 {
-    IEnumerable<User> GetAll();
-    User Get(int id);
     User Get(string login, string password);
-    int Add(User newUser);
-    int AddOrUpdate(User user);
-    int Delete(User user);
-    bool Any(int id);
 }
