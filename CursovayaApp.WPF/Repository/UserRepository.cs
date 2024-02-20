@@ -9,9 +9,9 @@ public class UserRepository : IUserRepository
 {
     private readonly DbContext _dbContext;
 
-    public UserRepository(DbContext dbContext)
+    public UserRepository()
     {
-        _dbContext = dbContext;
+        _dbContext = new ApplicationContext();
     }
 
     public int Save() =>

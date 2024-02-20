@@ -61,7 +61,7 @@ namespace CursovayaApp.WPF.ViewModels
 #pragma warning restore CS8618
         {
             ThisUser = new User();
-            _repository = new UserRepository(new ApplicationContext());
+            _repository = new UserRepository(/*new ApplicationContext()*/);
         }
     }
 }
