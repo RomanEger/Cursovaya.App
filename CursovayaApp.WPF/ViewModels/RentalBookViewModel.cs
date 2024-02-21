@@ -1,7 +1,10 @@
 ﻿using CursovayaApp.WPF.Commands;
 using CursovayaApp.WPF.Models;
 using CursovayaApp.WPF.Models.DbModels;
+using CursovayaApp.WPF.Repository;
+using CursovayaApp.WPF.Repository.Contracts;
 using CursovayaApp.WPF.Services;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -14,6 +17,11 @@ namespace CursovayaApp.WPF.ViewModels
 {
     public class RentalBookViewModel : ViewModelBase
     {
+        private readonly IGenericRepository<RentalBook> _repositoryRentalBook;
+        private readonly IGenericRepository<Book> _repositoryBook;
+        private readonly IGenericRepository<Author> _repositoryAuthor;
+        private readonly IGenericRepository<User> _repositoryUser;
+
         private string separator = " | ";
 
         private readonly bool _forGive;
@@ -40,15 +48,15 @@ namespace CursovayaApp.WPF.ViewModels
                 if (!_forGive && _selectedClient != null)
                 {
                     var arr = _selectedClient.Split(separator);
-                    var clientId = DbClass.entities.Users.Where(x => x.FullName == arr[0] && x.Login == arr[1]).Select(x => x.Id).FirstOrDefault();
-                    var books = from rental in DbClass.entities.RentalBooks
-                                join user in DbClass.entities.Users
+                    var clientId = _repositoryUser.Where(x => x.FullName == arr[0] && x.Login == arr[1]).Select(x => x.Id).FirstOrDefault();
+                    var books = from rental in _repositoryRentalBook.GetAll()
+                                join user in _repositoryUser.GetAll()
                                 on rental.UserId equals user.Id
-                                join book in DbClass.entities.Books
+                                join book in _repositoryBook.GetAll()
                                 on rental.BookId equals book.Id
-                                join author in DbClass.entities.Authors
+                                join author in _repositoryAuthor.GetAll()
                                 on book.AuthorId equals author.Id
-                                where user.Id == clientId
+                                where user.Id == clientId && rental.IsRentalEnd == false
                                 select book.Title + separator + author.FullName;
                     Books = new ObservableCollection<string>(books);
                 }
@@ -73,16 +81,22 @@ namespace CursovayaApp.WPF.ViewModels
         public RentalBookViewModel(bool forGive)
         {
             _forGive = forGive;
+            
+            _repositoryRentalBook = new GenericRepository<RentalBook>(new ApplicationContext());
+            _repositoryBook = new GenericRepository<Book>(new ApplicationContext());
+            _repositoryAuthor = new GenericRepository<Author>(new ApplicationContext());
+            _repositoryUser = new GenericRepository<User>(new ApplicationContext());
+
             if (forGive)
             {
                 try
                 {
-                    var books = (from book in DbClass.entities.Books
-                                join author in DbClass.entities.Authors
+                    var books = (from book in _repositoryBook.GetAll()
+                                join author in _repositoryAuthor.GetAll()
                                 on book.AuthorId equals author.Id
                                 select book.Title + separator + author.FullName).AsQueryable();
-                    Books = new ObservableCollection<string>(books);
-                    var clients = DbClass.entities.Users.Where(x => x.RoleId == 4).Select(x => x.FullName + separator + x.Login).AsQueryable();
+                    Books = new ObservableCollection<string>(books.ToList());
+                    var clients = _repositoryUser.Where(x => x.RoleId == 4).Select(x => x.FullName + separator + x.Login).AsQueryable();
                     Clients = new ObservableCollection<string>(clients);
                 }
                 catch (Exception ex)
@@ -94,8 +108,8 @@ namespace CursovayaApp.WPF.ViewModels
             {
                 try
                 {
-                    var clients = (from rental in DbClass.entities.RentalBooks
-                                   join user in DbClass.entities.Users
+                    var clients = (from rental in _repositoryRentalBook.GetAll()
+                                   join user in _repositoryUser.GetAll()
                                    on rental.UserId equals user.Id
                                    select user.FullName + separator + user.Login).Distinct().AsQueryable();
                     Clients = new ObservableCollection<string>(clients);
@@ -117,8 +131,8 @@ namespace CursovayaApp.WPF.ViewModels
                     var bookName = SelectedBook.Split(separator)[0];
                     var author = SelectedBook.Split(separator)[1];
                     var bookView = 
-                                (from books in DbClass.entities.Books
-                                join authors in DbClass.entities.Authors
+                                (from books in _repositoryBook.GetAll()
+                                join authors in _repositoryAuthor.GetAll()
                                 on books.AuthorId equals authors.Id
                                 select new
                                 {
@@ -127,7 +141,7 @@ namespace CursovayaApp.WPF.ViewModels
                                     authors.FullName,
                                 }).FirstOrDefault(x => x.Title == bookName && x.FullName == author);
 
-                    var count = DbClass.entities.RentalBooks.Count(x =>
+                    var count = _repositoryRentalBook.Count(x =>
                         x.IsRentalEnd == false && x.BookId == bookView.Id);
                     var canGive = Books.Count > count;
                     if (!canGive)
@@ -140,7 +154,7 @@ namespace CursovayaApp.WPF.ViewModels
 
                     var clientLogin = SelectedClient.Split(separator)[1];
 
-                    var client = DbClass.entities.Users.FirstOrDefault(x => x.RoleId == 4 && x.FullName == clientFullName && x.Login == clientLogin);
+                    var client = _repositoryUser.Get(x => x.RoleId == 4 && x.FullName == clientFullName && x.Login == clientLogin);
 
                     var entitie = new RentalBook()
                     {
@@ -150,8 +164,8 @@ namespace CursovayaApp.WPF.ViewModels
                         DateEnd = DateTime.Now.AddDays(14).Date,
                         IsRentalEnd = false
                     };
-                    DbClass.entities.RentalBooks.Add(entitie);
-                    DbClass.entities.SaveChanges();
+                    _repositoryRentalBook.Add(entitie);
+                    _repositoryRentalBook.Save();
                     MessageBox.Show("Книга выдана! Изменения сохранены!");
                 }
                 catch (Exception ex)
@@ -169,8 +183,8 @@ namespace CursovayaApp.WPF.ViewModels
                     var author = SelectedBook.Split(separator)[1];
                     
                     var bookView =
-                                (from books in DbClass.entities.Books
-                                 join authors in DbClass.entities.Authors
+                                (from books in _repositoryBook.GetAll()
+                                 join authors in _repositoryAuthor.GetAll()
                                  on books.AuthorId equals authors.Id
                                  select new
                                  {
@@ -183,15 +197,17 @@ namespace CursovayaApp.WPF.ViewModels
 
                     var clientLogin = SelectedClient.Split(separator)[1];
 
-                    var client = DbClass.entities.Users.FirstOrDefault(x => x.RoleId == 4 && x.FullName == clientFullName && x.Login == clientLogin);
+                    var client = _repositoryUser.Get(x => x.RoleId == 4 && x.FullName == clientFullName && x.Login == clientLogin);
 
-                    var entitie = DbClass.entities.RentalBooks.FirstOrDefault(x => x.BookId == bookView.Id && x.UserId == client.Id);
+                    var entitie = _repositoryRentalBook.Get(x => x.BookId == bookView.Id && x.UserId == client.Id);
 
                     entitie.IsRentalEnd = true;
-
-                    DbClass.entities.SaveChanges();
+                    
+                    _repositoryRentalBook.Update(entitie);
 
                     MessageBox.Show("Книга принята! Изменения сохранены!");
+                    SelectedBook = null;
+                    SelectedClient = SelectedClient;
                 }
                 catch (Exception ex )
                 {

@@ -66,44 +66,6 @@ namespace CursovayaApp.WPF.Models.DbModels
         public ICollection<Photo> Photos { get; set; } = new List<Photo>();
 
 
-        public int AddBook()
-        {
-            using var db = new ApplicationContext();
-            var transaction = db.Database.BeginTransaction();
-            try
-            {
-                DbClass.entities.Books.Add(this);
-                DbClass.entities.RegBooks.Add(new RegBook()
-                { BookId = this.Id, DateOfReg = DateTime.Now, ReasonId = 1, RegQuantity = this.Quantity });
-                transaction.Commit();
-                return 0;
-            }
-            catch
-            {
-                transaction.Rollback();
-                return -1;
-            }
-        }
-
-        public async Task<int> AddBookAsync()
-        {
-            await using var db = new ApplicationContext();
-            var transaction = await db.Database.BeginTransactionAsync();
-            try
-            {
-                await DbClass.entities.Books.AddAsync(this);
-                await DbClass.entities.RegBooks.AddAsync(new RegBook()
-                { BookId = this.Id, DateOfReg = DateTime.Now, ReasonId = 1, RegQuantity = this.Quantity });
-                await transaction.CommitAsync();
-                return 0;
-            }
-            catch
-            {
-                await transaction.RollbackAsync();
-                return -1;
-            }
-        }
-
         public event PropertyChangedEventHandler PropertyChanged;
         public virtual void OnPropertyChanged([CallerMemberName] string prop = "")
         {

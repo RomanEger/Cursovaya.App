@@ -89,51 +89,6 @@ namespace CursovayaApp.WPF.Models.DbModels
         public Book? Book { get; set; }
         public ReasonReg? Reason { get; set; }
 
-        public int AddBook()
-        {
-            using var db = new ApplicationContext();
-            var transaction = db.Database.BeginTransaction();
-            try
-            {
-                var book = DbClass.entities.Books.FirstOrDefault(x => x.Id == BookId);
-                if (book == null)
-                    throw new Exception("Книга не найдена");
-
-                book.Quantity += RegQuantity;
-                DbClass.entities.Books.Update(book);
-                DbClass.entities.RegBooks.Add(this);
-                transaction.Commit();
-                return 0;
-            }
-            catch
-            {
-                transaction.Rollback();
-                return -1;
-            }
-        }
-
-        public async Task<int> AddBookAsync()
-        {
-            using var db = new ApplicationContext();
-            var transaction = db.Database.BeginTransaction();
-            try
-            {
-                var book = await DbClass.entities.Books.FirstOrDefaultAsync(x => x.Id == BookId);
-                if (book == null)
-                    throw new Exception("Книга не найдена");
-
-                book.Quantity += RegQuantity;
-                DbClass.entities.Update(book);
-                await DbClass.entities.RegBooks.AddAsync(this);
-                await transaction.CommitAsync();
-                return 0;
-            }
-            catch
-            {
-                await transaction.RollbackAsync();
-                return -1;
-            }
-        }
 
         public event PropertyChangedEventHandler PropertyChanged;
         public virtual void OnPropertyChanged([CallerMemberName] string prop = "")

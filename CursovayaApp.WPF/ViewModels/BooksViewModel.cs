@@ -34,7 +34,7 @@ namespace CursovayaApp.WPF.ViewModels
         {
             try
             {
-                ListPublishings = new ObservableCollection<string>(DbClass.entities.PublishingHouses.Select(x => x.Name).ToList());
+                ListPublishings = new ObservableCollection<string>(_repositoryPublishing.GetAll().Select(x => x.Name).ToList());
             }
             catch (Exception ex)
             {
@@ -47,10 +47,10 @@ namespace CursovayaApp.WPF.ViewModels
             try
             {
                 var l =
-                    (from book in DbClass.entities.Books
-                     join author in DbClass.entities.Authors
+                    (from book in _repositoryBook.GetAll()
+                     join author in _repositoryAuthor.GetAll()
                          on book.AuthorId equals author.Id
-                     join publishing in DbClass.entities.PublishingHouses
+                     join publishing in _repositoryPublishing.GetAll()
                          on book.PublishingHouseId equals publishing.Id
                      select new
                      {
@@ -82,40 +82,7 @@ namespace CursovayaApp.WPF.ViewModels
                 MessageBox.Show(ex.Message, "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
-        private async Task GetBooksAsync()
-        {
-            var l = await 
-                (from book in DbClass.entities.Books
-                 join author in DbClass.entities.Authors
-                     on book.AuthorId equals author.Id
-                 join publishing in DbClass.entities.PublishingHouses
-                     on book.PublishingHouseId equals publishing.Id
-                 select new
-                 {
-                     Id = book.Id,
-                     Title = book.Title,
-                     AuthorFullName = author.FullName,
-                     Quantity = book.Quantity,
-                     Publishing = publishing.Name
-                 }).ToListAsync();
-            _listBooks = new List<BookView>();
-            foreach (var item in l)
-            {
-                _listBooks.Add(new BookView(item.Quantity)
-                {
-                    Id = item.Id,
-                    Title = item.Title,
-                    AuthorFullName = item.AuthorFullName,
-                    Quantity = item.Quantity,
-                    Publishing = item.Publishing
-                });
-            }
-
-            _sortedListBooks = _listBooks;
-            Books = new ObservableCollection<BookView>();
-            Pagination.InsertToUsers(ref _books, _listBooks);
-        }
-
+        
         private void GetAuthors()
         {
             Authors = new ObservableCollection<string> { "Все" };
@@ -129,7 +96,7 @@ namespace CursovayaApp.WPF.ViewModels
         {
             try
             {
-                AuthorsForAdd = new ObservableCollection<string>(DbClass.entities.Authors.Select(x => x.FullName).AsQueryable());
+                AuthorsForAdd = new ObservableCollection<string>(_repositoryAuthor.GetAll().Select(x => x.FullName).AsQueryable());
             }
             catch (Exception ex) 
             {
@@ -142,6 +109,12 @@ namespace CursovayaApp.WPF.ViewModels
             Pagination = new PaginationService<BookView>(7);
             _loggedUser = new();
             _repositoryBook = new GenericRepository<Book>(new ApplicationContext());
+            _repositoryAuthor = new GenericRepository<Author>(new ApplicationContext());
+            _repositoryRegBook = new GenericRepository<RegBook>(new ApplicationContext());
+            _repositoryDeregBook = new GenericRepository<DeregBook>(new ApplicationContext());
+            _repositoryPublishing = new GenericRepository<PublishingHouse>(new ApplicationContext());
+            _repositoryReasonsReg = new GenericRepository<ReasonReg>(new ApplicationContext());
+            _repositoryReasonsDereg = new GenericRepository<ReasonDereg>(new ApplicationContext());
             try
             {
                 GetData();

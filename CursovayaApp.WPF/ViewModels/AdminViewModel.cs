@@ -189,7 +189,7 @@ namespace CursovayaApp.WPF.ViewModels
                 {
                     try
                     {
-                        if (_userRepository.Any(SelectedUser.Id))
+                        if (_userRepository.Any(x => x.Id == SelectedUser.Id))
                         {
                             _userRepository.Delete(SelectedUser);
                         }

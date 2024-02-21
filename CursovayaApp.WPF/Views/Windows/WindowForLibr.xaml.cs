@@ -1,4 +1,5 @@
-﻿using CursovayaApp.WPF.ViewModels;
+﻿using CursovayaApp.WPF.Models.DbModels;
+using CursovayaApp.WPF.ViewModels;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;

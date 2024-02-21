@@ -18,8 +18,7 @@ namespace CursovayaApp.WPF
         public MainWindow()
         {
             InitializeComponent();
-            ResizeMode =  ResizeMode.CanMinimize;
-            DbClass.entities = new ApplicationContext();
+            ResizeMode = ResizeMode.CanMinimize;
             MyFrame.frame = MainFrame;
             Title = "Библиотека \"Читайка\"";
             l = new LoginPage();
@@ -40,7 +39,8 @@ namespace CursovayaApp.WPF
             {
                 try
                 {
-                    DbClass.entities.SaveChanges();
+                    var repo = new ApplicationContext();
+                    repo.SaveChanges();
                 }
                 catch (Exception ex)
                 {

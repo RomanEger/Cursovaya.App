@@ -21,6 +21,9 @@ public class GenericRepository<T> : IGenericRepository<T> where T: TableBase
         _dbContext.Set<T>().AsEnumerable();
 
 
+    public T Get(Func<T, bool> predicate) =>
+        _dbContext.Set<T>().FirstOrDefault(predicate);
+
     public T Get(int id) =>
         _dbContext.Set<T>().FirstOrDefault(x => x.Id == id);
 
@@ -36,16 +39,23 @@ public class GenericRepository<T> : IGenericRepository<T> where T: TableBase
         return _dbContext.SaveChanges();
     }
 
+    public int Update(T item)
+    {
+        _dbContext.Set<T>().Update(item);
+        return _dbContext.SaveChanges();
+    }
     public int Delete(T item)
     {
         _dbContext.Set<T>().Remove(item);
         return _dbContext.SaveChanges();
     }
 
-    public bool Any(int id) =>
-        _dbContext.Set<T>().Any(x => x.Id == id);
-
     public bool Any(Func<T, bool> predicate) =>
         _dbContext.Set<T>().Any(predicate);
 
+    public IQueryable<T> Where(Func<T, bool> predicate) =>
+        _dbContext.Set<T>().Where(predicate).AsQueryable();
+
+    public int Count(Func<T, bool> predicate) =>
+        _dbContext.Set<T>().Count(predicate);
 }

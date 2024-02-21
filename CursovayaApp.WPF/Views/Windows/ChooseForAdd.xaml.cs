@@ -1,4 +1,6 @@
 ﻿using CursovayaApp.WPF.Models;
+using CursovayaApp.WPF.Models.DbModels;
+using CursovayaApp.WPF.Repository;
 using CursovayaApp.WPF.ViewModels;
 using System.Windows;
 using System.Windows.Controls;
@@ -49,9 +51,11 @@ namespace CursovayaApp.WPF.Views.Windows
         {
             try
             {
+                var repo = new GenericRepository<PublishingHouse>(new ApplicationContext());
+
                 if (_vm.ListPublishings != null && _vm.ListPublishings.Any()) return;
 
-                List<string> list = DbClass.entities.PublishingHouses.Select(x => x.Name).ToList();
+                List<string> list = repo.GetAll().Select(x => x.Name).ToList();
                 _vm.ListPublishings = new System.Collections.ObjectModel.ObservableCollection<string>(list);
             }
             catch (Exception ex) 
@@ -64,9 +68,11 @@ namespace CursovayaApp.WPF.Views.Windows
         {
             try
             {
+                var repo = new GenericRepository<Author>(new ApplicationContext());
+
                 if (_vm.AuthorsForAdd != null && _vm.AuthorsForAdd.Any()) return;
 
-                List<string> list = DbClass.entities.Authors.Select(x => x.FullName).ToList();
+                List<string> list = repo.GetAll().Select(x => x.FullName).ToList();
                 _vm.AuthorsForAdd = new System.Collections.ObjectModel.ObservableCollection<string>(list);
             }
             catch (Exception ex)

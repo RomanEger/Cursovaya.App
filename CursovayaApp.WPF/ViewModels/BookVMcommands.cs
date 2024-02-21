@@ -35,8 +35,8 @@ namespace CursovayaApp.WPF.ViewModels
                         var localBooksList = _repositoryBook.GetAll();
                         foreach (var item in Books)
                         {
-                            var publishingId = DbClass.entities.PublishingHouses.Where(x => x.Name == item.Publishing).Select(x => x.Id).FirstOrDefault();
-                            var authorId = DbClass.entities.Authors.Where(x => x.FullName == item.AuthorFullName).Select(x => x.Id).FirstOrDefault();
+                            var publishingId = _repositoryPublishing.Where(x => x.Name == item.Publishing).Select(x => x.Id).FirstOrDefault();
+                            var authorId = _repositoryAuthor.Where(x => x.FullName == item.AuthorFullName).Select(x => x.Id).FirstOrDefault();
                             var book = new Book()
                             {
                                 Id = item.Id,
@@ -98,7 +98,7 @@ namespace CursovayaApp.WPF.ViewModels
                         {
                             if (AuthorsForAdd == null)
                             {
-                                var listAuthors = DbClass.entities.Authors.ToList();
+                                var listAuthors = _repositoryAuthor.GetAll();
                                 AuthorsForAdd = new ObservableCollection<string>(listAuthors.Select(x => x.FullName).Distinct());
                             }
                             if (!AuthorsForAdd.Contains(SelectedBook.AuthorFullName))
@@ -119,10 +119,10 @@ namespace CursovayaApp.WPF.ViewModels
                                 else return;
                             }
 
-                            var aId = DbClass.entities.Authors.Where(x => x.FullName == SelectedBook.AuthorFullName).Select(x => x.Id).FirstOrDefault();
-                            var pId = DbClass.entities.PublishingHouses.Where(x => x.Name == SelectedBook.Publishing).Select(x => x.Id).FirstOrDefault();
+                            var aId = _repositoryAuthor.Where(x => x.FullName == SelectedBook.AuthorFullName).Select(x => x.Id).FirstOrDefault();
+                            var pId = _repositoryPublishing.Where(x => x.Name == SelectedBook.Publishing).Select(x => x.Id).FirstOrDefault();
 
-                            var book = _repositoryBook.Get(SelectedBook.Id);
+                            var book = _repositoryBook.Get(x => x.Id == SelectedBook.Id);
                             book.Id = SelectedBook.Id;
                             book.Quantity = SelectedBook.Quantity;
                             book.Title = SelectedBook.Title;
@@ -133,9 +133,9 @@ namespace CursovayaApp.WPF.ViewModels
                             _repositoryBook.Save();
                             if (SelectedBook.ForAdd)
                             {
-                                var rId = DbClass.entities.ReasonsReg.Where(x => x.Name == SelectedReason).Select(x => x.Id)
+                                var rId = _repositoryReasonsReg.Where(x => x.Name == SelectedReason).Select(x => x.Id)
                                     .FirstOrDefault();
-                                var bId = DbClass.entities.Books.Where(x => x.AuthorId == book.AuthorId && x.Title == book.Title && x.PublishingHouseId == x.PublishingHouseId).Select(x => x.Id).FirstOrDefault();
+                                var bId = _repositoryBook.Where(x => x.AuthorId == book.AuthorId && x.Title == book.Title && x.PublishingHouseId == x.PublishingHouseId).Select(x => x.Id).FirstOrDefault();
                                 var regBook = new RegBook()
                                 {
                                     BookId = bId,
@@ -144,13 +144,13 @@ namespace CursovayaApp.WPF.ViewModels
                                     UserId = _loggedUser.CurrentUser.Id,
                                     RegQuantity = SelectedBook.QuantityToUpdate
                                 };
-                                DbClass.entities.RegBooks.Add(regBook);
+                                _repositoryRegBook.Add(regBook);
                             }
                             else
                             {
-                                var dId = DbClass.entities.ReasonsReg.Where(x => x.Name == SelectedReason).Select(x => x.Id)
+                                var dId = _repositoryReasonsDereg.Where(x => x.Name == SelectedReason).Select(x => x.Id)
                                     .FirstOrDefault();
-                                var bId = DbClass.entities.Books.Where(x => x.AuthorId == book.AuthorId && x.Title == book.Title && x.PublishingHouseId == x.PublishingHouseId).Select(x => x.Id).FirstOrDefault();
+                                var bId = _repositoryBook.Where(x => x.AuthorId == book.AuthorId && x.Title == book.Title && x.PublishingHouseId == x.PublishingHouseId).Select(x => x.Id).FirstOrDefault();
                                 var deregBook = new DeregBook()
                                 {
                                     BookId = bId,
@@ -159,7 +159,7 @@ namespace CursovayaApp.WPF.ViewModels
                                     UserId = _loggedUser.CurrentUser.Id,
                                     DeregQuantity = SelectedBook.QuantityToUpdate
                                 };
-                                DbClass.entities.DeregBooks.Add(deregBook);
+                                _repositoryDeregBook.Add(deregBook);
 
                             }
                             _repositoryBook.Save();
@@ -193,7 +193,7 @@ namespace CursovayaApp.WPF.ViewModels
         public RelayCommand AddAuthorCommand =>
             new(obj =>
                 {
-                    var author = DbClass.entities.Authors.FirstOrDefault(x => x.FullName == SelectedAuthor) ?? new Author();
+                    var author = _repositoryAuthor.Get(x => x.FullName == SelectedAuthor) ?? new Author();
                     _addOrUpdateAuthorsView = new(author, this);
                     _addOrUpdateAuthorsView.ShowDialog();
                 });
@@ -221,7 +221,7 @@ namespace CursovayaApp.WPF.ViewModels
                 {
                     try
                     {
-                        var publishing = DbClass.entities.PublishingHouses.FirstOrDefault(x => x.Name == SelectedPublishing) ?? new PublishingHouse();
+                        var publishing = _repositoryPublishing.Get(x => x.Name == SelectedPublishing) ?? new PublishingHouse();
                         _addOrUpdatePublishingsView = new(publishing, this);
                         _addOrUpdatePublishingsView.ShowDialog();
                     }
@@ -258,5 +258,7 @@ namespace CursovayaApp.WPF.ViewModels
                 _windowForGiveView = new(false);
                 _windowForGiveView.ShowDialog();
             });
+
+
     }
 }

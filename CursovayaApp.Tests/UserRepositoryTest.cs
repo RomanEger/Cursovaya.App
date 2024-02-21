@@ -118,8 +118,10 @@ namespace CursovayaApp.Tests
             int id = 1;
 
             var list = _fixture.GetTestData();
-
-            _mockUserRepository.Setup(x => x.Get(id)).Returns(list.ToList()[0]);
+            _mockUserRepository.Setup(x =>
+                x.Get(id))
+                .Returns(
+                    list.ToList()[0]);
 
             var repo = _mockUserRepository.Object;
 
@@ -135,7 +137,7 @@ namespace CursovayaApp.Tests
 
             var repo = new UserRepository(_dbContext);
 
-            var user = repo.Get(id);
+            var user = repo.Get(x => x.Id == id);
 
             Assert.Equal(id, user.Id);
         }

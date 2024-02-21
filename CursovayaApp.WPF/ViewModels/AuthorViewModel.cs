@@ -3,11 +3,14 @@ using CursovayaApp.WPF.Commands;
 using CursovayaApp.WPF.Models;
 using CursovayaApp.WPF.Models.DbModels;
 using System.Windows;
+using CursovayaApp.WPF.Repository.Contracts;
 
 namespace CursovayaApp.WPF.ViewModels
 {
     internal class AuthorViewModel : ViewModelBase
     {
+        private readonly IGenericRepository<Author> _repository;
+
         private Author _selectedAuthor;
         public Author SelectedAuthor
         {
@@ -48,14 +51,14 @@ namespace CursovayaApp.WPF.ViewModels
                 {
                     if (_ForAdd)
                     {
-                        DbClass.entities.Authors.Add(SelectedAuthor);
+                        _repository.Add(SelectedAuthor);
                         _vm.Authors.Add(SelectedAuthor.FullName);
                         if (_vm.AuthorsForAdd != null)
                             _vm.AuthorsForAdd.Add(SelectedAuthor.FullName);
                         else
                             _vm.AuthorsForAdd = new ObservableCollection<string>(new List<string>() {SelectedAuthor.FullName});
                     }
-                    DbClass.entities.SaveChanges();
+                    _repository.Save();
                 }
                 catch (Exception ex) 
                 {

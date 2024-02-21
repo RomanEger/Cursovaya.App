@@ -10,8 +10,15 @@ namespace CursovayaApp.WPF.ViewModels
 {
     public partial class BooksViewModel
     {
-        private IGenericRepository<Book> _repositoryBook;
-        
+        private readonly IGenericRepository<Book> _repositoryBook;
+        private readonly IGenericRepository<PublishingHouse> _repositoryPublishing;
+        private readonly IGenericRepository<Author> _repositoryAuthor;
+        private readonly IGenericRepository<RegBook> _repositoryRegBook;
+        private readonly IGenericRepository<DeregBook> _repositoryDeregBook;
+        private readonly IGenericRepository<ReasonReg> _repositoryReasonsReg;
+        private readonly IGenericRepository<ReasonDereg> _repositoryReasonsDereg;
+
+
         private AddOrUpdateBooks _addOrUpdateBooksView;
 
         private AddOrUpdateAuthors _addOrUpdateAuthorsView;
