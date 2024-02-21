@@ -1,8 +1,8 @@
 ﻿using System.Collections.ObjectModel;
 using CursovayaApp.WPF.Commands;
-using CursovayaApp.WPF.Models;
 using CursovayaApp.WPF.Models.DbModels;
 using System.Windows;
+using CursovayaApp.WPF.Repository;
 using CursovayaApp.WPF.Repository.Contracts;
 
 namespace CursovayaApp.WPF.ViewModels
@@ -22,16 +22,17 @@ namespace CursovayaApp.WPF.ViewModels
             }
         }
 
-        private readonly Author Author;
+        private readonly Author _author;
 
-        private readonly bool _ForAdd = false;
+        private readonly bool _forAdd = false;
 
         private readonly BooksViewModel _vm;
 
         public AuthorViewModel(Author author, BooksViewModel vm)
         {
+            _repository = new GenericRepository<Author>(new ApplicationContext());
             SelectedAuthor = author;
-            Author = new Author()
+            _author = new Author()
             {
                 Id = author.Id,
                 BirthYear = author.BirthYear,
@@ -41,24 +42,24 @@ namespace CursovayaApp.WPF.ViewModels
             };
             _vm = vm;
             if (author.Id < 1)
-                _ForAdd = true;
+                _forAdd = true;
         }
 
         public RelayCommand AddOrUpdateAuthorCommand =>
-            new (obj =>
+            new (_ =>
             {
                 try
                 {
-                    if (_ForAdd)
+                    if (_forAdd)
                     {
                         _repository.Add(SelectedAuthor);
-                        _vm.Authors.Add(SelectedAuthor.FullName);
                         if (_vm.AuthorsForAdd != null)
                             _vm.AuthorsForAdd.Add(SelectedAuthor.FullName);
                         else
                             _vm.AuthorsForAdd = new ObservableCollection<string>(new List<string>() {SelectedAuthor.FullName});
                     }
                     _repository.Save();
+                    MessageBox.Show("Автор успешно добавлен!");
                 }
                 catch (Exception ex) 
                 {
@@ -67,15 +68,15 @@ namespace CursovayaApp.WPF.ViewModels
             });
 
         public RelayCommand CancelCommand =>
-            new (obj =>
+            new (_ =>
             {
-                SelectedAuthor = Author;
+                SelectedAuthor = _author;
             });
 
         private bool _isChecked;
 
         public RelayCommand DeathYearCommand =>
-            new (obj =>
+            new (_ =>
             {
                 if (!_isChecked)
                 {

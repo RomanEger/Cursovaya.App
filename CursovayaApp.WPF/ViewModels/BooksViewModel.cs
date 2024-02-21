@@ -1,8 +1,6 @@
-﻿using CursovayaApp.WPF.Models;
-using CursovayaApp.WPF.Models.DbModels;
+﻿using CursovayaApp.WPF.Models.DbModels;
 using CursovayaApp.WPF.Services;
 using System.Collections.ObjectModel;
-using Microsoft.EntityFrameworkCore;
 using System.Windows;
 using CursovayaApp.WPF.Repository;
 
@@ -54,10 +52,10 @@ namespace CursovayaApp.WPF.ViewModels
                          on book.PublishingHouseId equals publishing.Id
                      select new
                      {
-                         Id = book.Id,
-                         Title = book.Title,
+                         book.Id,
+                         book.Title,
                          AuthorFullName = author.FullName,
-                         Quantity = book.Quantity,
+                         book.Quantity,
                          Publishing = publishing.Name
                      }).AsQueryable();
                 _listBooks = new List<BookView>();
@@ -107,7 +105,9 @@ namespace CursovayaApp.WPF.ViewModels
         public BooksViewModel()
         {
             Pagination = new PaginationService<BookView>(7);
+            
             _loggedUser = new();
+            
             _repositoryBook = new GenericRepository<Book>(new ApplicationContext());
             _repositoryAuthor = new GenericRepository<Author>(new ApplicationContext());
             _repositoryRegBook = new GenericRepository<RegBook>(new ApplicationContext());
@@ -115,6 +115,7 @@ namespace CursovayaApp.WPF.ViewModels
             _repositoryPublishing = new GenericRepository<PublishingHouse>(new ApplicationContext());
             _repositoryReasonsReg = new GenericRepository<ReasonReg>(new ApplicationContext());
             _repositoryReasonsDereg = new GenericRepository<ReasonDereg>(new ApplicationContext());
+            
             try
             {
                 GetData();

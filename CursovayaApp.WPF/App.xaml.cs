@@ -2,8 +2,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using System.Configuration;
-using System.Data;
 using System.Windows;
 
 namespace CursovayaApp.WPF
@@ -11,7 +9,7 @@ namespace CursovayaApp.WPF
     /// <summary>
     /// Interaction logic for App.xaml
     /// </summary>
-    public partial class App : Application
+    public partial class App
     {
         protected override async void OnStartup(StartupEventArgs e)
         {
@@ -28,10 +26,10 @@ namespace CursovayaApp.WPF
         public App()
         {
             AppHost = Host.CreateDefaultBuilder()
-                .ConfigureServices((hostContext, servies) =>
+                .ConfigureServices((_, services) =>
                 {
-                    servies.AddSingleton<MainWindow>();
-                    servies.AddSingleton<DbContext, ApplicationContext>();
+                    services.AddSingleton<MainWindow>();
+                    services.AddSingleton<DbContext, ApplicationContext>();
                 }).
                 Build();
         }

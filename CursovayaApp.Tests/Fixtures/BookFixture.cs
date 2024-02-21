@@ -1,10 +1,5 @@
 ﻿using Bogus;
 using CursovayaApp.WPF.Models.DbModels;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CursovayaApp.Tests.Fixtures
 {

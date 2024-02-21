@@ -1,16 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using CursovayaApp.WPF.Repository;
 using CursovayaApp.WPF.Repository.Contracts;
-using Microsoft.EntityFrameworkCore;
 
 namespace CursovayaApp.WPF.Models.DbModels
 {
@@ -70,13 +64,15 @@ namespace CursovayaApp.WPF.Models.DbModels
         }
 
         private int _quantity;
-
+        
         public int Quantity
         {
             get => _quantity;
             set
             {
-                if (_quantity > value)
+                if(value < 0)
+                    return;
+                if (_oldQuantity > value)
                 {
                     QuantityToUpdate = _oldQuantity - value;
                     ForAdd = false;
@@ -123,6 +119,7 @@ namespace CursovayaApp.WPF.Models.DbModels
             set
             {
                 _forAdd = value;
+                GetReasons();
                 OnPropertyChanged();
             }
         }

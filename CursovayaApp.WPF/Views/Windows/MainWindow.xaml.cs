@@ -1,8 +1,6 @@
 ﻿using System.ComponentModel;
-using System.IO;
 using System.Windows;
 using System.Windows.Controls;
-using CursovayaApp.WPF.Models;
 using CursovayaApp.WPF.Models.DbModels;
 using CursovayaApp.WPF.Services;
 using CursovayaApp.WPF.Views;
@@ -19,7 +17,7 @@ namespace CursovayaApp.WPF
         {
             InitializeComponent();
             ResizeMode = ResizeMode.CanMinimize;
-            MyFrame.frame = MainFrame;
+            MyFrame.Frame = MainFrame;
             Title = "Библиотека \"Читайка\"";
             l = new LoginPage();
             MyFrame.Navigate(l);
@@ -27,7 +25,7 @@ namespace CursovayaApp.WPF
 
         private void MainWindow_OnClosing(object? sender, CancelEventArgs e)
         {
-            var x = MyFrame.frame.Content as Page;
+            var x = MyFrame.Frame.Content as Page;
             if(l.GetType() == x?.GetType())
                 return;
 

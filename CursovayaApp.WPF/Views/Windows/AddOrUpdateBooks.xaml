@@ -43,7 +43,7 @@
                     Margin="5 5 0 5"/>
             </StackPanel>
             <StackPanel
-                        DataContext="{Binding SelectedBook}">
+                DataContext="{Binding SelectedBook}">
                 <TextBlock Text="Название" />
                 <TextBox Text="{Binding Title, UpdateSourceTrigger=PropertyChanged}" />
                 <TextBlock Text="Новое количество" />
@@ -63,15 +63,12 @@
                 HorizontalAlignment="Center"
                 Orientation="Horizontal">
                 <Button
-                        Style="{StaticResource MainButtonStyle}"
+                    Style="{StaticResource MainButtonStyle}"
                     Content="Сохранить"
-                    Background="DodgerBlue"
-                    Foreground="White"
-                    BorderBrush="Transparent"
                     Command="{Binding AddOrUpdateBookCommand}"
                     Width="110"/>
                 <Button
-                        Style="{StaticResource SecondaryButtonStyle}"
+                    Style="{StaticResource SecondaryButtonStyle}"
                     Content="Отменить"
                     Command="{Binding CancelCommand}"
                     Width="110"/>

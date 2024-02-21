@@ -27,9 +27,16 @@ namespace CursovayaApp.WPF.ViewModels
 
         private WindowForLibr _windowForGiveView;
 
-        //private WindowForRecieve _windowForRecieveView;
-
-        public ObservableCollection<string> ListReasons { get; set; }
+        public ObservableCollection<string> ListReasons
+        {
+            get => _listReasons;
+            set
+            {
+                if (Equals(value, _listReasons)) return;
+                _listReasons = value;
+                OnPropertyChanged();
+            }
+        }
 
         private string _selectedReason;
         public string SelectedReason
@@ -39,10 +46,21 @@ namespace CursovayaApp.WPF.ViewModels
             {
                 _selectedReason = value;
                 OnPropertyChanged();
+                OnPropertyChanged(nameof(AddOrUpdateBookCommand));
+                OnPropertyChanged();
             }
         }
 
-        public ObservableCollection<string> ListPublishings { get; set; }
+        public ObservableCollection<string> ListPublishings
+        {
+            get => _listPublishings;
+            set
+            {
+                if (Equals(value, _listPublishings)) return;
+                _listPublishings = value;
+                OnPropertyChanged();
+            }
+        }
 
         private string _selectedPublishing;
         public string SelectedPublishing
@@ -51,6 +69,8 @@ namespace CursovayaApp.WPF.ViewModels
             set
             {
                 _selectedPublishing = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(AddPublishingCommand));
                 if(SelectedBook != null)
                     SelectedBook.Publishing = _selectedPublishing;
                 OnPropertyChanged();
@@ -64,8 +84,9 @@ namespace CursovayaApp.WPF.ViewModels
             set
             {
                 _searchText = value;
+                OnPropertyChanged();
                 Sort();
-                OnPropertyChanged("SearchText");
+                OnPropertyChanged();
             }
         }
 
@@ -73,9 +94,32 @@ namespace CursovayaApp.WPF.ViewModels
 
         private List<BookView> _sortedListBooks;
 
-        public ObservableCollection<string> Authors { get; set; }
+        public ObservableCollection<string> Authors
+        {
+            get => _authors;
+            private set
+            {
+                if (Equals(value, _authors)) return;
+                _authors = value;
+                OnPropertyChanged();
+                OnPropertyChanged();
+                OnPropertyChanged();
+            }
+        }
 
-        public ObservableCollection<string> AuthorsForAdd { get; set; }
+        public ObservableCollection<string>? AuthorsForAdd
+        {
+            get => _authorsForAdd;
+            set
+            {
+                if (Equals(value, _authorsForAdd)) return;
+                _authorsForAdd = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(AddOrUpdateBookCommand));
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(AddOrUpdateBookCommand));
+            }
+        }
 
         private string _selectedAuthor = string.Empty;
         public string SelectedAuthor
@@ -84,20 +128,36 @@ namespace CursovayaApp.WPF.ViewModels
             set
             {
                 _selectedAuthor = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(AddAuthorCommand));
                 Sort();
                 SetCount();
-                OnPropertyChanged("SelectedAuthor");
+                OnPropertyChanged();
+            }
+        }
+        private string _selectedAuthorForAdd = string.Empty;
+        public string SelectedAuthorForAdd
+        {
+            get => _selectedAuthorForAdd;
+            set
+            {
+                _selectedAuthorForAdd = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(AddAuthorCommand));
+                Sort();
+                SetCount();
+                OnPropertyChanged();
             }
         }
 
-        private PaginationService<BookView> _pagination;
+        private readonly PaginationService<BookView> _pagination;
         public PaginationService<BookView> Pagination
         {
             get => _pagination;
-            set
+            init
             {
                 _pagination = value;
-                OnPropertyChanged("Pagination");
+                OnPropertyChanged();
             }
         }
 
@@ -108,22 +168,45 @@ namespace CursovayaApp.WPF.ViewModels
             set
             {
                 _books = value;
-                OnPropertyChanged("Books");
+                OnPropertyChanged(nameof(SaveCommand));
+                OnPropertyChanged(nameof(AddCommand));
+                OnPropertyChanged(nameof(AddOrUpdateBookCommand));
+                OnPropertyChanged(nameof(CancelCommand));
+                OnPropertyChanged();
             }
         }
 
-        private BookView _selectedBook;
-        public BookView SelectedBook
+        private BookView? _selectedBook;
+        public BookView? SelectedBook
         {
             get => _selectedBook;
             set
             {
                 _selectedBook = value;
+                OnPropertyChanged(nameof(AddCommand));
+                OnPropertyChanged(nameof(AddOrUpdateBookCommand));
+                OnPropertyChanged(nameof(CancelCommand));
                 GetPublishings();
-                OnPropertyChanged("SelectedBook");
+                OnPropertyChanged();
             }
         }
 
-        private LoggedUser _loggedUser;
+        private BookView? _bookForUpdateInit;
+
+        public BookView? BookForUpdate
+        {
+            get => _bookForUpdateInit;
+            set
+            {
+                _bookForUpdateInit = value;
+                OnPropertyChanged();
+            }
+        }
+        
+        private readonly LoggedUser _loggedUser;
+        private ObservableCollection<string> _authors;
+        private ObservableCollection<string>? _authorsForAdd;
+        private ObservableCollection<string> _listReasons;
+        private ObservableCollection<string> _listPublishings;
     }
 }

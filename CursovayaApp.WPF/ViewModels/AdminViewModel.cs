@@ -1,12 +1,10 @@
 ﻿using CursovayaApp.WPF.Commands;
-using CursovayaApp.WPF.Models;
 using CursovayaApp.WPF.Models.DbModels;
 using CursovayaApp.WPF.Services;
 using CursovayaApp.WPF.Views;
 using System.Windows;
 using CursovayaApp.WPF.Repository;
 using CursovayaApp.WPF.Repository.Contracts;
-using Microsoft.EntityFrameworkCore;
 
 namespace CursovayaApp.WPF.ViewModels
 {
@@ -26,7 +24,7 @@ namespace CursovayaApp.WPF.ViewModels
             set
             {
                 _pagination = value;
-                OnPropertyChanged("Pagination");
+                OnPropertyChanged();
             }
         }
 
@@ -113,7 +111,7 @@ namespace CursovayaApp.WPF.ViewModels
             set
             {
                 _selectedUser = value;
-                OnPropertyChanged("SelectedUser");
+                OnPropertyChanged();
             }
         }
 
@@ -124,24 +122,24 @@ namespace CursovayaApp.WPF.ViewModels
             set
             {
                 _users = value;
-                OnPropertyChanged("Users");
+                OnPropertyChanged();
             }
         }
 
         public RelayCommand FirstUsersCommand =>
-            new (obj => Pagination.FirstT(ref _users, _listUsers));
+            new (_ => Pagination.FirstT(ref _users, _listUsers));
 
         public RelayCommand BackUsersCommand =>
-             new (obj => Pagination.BackT(ref _users, _listUsers));
+             new (_ => Pagination.BackT(ref _users, _listUsers));
 
         public RelayCommand ForwardUsersCommand =>
-            new (obj => Pagination.ForwardT(ref _users, _listUsers));
+            new (_ => Pagination.ForwardT(ref _users, _listUsers));
 
         public RelayCommand LastUsersCommand =>
-            new (obj => Pagination.LastT(ref _users, _listUsers));
+            new (_ => Pagination.LastT(ref _users, _listUsers));
 
         public RelayCommand SaveCommand =>
-            new ( obj =>
+            new ( _ =>
             {
                 try
                 {
@@ -159,7 +157,7 @@ namespace CursovayaApp.WPF.ViewModels
             });
 
         public RelayCommand AddCommand =>
-            new(obj =>
+            new(_ =>
             {
                 User newUser = new User();
                 _listUsers.Add(newUser);
@@ -174,7 +172,7 @@ namespace CursovayaApp.WPF.ViewModels
             });
 
         public RelayCommand DeleteCommand =>
-            new (obj =>
+            new (_ =>
             {
                 if (SelectedUser == null)
                 {
@@ -217,10 +215,10 @@ namespace CursovayaApp.WPF.ViewModels
             });
 
         public RelayCommand ChangeCommand =>
-            new (obj => MyFrame.frame.Navigate(new BooksPage()));
+            new (_ => MyFrame.Frame.Navigate(new BooksPage()));
 
         public RelayCommand ExitCommand =>
-            new (obj =>
+            new (_ =>
             {
                 if (MessageBox.Show(
                         "Вы уверены, что хотите выйти из аккаунта?",

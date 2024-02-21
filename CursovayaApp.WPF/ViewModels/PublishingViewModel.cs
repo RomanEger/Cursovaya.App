@@ -1,5 +1,4 @@
 ﻿using CursovayaApp.WPF.Commands;
-using CursovayaApp.WPF.Models;
 using CursovayaApp.WPF.Models.DbModels;
 using CursovayaApp.WPF.Repository;
 using System.Windows;
@@ -7,7 +6,7 @@ using CursovayaApp.WPF.Repository.Contracts;
 
 namespace CursovayaApp.WPF.ViewModels
 {
-    class PublishingViewModel : ViewModelBase
+    public class PublishingViewModel : ViewModelBase
     {
         private readonly IGenericRepository<PublishingHouse> _repository;
 
@@ -39,7 +38,7 @@ namespace CursovayaApp.WPF.ViewModels
         }
 
         public RelayCommand SaveCommand =>
-            new (obj =>
+            new (_ =>
             {
                 if (ForAdd)
                 {
@@ -56,7 +55,7 @@ namespace CursovayaApp.WPF.ViewModels
                         _repository.Save();
                         MessageBox.Show("Сохранения успешно применены!");
                     }
-                    catch (Exception ex)
+                    catch (Exception)
                     {
                         MessageBox.Show("Не удалось добавить издательство. Попробуйте еще раз.",
                             "Ошибка",
@@ -72,7 +71,7 @@ namespace CursovayaApp.WPF.ViewModels
                         _vm.GetPublishings();
                         MessageBox.Show("Сохранения успешно применены!");
                     }
-                    catch (Exception ex)
+                    catch (Exception)
                     {
                         MessageBox.Show("Не удалось сохранить изменения. Попробуйте еще раз.",
                             "Ошибка",

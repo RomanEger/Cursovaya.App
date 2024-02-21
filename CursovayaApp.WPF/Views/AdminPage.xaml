@@ -51,8 +51,11 @@
                 FontWeight="DemiBold"
                 CanUserAddRows="False"
                 CanUserResizeColumns="False"
+                CanUserResizeRows="False"
                 AutoGenerateColumns="False"
-                MaxWidth="550"
+                Width="755"
+                MaxHeight="160"
+                Margin="0"
                 HorizontalContentAlignment="Center"
                 VerticalContentAlignment="Center"
                 SelectedItem="{Binding SelectedUser}"
@@ -76,19 +79,6 @@
                         Binding="{Binding RoleId, UpdateSourceTrigger=PropertyChanged}"/>
                 </DataGrid.Columns>
             </DataGrid>
-                <!--<StackPanel Margin="5 0"
-                            MaxWidth="190"
-                            DataContext="{Binding SelectedUser}">
-                    <TextBlock Text="Выбранный элемент"  />
-                    <TextBlock Text="ФИО" />
-                    <TextBox Text="{Binding FullName, UpdateSourceTrigger=PropertyChanged}" />
-                    <TextBlock Text="Логин" />
-                    <TextBox  Text="{Binding Login, UpdateSourceTrigger=PropertyChanged}" />
-                    <TextBlock Text="Пароль" />
-                    <TextBox Text="{Binding Password, UpdateSourceTrigger=PropertyChanged}" />
-                    <TextBlock Text="Id роли" />
-                    <TextBox Text="{Binding RoleId, UpdateSourceTrigger=PropertyChanged}" />
-                </StackPanel>-->
             <StackPanel 
                 HorizontalAlignment="Center"
                 Orientation="Horizontal">

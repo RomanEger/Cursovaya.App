@@ -8,9 +8,9 @@ namespace CursovayaApp.Tests
 {
     public class UserRepositoryTest
     {
-        private Mock<IGenericRepository<User>> _mockUserRepository;
-        private IFixture<User> _fixture;
-        private ApplicationContext _dbContext;
+        private readonly Mock<IGenericRepository<User>> _mockUserRepository;
+        private readonly IFixture<User> _fixture;
+        private readonly ApplicationContext _dbContext;
         
         public UserRepositoryTest()
         {
@@ -81,15 +81,13 @@ namespace CursovayaApp.Tests
         {
             const int count = 4;
 
-            var list = _fixture.GetRandomData(count);
+            var list = _fixture.GetRandomData(count).ToList();
 
             _mockUserRepository.Setup(x => x.GetAll()).Returns(list);
 
             var repo = _mockUserRepository.Object;
 
-            var result = repo.GetAll();
-
-            var c = result.Count();
+            var result = repo.GetAll().ToList();
 
             Assert.Equal(
                 list.Count(),
@@ -125,7 +123,7 @@ namespace CursovayaApp.Tests
 
             var repo = _mockUserRepository.Object;
 
-            var user = repo.Get(id);
+            var user = repo.Get(id) ?? new User();
 
             Assert.Equal(id, user.Id);
         }
@@ -137,7 +135,7 @@ namespace CursovayaApp.Tests
 
             var repo = new GenericRepository<User>(_dbContext);
 
-            var user = repo.Get(x => x.Id == id);
+            var user = repo.Get(x => x.Id == id) ?? new User();
 
             Assert.Equal(id, user.Id);
         }
@@ -153,7 +151,7 @@ namespace CursovayaApp.Tests
 
             var repo = new GenericRepository<User>(_dbContext);
 
-            var user = repo.Get(x => x.Login == login && x.Password == password);
+            var user = repo.Get(x => x.Login == login && x.Password == password) ?? new User();
 
             Assert.Equal(expectedId, user.Id);
         }
@@ -169,7 +167,7 @@ namespace CursovayaApp.Tests
 
             var repo = new GenericRepository<User>(_dbContext);
 
-            var user = repo.Get(x => x.Login == login && x.Password == password);
+            var user = repo.Get(x => x.Login == login && x.Password == password) ?? new User();
 
             Assert.Equal(expectedId, user.Id);
         }

@@ -17,7 +17,7 @@ namespace CursovayaApp.WPF.Services
             set
             {
                 _count = value;
-                OnPropertyChanged("Count");
+                OnPropertyChanged();
             }
         }
 
@@ -27,17 +27,17 @@ namespace CursovayaApp.WPF.Services
         }
         
 
-        public void InsertToUsers(ref ICollection<T> Tcollection, List<T> listT)
+        public void InsertToUsers(ref ICollection<T> collection, List<T> listT)
         {
             try
             {
-                Tcollection ??= new ObservableCollection<T>();
+                collection ??= new ObservableCollection<T>();
                 if (listT.Count <= TsAtPage)
                 {
-                    Tcollection?.Clear();
+                    collection?.Clear();
                     foreach (var item in listT)
                     {
-                        Tcollection?.Add(item);
+                        collection?.Add(item);
                     }
                     return;
                 }
@@ -55,15 +55,15 @@ namespace CursovayaApp.WPF.Services
 
                 if (TsAtPage > i)
                 {
-                    Tcollection?.Clear();
+                    collection?.Clear();
                     for (int index = IndexT; index < listT.Count; index++)
-                        Tcollection?.Add(listT[index]);
+                        collection?.Add(listT[index]);
                 }
                 else
                 {
-                    Tcollection?.Clear();
+                    collection?.Clear();
                     for (int index = IndexT; index < IndexT+TsAtPage; index++)
-                        Tcollection?.Add(listT[index]);
+                        collection?.Add(listT[index]);
                 }
             }
             catch (Exception ex)
@@ -72,38 +72,38 @@ namespace CursovayaApp.WPF.Services
             }
         }
 
-        public void FirstT(ref ICollection<T>  TCollection, List<T> listT)
+        public void FirstT(ref ICollection<T>  collection, List<T> listT)
         {
             IndexT = 0;
-            InsertToUsers(ref TCollection, listT);
+            InsertToUsers(ref collection, listT);
         }
 
-        public void BackT(ref ICollection<T> TCollection, List<T> listT)
+        public void BackT(ref ICollection<T> collection, List<T> listT)
         {
             if (IndexT < TsAtPage)
                 IndexT = 0;
             else
                 IndexT -= TsAtPage;
-            InsertToUsers(ref TCollection, listT);
+            InsertToUsers(ref collection, listT);
         }
 
-        public void ForwardT(ref ICollection<T> TCollection, List<T> listT)
+        public void ForwardT(ref ICollection<T> collection, List<T> listT)
         {
             var i = listT.Count - IndexT;
             var canGoForward = i >= TsAtPage;
             if (canGoForward)
                 IndexT += TsAtPage;
-            InsertToUsers(ref TCollection, listT);
+            InsertToUsers(ref collection, listT);
         }
 
-        public void LastT(ref ICollection<T> TCollection, List<T> listT)
+        public void LastT(ref ICollection<T> collection, List<T> listT)
         {
             IndexT = listT.Count - TsAtPage;
             if (IndexT <= 0)
                 IndexT = 0;
             else if (IndexT < TsAtPage)
                 IndexT = listT.Count - IndexT;
-            InsertToUsers(ref TCollection, listT);
+            InsertToUsers(ref collection, listT);
         } 
 
         public event PropertyChangedEventHandler PropertyChanged;

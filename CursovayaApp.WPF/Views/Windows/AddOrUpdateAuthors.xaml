@@ -1,4 +1,4 @@
-﻿<Window x:Class="CursovayaApp.WPF.Views.AddOrUpdateAuthors"
+﻿<Window x:Class="CursovayaApp.WPF.Views.Windows.AddOrUpdateAuthors"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -41,11 +41,8 @@
                 HorizontalAlignment="Center"
                 Orientation="Horizontal">
                 <Button
-                        Style="{StaticResource MainButtonStyle}"
+                    Style="{StaticResource MainButtonStyle}"
                     Content="Сохранить"
-                    Background="DodgerBlue"
-                    Foreground="White"
-                    BorderBrush="Transparent"
                     Command="{Binding AddOrUpdateAuthorCommand}"
                     Width="110"/>
                 <Button

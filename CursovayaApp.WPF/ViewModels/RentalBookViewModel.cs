@@ -1,16 +1,8 @@
 ﻿using CursovayaApp.WPF.Commands;
-using CursovayaApp.WPF.Models;
 using CursovayaApp.WPF.Models.DbModels;
 using CursovayaApp.WPF.Repository;
 using CursovayaApp.WPF.Repository.Contracts;
-using CursovayaApp.WPF.Services;
-using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 
 namespace CursovayaApp.WPF.ViewModels
@@ -22,12 +14,12 @@ namespace CursovayaApp.WPF.ViewModels
         private readonly IGenericRepository<Author> _repositoryAuthor;
         private readonly IGenericRepository<User> _repositoryUser;
 
-        private string separator = " | ";
+        private const string Separator = " | ";
 
         private readonly bool _forGive;
 
-        private string _selectedBook;
-        public string SelectedBook
+        private string? _selectedBook;
+        public string? SelectedBook
         {
             get => _selectedBook;
             set
@@ -37,9 +29,9 @@ namespace CursovayaApp.WPF.ViewModels
             }
         }
 
-        private string _selectedClient;
+        private string? _selectedClient;
 
-        public string SelectedClient
+        public string? SelectedClient
         {
             get => _selectedClient;
             set
@@ -47,7 +39,7 @@ namespace CursovayaApp.WPF.ViewModels
                 _selectedClient = value;
                 if (!_forGive && _selectedClient != null)
                 {
-                    var arr = _selectedClient.Split(separator);
+                    var arr = _selectedClient.Split(Separator);
                     var clientId = _repositoryUser.Where(x => x.FullName == arr[0] && x.Login == arr[1]).Select(x => x.Id).FirstOrDefault();
                     var books = from rental in _repositoryRentalBook.GetAll()
                                 join user in _repositoryUser.GetAll()
@@ -57,7 +49,7 @@ namespace CursovayaApp.WPF.ViewModels
                                 join author in _repositoryAuthor.GetAll()
                                 on book.AuthorId equals author.Id
                                 where user.Id == clientId && rental.IsRentalEnd == false
-                                select book.Title + separator + author.FullName;
+                                select book.Title + Separator + author.FullName;
                     Books = new ObservableCollection<string>(books);
                 }
                 OnPropertyChanged();
@@ -65,6 +57,7 @@ namespace CursovayaApp.WPF.ViewModels
         }
 
         private ObservableCollection<string> _books;
+        private ObservableCollection<string> _clients;
 
         public ObservableCollection<string> Books 
         {
@@ -76,7 +69,16 @@ namespace CursovayaApp.WPF.ViewModels
             }
         }
 
-        public ObservableCollection<string> Clients { get; set; }
+        public ObservableCollection<string> Clients
+        {
+            get => _clients;
+            set
+            {
+                if (Equals(value, _clients)) return;
+                _clients = value;
+                OnPropertyChanged();
+            }
+        }
 
         public RentalBookViewModel(bool forGive)
         {
@@ -94,9 +96,9 @@ namespace CursovayaApp.WPF.ViewModels
                     var books = (from book in _repositoryBook.GetAll()
                                 join author in _repositoryAuthor.GetAll()
                                 on book.AuthorId equals author.Id
-                                select book.Title + separator + author.FullName).AsQueryable();
+                                select book.Title + Separator + author.FullName).AsQueryable();
                     Books = new ObservableCollection<string>(books.ToList());
-                    var clients = _repositoryUser.Where(x => x.RoleId == 4).Select(x => x.FullName + separator + x.Login).AsQueryable();
+                    var clients = _repositoryUser.Where(x => x.RoleId == 4).Select(x => x.FullName + Separator + x.Login).AsQueryable();
                     Clients = new ObservableCollection<string>(clients);
                 }
                 catch (Exception ex)
@@ -111,7 +113,8 @@ namespace CursovayaApp.WPF.ViewModels
                     var clients = (from rental in _repositoryRentalBook.GetAll()
                                    join user in _repositoryUser.GetAll()
                                    on rental.UserId equals user.Id
-                                   select user.FullName + separator + user.Login).Distinct().AsQueryable();
+                                   where rental.IsRentalEnd == false
+                                   select user.FullName + Separator + user.Login).Distinct().AsQueryable();
                     Clients = new ObservableCollection<string>(clients);
                     Books = new();
                 }
@@ -124,12 +127,12 @@ namespace CursovayaApp.WPF.ViewModels
 
 
         public RelayCommand GiveCommand => 
-            new(obj =>
+            new(_ =>
             {
                 try
                 {
-                    var bookName = SelectedBook.Split(separator)[0];
-                    var author = SelectedBook.Split(separator)[1];
+                    var bookName = SelectedBook?.Split(Separator)[0];
+                    var author = SelectedBook?.Split(Separator)[1];
                     var bookView = 
                                 (from books in _repositoryBook.GetAll()
                                 join authors in _repositoryAuthor.GetAll()
@@ -142,7 +145,7 @@ namespace CursovayaApp.WPF.ViewModels
                                 }).FirstOrDefault(x => x.Title == bookName && x.FullName == author);
 
                     var count = _repositoryRentalBook.Count(x =>
-                        x.IsRentalEnd == false && x.BookId == bookView.Id);
+                        bookView != null && x.IsRentalEnd == false && x.BookId == bookView.Id);
                     var canGive = Books.Count > count;
                     if (!canGive)
                     {
@@ -150,21 +153,21 @@ namespace CursovayaApp.WPF.ViewModels
                         return;
                     }
 
-                    var clientFullName = SelectedClient.Split(separator)[0];
+                    var clientFullName = SelectedClient?.Split(Separator)[0];
 
-                    var clientLogin = SelectedClient.Split(separator)[1];
+                    var clientLogin = SelectedClient?.Split(Separator)[1];
 
-                    var client = _repositoryUser.Get(x => x.RoleId == 4 && x.FullName == clientFullName && x.Login == clientLogin);
+                    var client = _repositoryUser.Get(x => x.RoleId == 4 && x.FullName == clientFullName && x.Login == clientLogin) ?? new ();
 
-                    var entitie = new RentalBook()
+                    var entity = new RentalBook()
                     {
-                        BookId = bookView.Id,
+                        BookId = bookView?.Id ?? 0,
                         UserId = client.Id,
                         DateStart = DateTime.Now.Date,
                         DateEnd = DateTime.Now.AddDays(14).Date,
                         IsRentalEnd = false
                     };
-                    _repositoryRentalBook.Add(entitie);
+                    _repositoryRentalBook.Add(entity);
                     _repositoryRentalBook.Save();
                     MessageBox.Show("Книга выдана! Изменения сохранены!");
                 }
@@ -175,12 +178,12 @@ namespace CursovayaApp.WPF.ViewModels
             });
 
         public RelayCommand RecieveCommand =>
-            new(obj =>
+            new(_ =>
             {
                 try
                 {
-                    var bookName = SelectedBook.Split(separator)[0];
-                    var author = SelectedBook.Split(separator)[1];
+                    var bookName = SelectedBook?.Split(Separator)[0];
+                    var author = SelectedBook?.Split(Separator)[1];
                     
                     var bookView =
                                 (from books in _repositoryBook.GetAll()
@@ -193,17 +196,17 @@ namespace CursovayaApp.WPF.ViewModels
                                      authors.FullName,
                                  }).FirstOrDefault(x => x.Title == bookName && x.FullName == author);
 
-                    var clientFullName = SelectedClient.Split(separator)[0];
+                    var clientFullName = SelectedClient?.Split(Separator)[0];
 
-                    var clientLogin = SelectedClient.Split(separator)[1];
+                    var clientLogin = SelectedClient?.Split(Separator)[1];
 
-                    var client = _repositoryUser.Get(x => x.RoleId == 4 && x.FullName == clientFullName && x.Login == clientLogin);
+                    var client = _repositoryUser.Get(x => x.RoleId == 4 && x.FullName == clientFullName && x.Login == clientLogin) ?? new User();
 
-                    var entitie = _repositoryRentalBook.Get(x => x.BookId == bookView.Id && x.UserId == client.Id);
+                    var entity = _repositoryRentalBook.Get(x => bookView != null && x.BookId == bookView.Id && x.UserId == client.Id) ?? new RentalBook();
 
-                    entitie.IsRentalEnd = true;
+                    entity.IsRentalEnd = true;
                     
-                    _repositoryRentalBook.Update(entitie);
+                    _repositoryRentalBook.Update(entity);
 
                     MessageBox.Show("Книга принята! Изменения сохранены!");
                     SelectedBook = null;

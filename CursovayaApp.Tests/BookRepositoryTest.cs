@@ -8,9 +8,9 @@ namespace CursovayaApp.Tests
 {
     public class BookRepositoryTest
     {
-        private Mock<IGenericRepository<Book>> _mockRepository;
-        private IFixture<Book> _fixture;
-        private ApplicationContext _dbContext;
+        private readonly Mock<IGenericRepository<Book>> _mockRepository;
+        private readonly IFixture<Book> _fixture;
+        private readonly ApplicationContext _dbContext;
 
         public BookRepositoryTest()
         {
@@ -80,15 +80,13 @@ namespace CursovayaApp.Tests
         {
             const int count = 4;
 
-            var list = _fixture.GetRandomData(count);
+            var list = _fixture.GetRandomData(count).ToList();
 
             _mockRepository.Setup(x => x.GetAll()).Returns(list);
 
             var repo = _mockRepository.Object;
 
-            var result = repo.GetAll();
-
-            var c = result.Count();
+            var result = repo.GetAll().ToList();
 
             Assert.Equal(
                 list.Count(),
@@ -124,9 +122,9 @@ namespace CursovayaApp.Tests
 
             var repo = _mockRepository.Object;
 
-            var user = repo.Get(id);
+            var book = repo.Get(id) ?? new Book();
 
-            Assert.Equal(id, user.Id);
+            Assert.Equal(id, book.Id);
         }
 
         [Fact]
@@ -154,7 +152,7 @@ namespace CursovayaApp.Tests
 
             var repo = new GenericRepository<Book>(_dbContext);
 
-            var book = repo.Get(x => x.Title == title && x.AuthorId == authorId && x.PublishingHouseId == publishingId) ?? new Book();
+            var book = repo.Get(x => x is { Title: title, AuthorId: authorId, PublishingHouseId: publishingId }) ?? new Book();
 
             Assert.Equal(expectedId, book.Id);
         }
@@ -172,7 +170,7 @@ namespace CursovayaApp.Tests
 
             var repo = new GenericRepository<Book>(_dbContext);
 
-            var book = repo.Get(x => x.Title == title && x.AuthorId == authorId && x.PublishingHouseId == publishingId) ?? new Book();
+            var book = repo.Get(x => x is { Title: title, AuthorId: authorId, PublishingHouseId: publishingId }) ?? new Book();
 
             Assert.Equal(expectedId, book.Id);
         }

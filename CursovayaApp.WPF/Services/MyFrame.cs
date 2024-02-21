@@ -1,29 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Controls;
-using System.Windows.Navigation;
+﻿using System.Windows.Controls;
 
 namespace CursovayaApp.WPF.Services
 {
-    internal class MyFrame
+    internal static class MyFrame
     {
-        public static Frame frame;
+        public static Frame Frame;
 
         public static bool Navigate(Page newPage) =>
-            frame?.Navigate(newPage) ?? false;
+            Frame?.Navigate(newPage) ?? false;
 
         public static void ClearHistory()
         {
-            while (frame.CanGoBack && frame.CanGoForward)
+            while (Frame is { CanGoBack: true, CanGoForward: true })
             {
                 try
                 {
-                    frame.RemoveBackEntry();
+                    Frame.RemoveBackEntry();
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     break;
                 }

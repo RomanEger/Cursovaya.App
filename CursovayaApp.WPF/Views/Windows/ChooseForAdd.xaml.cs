@@ -1,5 +1,4 @@
-﻿using CursovayaApp.WPF.Models;
-using CursovayaApp.WPF.Models.DbModels;
+﻿using CursovayaApp.WPF.Models.DbModels;
 using CursovayaApp.WPF.Repository;
 using CursovayaApp.WPF.ViewModels;
 using System.Windows;
@@ -30,7 +29,7 @@ namespace CursovayaApp.WPF.Views.Windows
 
                 bindingIS.Path = new PropertyPath("AuthorsForAdd");
                 cmb.SetBinding(ComboBox.ItemsSourceProperty, bindingIS);
-                bindingSI.Path = new PropertyPath("SelectedAuthor");
+                bindingSI.Path = new PropertyPath("SelectedAuthorForAdd");
                 cmb.SetBinding(ComboBox.SelectedItemProperty, bindingSI);
                 bindingC.Path = new PropertyPath("AddAuthorCommand");
                 btn.SetBinding(Button.CommandProperty, bindingC);

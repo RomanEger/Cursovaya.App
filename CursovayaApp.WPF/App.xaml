@@ -85,7 +85,10 @@
 
 
         <Style TargetType="DataGridColumnHeader">
-            <Setter Property="Background" Value="Aqua"/>
+            <Setter Property="Background" Value="DodgerBlue"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderBrush" Value="LightSkyBlue"/>
+            <Setter Property="BorderThickness" Value="0.9, 0.1"/>
             <Setter Property="HorizontalContentAlignment" Value="Center"/>
         </Style>
 
@@ -106,7 +109,5 @@
             <Setter Property="Background" Value="Transparent"/>
         </Style>
 
-        <Style TargetType="DataGrid">
-        </Style>
     </Application.Resources>
 </Application>

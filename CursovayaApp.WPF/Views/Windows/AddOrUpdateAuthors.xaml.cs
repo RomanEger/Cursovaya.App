@@ -3,7 +3,7 @@ using System.Windows.Controls;
 using CursovayaApp.WPF.Models.DbModels;
 using CursovayaApp.WPF.ViewModels;
 
-namespace CursovayaApp.WPF.Views;
+namespace CursovayaApp.WPF.Views.Windows;
 
 public partial class AddOrUpdateAuthors : Window
 {
@@ -17,10 +17,6 @@ public partial class AddOrUpdateAuthors : Window
 
     private void CheckBox_Click(object sender, RoutedEventArgs e)
     {
-        var s = sender as CheckBox;
-        if (s.IsChecked == true)
-            dpDeath.IsEnabled = false;
-        else
-            dpDeath.IsEnabled = true;
+        dpDeath.IsEnabled = sender is not CheckBox { IsChecked: true };
     }
 }

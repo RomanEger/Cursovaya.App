@@ -26,11 +26,11 @@ namespace CursovayaApp.WPF.ViewModels
         }
         
         public RelayCommand LoginCommand =>
-            new (obj =>
+            new (_ =>
                 {
                     try
                     {
-                        var q = _repository.Get(x => x.Login == ThisUser.Login && x.Password == ThisUser.Password);
+                        var q = _repository.Get(x => x.Login == ThisUser.Login && x.Password == ThisUser.Password) ?? new User();
                         LoggedUser loggedUser = new()
                         {
                             CurrentUser = q
@@ -39,7 +39,7 @@ namespace CursovayaApp.WPF.ViewModels
                         {
                             MyFrame.Navigate(new AdminPage());
                         }
-                        else if (q.RoleId == 2 || q.RoleId == 3)
+                        else if (q.RoleId is 2 or 3)
                         {
                             MyFrame.Navigate(new BooksPage());
                         }
