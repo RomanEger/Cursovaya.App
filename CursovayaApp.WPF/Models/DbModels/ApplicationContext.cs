@@ -1,13 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.IO;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
-using Microsoft.EntityFrameworkCore.ChangeTracking.Internal;
-using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.Extensions.Configuration;
 
 namespace CursovayaApp.WPF.Models.DbModels
@@ -33,7 +25,7 @@ namespace CursovayaApp.WPF.Models.DbModels
             //Database.EnsureDeleted();
 
             //создание бд при ее отсутствии
-            Database.EnsureCreated();
+            //Database.EnsureCreated();
         }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -51,7 +43,7 @@ namespace CursovayaApp.WPF.Models.DbModels
 
             //Author
             modelBuilder.Entity<Author>().Property(x => x.FullName).HasMaxLength(120);
-            modelBuilder.Entity<Author>().HasIndex(x => new { x.FullName, x.BirthYear, x.DeathYear }).IsUnique();
+            modelBuilder.Entity<Author>().HasIndex(x => new { x.FullName}).IsUnique();
             modelBuilder.Entity<Author>().ToTable(x => x.HasCheckConstraint("BirthYear", "BirthYear<DeathYear"));
             modelBuilder.Entity<Author>().ToTable(x => x.HasCheckConstraint("DeathYear", "BirthYear<YEAR(GETDATE()) AND DeathYear<=YEAR(GETDATE())"));
 
@@ -101,7 +93,7 @@ namespace CursovayaApp.WPF.Models.DbModels
             modelBuilder.Entity<User>().Property(x => x.Login).HasMaxLength(50);
             modelBuilder.Entity<User>().Property(x => x.Password).HasMaxLength(50);
             //check
-            modelBuilder.Entity<User>().ToTable(x => x.HasCheckConstraint("FullName", "LEN(FullName) > 0 AND FullName <> ''"));
+            modelBuilder.Entity<Book>().ToTable(x => x.HasCheckConstraint("FullName", "LEN(FullName) > 0 AND FullName <> ''"));
             modelBuilder.Entity<User>().ToTable(x => x.HasCheckConstraint("Login", "LEN(Login) >= 4 AND Login <> ''"));
             modelBuilder.Entity<User>().ToTable(x => x.HasCheckConstraint("Password", "LEN(Password) >= 4 AND Password <> ''"));
             //unique

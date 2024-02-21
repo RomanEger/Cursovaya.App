@@ -1,16 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Input;
+﻿using System.Windows.Input;
+#pragma warning disable CS8612 // Nullability of reference types in type doesn't match implicitly implemented member.
 
 namespace CursovayaApp.WPF.Commands
 {
     public class RelayCommand : ICommand
     {
-        private Action<object> execute;
-        private Func<object, bool> canExecute;
+        private Action<object> _execute;
+        private Func<object, bool> _canExecute;
 
         public event EventHandler CanExecuteChanged
         {
@@ -18,20 +14,22 @@ namespace CursovayaApp.WPF.Commands
             remove => CommandManager.RequerySuggested -= value;
         }
 
+#pragma warning disable CS8625 // Cannot convert null literal to non-nullable reference type.
         public RelayCommand(Action<object> execute, Func<object, bool> canExecute = null)
+#pragma warning restore CS8625 // Cannot convert null literal to non-nullable reference type.
         {
-            this.execute = execute;
-            this.canExecute = canExecute;
+            this._execute = execute;
+            this._canExecute = canExecute;
         }
 
-        public bool CanExecute(object parameter)
-        {
-            return this.canExecute == null || this.canExecute(parameter);
-        }
+#pragma warning disable CS8767 // Nullability of reference types in type of parameter doesn't match implicitly implemented member (possibly because of nullability attributes).
+        public bool CanExecute(object parameter) =>
+            this._canExecute == null || this._canExecute(parameter);
+        
 
-        public void Execute(object parameter)
-        {
-            this.execute(parameter);
-        }
+        public void Execute(object parameter) =>
+            this._execute(parameter);
+#pragma warning restore CS8767 // Nullability of reference types in type of parameter doesn't match implicitly implemented member (possibly because of nullability attributes).
+        
     }
 }

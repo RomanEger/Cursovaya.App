@@ -1,22 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
+using System.Windows;
+using CursovayaApp.WPF.Repository;
+using CursovayaApp.WPF.Repository.Contracts;
 
 namespace CursovayaApp.WPF.Models.DbModels
 {
     [NotMapped]
     public class BookView : TableBase, INotifyPropertyChanged
     {
+        private readonly IGenericRepository<ReasonReg> _repositoryReasonReg;
+        private readonly IGenericRepository<ReasonDereg> _repositoryReasonDereg;
+
         public BookView(int quantity)
         {
             OldQuantity = quantity;
+            _repositoryReasonReg = new GenericRepository<ReasonReg>(new ApplicationContext());
+            _repositoryReasonDereg = new GenericRepository<ReasonDereg>(new ApplicationContext());
         }
 
         private int _id;
@@ -62,13 +64,15 @@ namespace CursovayaApp.WPF.Models.DbModels
         }
 
         private int _quantity;
-
+        
         public int Quantity
         {
             get => _quantity;
             set
             {
-                if (_quantity > value)
+                if(value < 0)
+                    return;
+                if (_oldQuantity > value)
                 {
                     QuantityToUpdate = _oldQuantity - value;
                     ForAdd = false;
@@ -120,83 +124,27 @@ namespace CursovayaApp.WPF.Models.DbModels
             }
         }
 
-        private void GetReasons()
+        public void GetReasons()
         {
-            if (ForAdd)
+            try
             {
-                var l = DbClass.entities.ReasonsReg.Select(x => x.Name).ToList();
-                ListReasons = new ObservableCollection<string>(l);
+                if (ForAdd)
+                {
+                    var l = _repositoryReasonReg.GetAll().Select(x => x.Name).ToList();
+                    ListReasons = new ObservableCollection<string>(l);
+                }
+                else
+                {
+                    var l = _repositoryReasonDereg.GetAll().Select(x => x.Name).ToList();
+                    ListReasons = new ObservableCollection<string>(l);
+                }
             }
-            else
+            catch(Exception ex)
             {
-                var l = DbClass.entities.ReasonsDereg.Select(x => x.Name).ToList();
-                ListReasons = new ObservableCollection<string>(l);
+                MessageBox.Show(ex.Message, "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
-        public int AddBook()
-        {
-            using var db = new ApplicationContext();
-            var transaction = db.Database.BeginTransaction();
-            try
-            {
-                var pId = DbClass.entities.PublishingHouses.Where(p => p.Name == Publishing).Select(x => x.Id).First();
-                if (pId <= 0)
-                    throw new Exception();
-                var aId = DbClass.entities.Authors.Where(p => p.FullName == AuthorFullName).Select(x => x.Id).First();
-                if (aId <= 0)
-                    throw new Exception();
-                var book = new Book()
-                {
-                    AuthorId = aId,
-                    PublishingHouseId = pId,
-                    Quantity = this.Quantity,
-                    Title = this.Title
-                };
-                DbClass.entities.Books.Add(book);
-                DbClass.entities.RegBooks.Add(new RegBook()
-                    { BookId = book.Id, DateOfReg = DateTime.Now, ReasonId = 1, RegQuantity = book.Quantity });
-                transaction.Commit();
-                return 0;
-            }
-            catch
-            {
-                transaction.Rollback();
-                return -1;
-            }
-        }
-
-        public async Task<int> AddBookAsync()
-        {
-            await using var db = new ApplicationContext();
-            var transaction = await db.Database.BeginTransactionAsync();
-            try
-            {
-                var pId = DbClass.entities.PublishingHouses.Where(p => p.Name == Publishing).Select(x => x.Id).FirstAsync();
-                if (pId.Result <= 0)
-                    throw new Exception();
-                var aId = DbClass.entities.Authors.Where(p => p.FullName == AuthorFullName).Select(x => x.Id).FirstAsync();
-                if (aId.Result <= 0)
-                    throw new Exception();
-                var book = new Book()
-                {
-                    AuthorId = aId.Result,
-                    PublishingHouseId = pId.Result,
-                    Quantity = this.Quantity,
-                    Title = this.Title
-                };
-                await DbClass.entities.Books.AddAsync(book);
-                await DbClass.entities.RegBooks.AddAsync(new RegBook()
-                    { BookId = book.Id, DateOfReg = DateTime.Now, ReasonId = 1, RegQuantity = book.Quantity });
-                await transaction.CommitAsync();
-                return 0;
-            }
-            catch
-            {
-                await transaction.RollbackAsync();
-                return -1;
-            }
-        }
 
         public event PropertyChangedEventHandler PropertyChanged;
         public virtual void OnPropertyChanged([CallerMemberName] string prop = "")

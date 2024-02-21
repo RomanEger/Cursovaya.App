@@ -7,13 +7,14 @@
         xmlns:local="clr-namespace:CursovayaApp.WPF"
         SizeToContent="Height"
         mc:Ignorable="d"
+        WindowStartupLocation="CenterScreen"
         Closing="MainWindow_OnClosing"
         Title="" Height="465.96" Width="800">
     <Grid>
-            
-            <Frame Name="MainFrame"
-                   NavigationUIVisibility="Hidden" 
-                   Height="450"/>
-        </Grid>
+        <Frame 
+            Name="MainFrame"
+            NavigationUIVisibility="Hidden" 
+            Height="450"/>
+    </Grid>
     
 </Window>

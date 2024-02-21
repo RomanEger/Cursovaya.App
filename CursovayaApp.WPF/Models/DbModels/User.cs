@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CursovayaApp.WPF.Models.DbModels
 {
@@ -18,7 +13,7 @@ namespace CursovayaApp.WPF.Models.DbModels
             set
             {
                 _id = value;
-                OnPropertyChanged("Id");
+                OnPropertyChanged();
             }
         }
 
@@ -31,7 +26,7 @@ namespace CursovayaApp.WPF.Models.DbModels
             set
             {
                 _fullName = value;
-                OnPropertyChanged("FullName");
+                OnPropertyChanged();
             }
         }
 
@@ -44,7 +39,7 @@ namespace CursovayaApp.WPF.Models.DbModels
             set
             {
                 _login = value;
-                OnPropertyChanged("Login");
+                OnPropertyChanged();
             }
         }
 
@@ -57,7 +52,7 @@ namespace CursovayaApp.WPF.Models.DbModels
             set
             {
                 _password = value;
-                OnPropertyChanged("Password");
+                OnPropertyChanged();
             }
         }
 
@@ -70,7 +65,7 @@ namespace CursovayaApp.WPF.Models.DbModels
             set
             {
                 _roleId = value;
-                OnPropertyChanged("RoleId");
+                OnPropertyChanged();
             }
         }
 

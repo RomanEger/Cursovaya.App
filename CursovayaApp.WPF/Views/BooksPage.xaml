@@ -17,7 +17,9 @@
 
                 <Button Content="Назад"
                         Command="{Binding GoBackCommand}"
+                        Style="{StaticResource SecondaryButtonStyle}"
                         Margin="0"
+                        Width="75"
                         Name="BtnBack"/>
 
                 <Label Content="Автор"
@@ -52,7 +54,7 @@
                     AutoGenerateColumns="False"
                     MaxWidth="550"
                     SelectedItem="{Binding SelectedBook}"
-                    ItemsSource="{Binding Books}">
+                    ItemsSource="{Binding Books, IsAsync=True}">
                     <DataGrid.Columns>
                         <DataGridTextColumn 
                             Header="Название"
@@ -76,15 +78,23 @@
                     HorizontalAlignment="Center"
                     Orientation="Horizontal">
                     <Button
+                        Width="32"
+                        Style="{StaticResource SecondaryButtonStyle}"
                         Command="{Binding FirstBooksCommand}"
                         Content="1"/>
                     <Button
+                        Width="32"
+                        Style="{StaticResource SecondaryButtonStyle}"
                         Command="{Binding BackBooksCommand}"
                         Content="&lt;"/>
                     <Button
+                        Width="32"
+                        Style="{StaticResource SecondaryButtonStyle}"
                         Command="{Binding ForwardBooksCommand}"
                         Content="&gt;"/>
                     <Button
+                        Width="32"
+                        Style="{StaticResource SecondaryButtonStyle}"
                         Command="{Binding LastBooksCommand}"
                         Content="{Binding Pagination.Count}"/>
                 </StackPanel>
@@ -93,21 +103,21 @@
                             HorizontalAlignment="Center">
                     <Button
                         Content="Сохранить"
-                        Background="DodgerBlue"
-                        Foreground="White"
-                        BorderBrush="Transparent"
+                        Style="{StaticResource MainButtonStyle}"
                         Command="{Binding SaveCommand}"
                         Width="140"/>
                     <Button
                         Content="Добавить"
                         BorderBrush="DodgerBlue"
                         Foreground="DodgerBlue"
+                        Style="{StaticResource SecondaryButtonStyle}"
                         Command="{Binding AddCommand}"
                         Width="140"/>
                      <Button
                         Content="Изменить"
                         BorderBrush="DodgerBlue"
                         Foreground="DodgerBlue"
+                        Style="{StaticResource SecondaryButtonStyle}"
                         Command="{Binding UpdateCommand}"
                         Width="140"/>
                 </StackPanel>
@@ -116,25 +126,47 @@
                             HorizontalAlignment="Center">
                     <Button
                         Content="Сохранить"
-                        Background="DodgerBlue"
-                        Foreground="White"
-                        BorderBrush="Transparent"
+                        Style="{StaticResource MainButtonStyle}"
                         Command="{Binding SaveCommand}"
                         Width="170"/>
                     <Button
-                        Content="Выдана клиенту"
+                        Content="Выдать книгу"
                         BorderBrush="DodgerBlue"
                         Foreground="DodgerBlue"
+                        Style="{StaticResource SecondaryButtonStyle}"
                         Command="{Binding GiveCommand}"
                         Width="170"/>
                     <Button
-                        Content="Сдана клиентом"
+                        Content="Принять книгу"
                         BorderBrush="DodgerBlue"
                         Foreground="DodgerBlue"
+                        Style="{StaticResource SecondaryButtonStyle}"
                         Command="{Binding RecieveCommand}"
                         Width="170"/>
                 </StackPanel>
-
+                <StackPanel Orientation="Horizontal"
+                    Name="StackPanelForAdmin"
+                    HorizontalAlignment="Center">
+                    <Button
+                        Content="Сохранить"
+                        Style="{StaticResource MainButtonStyle}"
+                        Command="{Binding SaveCommand}"
+                        Width="170"/>
+                    <Button
+                        Content="Ред. автора"
+                        BorderBrush="DodgerBlue"
+                        Foreground="DodgerBlue"
+                        Style="{StaticResource SecondaryButtonStyle}"
+                        Command="{Binding AddOrUpdateAuthorCommand}"
+                        Width="170"/>
+                    <Button
+                        Content="Ред. издательство"
+                        BorderBrush="DodgerBlue"
+                        Foreground="DodgerBlue"
+                        Style="{StaticResource SecondaryButtonStyle}"
+                        Command="{Binding AddOrUpdatePublishingCommand}"
+                        Width="170"/>
+                </StackPanel>
             </StackPanel>
         </StackPanel>
     </Grid>

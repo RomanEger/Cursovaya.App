@@ -1,23 +1,20 @@
 ﻿using CursovayaApp.WPF.Commands;
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using CursovayaApp.WPF.Models;
 using CursovayaApp.WPF.Models.DbModels;
 using CursovayaApp.WPF.Services;
 using CursovayaApp.WPF.Views;
-using Microsoft.EntityFrameworkCore;
+using System.Windows;
+using CursovayaApp.WPF.Repository;
+using CursovayaApp.WPF.Repository.Contracts;
 
 namespace CursovayaApp.WPF.ViewModels
 {
     public class AdminViewModel : ViewModelBase
     {
-        private List<User> listUsers;
+        private readonly IGenericRepository<User> _userRepository;
+
+        private List<User> _listUsers;
+
+        private List<User> _sortedListUsers;
 
         private PaginationService<User> _pagination;
 
@@ -27,38 +24,85 @@ namespace CursovayaApp.WPF.ViewModels
             set
             {
                 _pagination = value;
-                OnPropertyChanged("Pagination");
-            } 
+                OnPropertyChanged();
+            }
+        }
+
+        private List<string> _listRolesStr;
+
+        public List<string> ListRolesStr
+        {
+            get => _listRolesStr;
+            set
+            {
+                _listRolesStr = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private List<Role> _listRoles;
+
+        private string _selectedRole;
+
+        public string SelectedRole
+        {
+            get => _selectedRole;
+            set
+            {
+                _selectedRole = value;
+                if(value == "Все")
+                {
+                    _sortedListUsers = _listUsers;
+                    SetCount();
+                    Pagination.InsertToUsers(ref _users, _sortedListUsers);
+                }
+                else
+                {
+                    var v = _listRoles.Where(x => x.Name == value).Select(x => x.Id).FirstOrDefault();
+                    _sortedListUsers = _listUsers.Where(x => x.RoleId == v).ToList();
+                    SetCount();
+                    Pagination.InsertToUsers(ref _users, _sortedListUsers);
+                }
+                OnPropertyChanged();
+            }
         }
 
         public AdminViewModel()
         {
-            Pagination = new PaginationService<User>(7);
+            _userRepository = new GenericRepository<User>(new ApplicationContext());
+            IGenericRepository<Role> roleRepository = new GenericRepository<Role>(new ApplicationContext());
+            Pagination = new PaginationService<User>(3);
             try
             {
                 GetUsers();
+                _listRoles = roleRepository.GetAll().ToList();
+                ListRolesStr = new List<string>() { "Все" };
+                ListRolesStr.AddRange(_listRoles.Select(x => x.Name).ToList());
             }
             catch (Exception ex)
             {
-                //string fileName = $@"C:\Users\error{DateTime.Now}.txt";
-                //FileStream fileStream = new FileStream(fileName, FileMode.Create);
-                //StreamWriter sw = new StreamWriter(fileStream);
-                //sw.Write(ex.Message);
-                //sw.Close();
+                MessageBox.Show(ex.Message, "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
         private void GetUsers()
         {
-            listUsers = DbClass.entities.Users.ToList();
-            SetCount();
-            Pagination.InsertToUsers(ref _users, listUsers);
+            try
+            {
+                _listUsers = _userRepository.GetAll().ToList();
+                _sortedListUsers = _listUsers;
+                SetCount();
+                Pagination.InsertToUsers(ref _users, _sortedListUsers);
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
-        private void SetCount()
-        {
-            Pagination.Count = (int)Math.Ceiling(listUsers.Count * 1.0 / Pagination.TsAtPage);
-        }
+        private void SetCount() =>
+            Pagination.Count = (int)Math.Ceiling(_sortedListUsers.Count * 1.0 / Pagination.TsAtPage);
         
+
 
         private User _selectedUser;
         public User SelectedUser
@@ -67,217 +111,141 @@ namespace CursovayaApp.WPF.ViewModels
             set
             {
                 _selectedUser = value;
-                OnPropertyChanged("SelectedUser");
+                OnPropertyChanged();
             }
         }
 
         private ICollection<User> _users;
         public ICollection<User> Users
         {
-            get
-            {
-                //GetUsers();
-                return _users;
-            }
+            get => _users;
             set
             {
                 _users = value;
-                OnPropertyChanged("Users");
+                OnPropertyChanged();
             }
         }
 
+        public RelayCommand FirstUsersCommand =>
+            new (_ => Pagination.FirstT(ref _users, _listUsers));
 
-        private RelayCommand _firstUsersCommand;
+        public RelayCommand BackUsersCommand =>
+             new (_ => Pagination.BackT(ref _users, _listUsers));
 
-        public RelayCommand FirstUsersCommand
-        {
-            get
+        public RelayCommand ForwardUsersCommand =>
+            new (_ => Pagination.ForwardT(ref _users, _listUsers));
+
+        public RelayCommand LastUsersCommand =>
+            new (_ => Pagination.LastT(ref _users, _listUsers));
+
+        public RelayCommand SaveCommand =>
+            new ( _ =>
             {
-                return _firstUsersCommand ??= new RelayCommand(obj =>
+                try
                 {
-                    Pagination.FirstT(ref _users, listUsers);
-                });
-            }
-        }
-
-        private RelayCommand _backUsersCommand;
-        public RelayCommand BackUsersCommand
-        {
-            get
-            {
-                return _backUsersCommand ??= new RelayCommand(obj =>
+                    foreach (var item in Users)
+                    {
+                        _userRepository.AddOrUpdate(item);
+                    }
+                    MessageBox.Show("Изменения успешно сохранены");
+                    GetUsers();
+                }
+                catch (Exception ex)
                 {
-                    Pagination.BackT(ref _users, listUsers);
-                });
-            }
-        }
+                    MessageBox.Show(ex.Message, "Не удалось сохранить изменения", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            });
 
-        private RelayCommand _forwardUsersCommand;
-        public RelayCommand ForwardUsersCommand
-        {
-            get
+        public RelayCommand AddCommand =>
+            new(_ =>
             {
-                return _forwardUsersCommand ??= new RelayCommand(obj =>
+                User newUser = new User();
+                _listUsers.Add(newUser);
+                int i = _listUsers.Count - Pagination.IndexT;
+                bool canGoForward = i > Pagination.TsAtPage;
+                if (canGoForward)
+                    Pagination.IndexT += Pagination.TsAtPage;
+
+                Pagination.InsertToUsers(ref _users, _listUsers);
+                SelectedUser = newUser;
+                SetCount();
+            });
+
+        public RelayCommand DeleteCommand =>
+            new (_ =>
+            {
+                if (SelectedUser == null)
                 {
-                    Pagination.ForwardT(ref _users, listUsers);
-                });
-            }
-        }
-
-        private RelayCommand _lastUsersCommand;
-        public RelayCommand LastUsersCommand
-        {
-            get
-            {
-                return _lastUsersCommand ??= new RelayCommand(obj =>
-                {
-                    Pagination.LastT(ref _users, listUsers);
-                });
-            }
-        }
-
-
-        private RelayCommand _saveCommand;
-        public RelayCommand SaveCommand
-        {
-            get
-            {
-                return _saveCommand ??= new RelayCommand(obj =>
+                    MessageBox.Show("Сначала выберите пользователя");
+                    return;
+                }
+                if (MessageBox.Show(
+                        "Вы уверены, что хотите удалить пользователя?",
+                        "Удаление",
+                        MessageBoxButton.YesNo,
+                        MessageBoxImage.Exclamation) == MessageBoxResult.Yes)
                 {
                     try
                     {
-                        foreach (var item in Users)
+                        if (_userRepository.Any(x => x.Id == SelectedUser.Id))
                         {
-                            DbClass.entities.Users.AddOrUpdate(item);
+                            _userRepository.Delete(SelectedUser);
                         }
 
-                        DbClass.entities.SaveChanges();
-                        MessageBox.Show("Изменения успешно сохранены");
-                        GetUsers();
+                        int s = _listUsers.IndexOf(SelectedUser);
+                        _listUsers.Remove(SelectedUser);
+                        if (s >= _listUsers.Count && s > 0)
+                        {
+                            SelectedUser = _listUsers[--s];
+                        }
+                        else
+                        {
+                            SelectedUser = _listUsers[s];
+                        }
+
+                        Pagination.InsertToUsers(ref _users, _listUsers);
+                        SetCount();
+                        MessageBox.Show("Пользователь удален");
                     }
                     catch (Exception ex)
                     {
-                        //string fileName = $@"C:\Users\error{DateTime.Now}.txt";
-                        //FileStream fileStream = new FileStream(fileName, FileMode.Create);
-                        //StreamWriter sw = new StreamWriter(fileStream);
-                        //sw.Write(ex.Message);
-                        //sw.Close();
+                        MessageBox.Show(ex.Message, "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
                     }
-                });
-            }
-        }
+                }
+            });
 
-        private RelayCommand _addCommand;
-        public RelayCommand AddCommand
-        {
-            get
-            {
-                return _addCommand ??= new RelayCommand(obj =>
-                {
-                    var newUser = new User();
-                    listUsers.Add(newUser);
-                    var i = listUsers.Count - Pagination.IndexT;
-                    var canGoForward = i > Pagination.TsAtPage;
-                    if (canGoForward)
-                        Pagination.IndexT += Pagination.TsAtPage;
-                    Pagination.InsertToUsers(ref _users, listUsers);
-                    SelectedUser = newUser;
-                    SetCount();
-                });
-            }
-        }
-        
-        private RelayCommand _deleteCommand;
-        public RelayCommand DeleteCommand
-        {
-            get
-            {
-                return _deleteCommand ??= new RelayCommand(obj =>
-                {
-                    if (SelectedUser == null)
-                    {
-                        MessageBox.Show("Сначала выберите пользователя");
-                        return;
-                    }
-                    if (MessageBox.Show(
-                            "Вы уверены, что хотите удалить пользователя?",
-                            "Удаление",
-                            MessageBoxButton.YesNo,
-                            MessageBoxImage.Exclamation) == MessageBoxResult.Yes)
-                    {
-                        try
-                        {
-                            if (DbClass.entities.Users.Any(x => x.Id == SelectedUser.Id))
-                                DbClass.entities.Users.Remove(SelectedUser);
-                            var s = listUsers.IndexOf(SelectedUser);
-                            listUsers.Remove(SelectedUser);
-                            if (s >= listUsers.Count && s > 0)
-                                SelectedUser = listUsers[--s];
-                            else
-                                SelectedUser = listUsers[s];
-                            Pagination.InsertToUsers(ref _users, listUsers);
-                            SetCount();
-                            MessageBox.Show("Пользователь удален");
-                        }
-                        catch (Exception ex)
-                        {
-                            //string fileName = $@"C:\Users\error{DateTime.Now}.txt";
-                            //FileStream fileStream = new FileStream(fileName, FileMode.Create);
-                            //StreamWriter sw = new StreamWriter(fileStream);
-                            //sw.Write(ex.Message);
-                            //sw.Close();
-                        }
-                    }
-                });
-            }
-        }
+        public RelayCommand ChangeCommand =>
+            new (_ => MyFrame.Frame.Navigate(new BooksPage()));
 
-        private RelayCommand _changeCommand;
-        public RelayCommand ChangeCommand
-        {
-            get
+        public RelayCommand ExitCommand =>
+            new (_ =>
             {
-                return _changeCommand ??= new RelayCommand(obj =>
+                if (MessageBox.Show(
+                        "Вы уверены, что хотите выйти из аккаунта?",
+                        "Выход",
+                        MessageBoxButton.YesNo,
+                        MessageBoxImage.Asterisk) == MessageBoxResult.Yes)
                 {
-                    MyFrame.frame.Navigate(new BooksPage());
-                });
-            }
-        }
-
-        private RelayCommand _exitCommand;
-        public RelayCommand ExitCommand
-        {
-            get
-            {
-                return _exitCommand ??= new RelayCommand(obj =>
-                {
-                    if (MessageBox.Show(
-                            "Вы уверены, что хотите выйти из аккаунта?",
-                            "Выход",
-                            MessageBoxButton.YesNo,
-                            MessageBoxImage.Asterisk) == MessageBoxResult.Yes)
+                    try
                     {
-                        try
+                        MessageBoxResult a = MessageBox.Show("Хотите ли вы сохранить изменения?", "", MessageBoxButton.YesNoCancel, MessageBoxImage.Question);
+                        if (a == MessageBoxResult.Yes)
                         {
-                            var a = MessageBox.Show("Хотите ли вы сохранить изменения?", "", MessageBoxButton.YesNoCancel, MessageBoxImage.Question);
-                            if (a == MessageBoxResult.Yes)
-                                DbClass.entities.SaveChanges();
-                            else if(a == MessageBoxResult.Cancel)
-                                return;
-                            MyFrame.Navigate(new LoginPage());
-                            MyFrame.ClearHistory();
+                            _userRepository.Save();
                         }
-                        catch (Exception ex)
+                        else if (a == MessageBoxResult.Cancel)
                         {
-                            //string fileName = $@"C:\Users\error{DateTime.Now}.txt";
-                            //FileStream fileStream = new FileStream(fileName, FileMode.Create);
-                            //StreamWriter sw = new StreamWriter(fileStream);
-                            //sw.Write(ex.Message);
-                            //sw.Close();
+                            return;
                         }
+
+                        MyFrame.Navigate(new LoginPage());
+                        MyFrame.ClearHistory();
                     }
-                });
-            }
-        }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show(ex.Message, "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
+                }
+            });
     }
 }

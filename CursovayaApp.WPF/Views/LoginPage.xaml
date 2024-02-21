@@ -19,6 +19,9 @@
                     Margin="0 0 0 0">
 
 
+            <StackPanel.InputBindings>
+                <KeyBinding Key="Enter" Command="{Binding LoginCommand}"/>
+            </StackPanel.InputBindings>
             <StackPanel
                 DataContext="{Binding ThisUser}">
                 <StackPanel HorizontalAlignment="Center"
@@ -50,13 +53,12 @@
                 Margin="0 25 0 0">
                 <Button Content="Войти"
                         Margin="0"
-                        BorderBrush="Transparent"
                         HorizontalAlignment="Center"
-                        Background="DodgerBlue"
                         Name="BtnLogin"
-                        Foreground="White"
                         Width="140"
-                        Command="{Binding LoginCommand}"/>
+                        Style="{StaticResource MainButtonStyle}"
+                        Command="{Binding LoginCommand}">
+                </Button>
             </StackPanel>
         </StackPanel>
     </Grid>

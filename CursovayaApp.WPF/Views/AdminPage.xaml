@@ -11,27 +11,53 @@
     <Grid>
         <StackPanel VerticalAlignment="Top"
                     HorizontalAlignment="Right">
-            <Button Content="Выход"
-                    Command="{Binding ExitCommand}"
-                    Name="BtnExit"/>
+            <Button 
+                Width="80"
+                Content="Выход"
+                Style="{StaticResource SecondaryButtonStyle}"
+                Command="{Binding ExitCommand}"
+                Name="BtnExit"/>
         </StackPanel>
         <StackPanel VerticalAlignment="Top"
                     HorizontalAlignment="Left">
-            <Button Content="Каталог книг"
-                    Command="{Binding ChangeCommand}"
-                    Name="BtnChange"/>
+            <Button
+                Width="125"
+                Content="Каталог книг"
+                        Style="{StaticResource SecondaryButtonStyle}"
+                Command="{Binding ChangeCommand}"
+                Name="BtnChange"/>
         </StackPanel>
         <StackPanel 
             Margin="15 60"
             VerticalAlignment="Top"
             HorizontalAlignment="Center">
+
+            <StackPanel 
+                Margin="0 0 0 15"
+                Orientation="Horizontal"
+                HorizontalAlignment="Right">
+
+                <Label Content="Сортировка по ролям"
+                       VerticalAlignment="Top"/>
+                <ComboBox 
+                    Width="120"
+                    ItemsSource="{Binding ListRolesStr}"      
+                    SelectedItem="{Binding SelectedRole}"/>
+                
+            </StackPanel>
+
             <DataGrid
                 CanUserSortColumns="False"
                 FontWeight="DemiBold"
                 CanUserAddRows="False"
                 CanUserResizeColumns="False"
+                CanUserResizeRows="False"
                 AutoGenerateColumns="False"
-                MaxWidth="550"
+                Width="755"
+                MaxHeight="160"
+                Margin="0"
+                HorizontalContentAlignment="Center"
+                VerticalContentAlignment="Center"
                 SelectedItem="{Binding SelectedUser}"
                 ItemsSource="{Binding Users}">
                 <DataGrid.Columns>
@@ -53,54 +79,47 @@
                         Binding="{Binding RoleId, UpdateSourceTrigger=PropertyChanged}"/>
                 </DataGrid.Columns>
             </DataGrid>
-                <!--<StackPanel Margin="5 0"
-                            MaxWidth="190"
-                            DataContext="{Binding SelectedUser}">
-                    <TextBlock Text="Выбранный элемент"  />
-                    <TextBlock Text="ФИО" />
-                    <TextBox Text="{Binding FullName, UpdateSourceTrigger=PropertyChanged}" />
-                    <TextBlock Text="Логин" />
-                    <TextBox  Text="{Binding Login, UpdateSourceTrigger=PropertyChanged}" />
-                    <TextBlock Text="Пароль" />
-                    <TextBox Text="{Binding Password, UpdateSourceTrigger=PropertyChanged}" />
-                    <TextBlock Text="Id роли" />
-                    <TextBox Text="{Binding RoleId, UpdateSourceTrigger=PropertyChanged}" />
-                </StackPanel>-->
             <StackPanel 
                 HorizontalAlignment="Center"
                 Orientation="Horizontal">
                 <Button
+                        Style="{StaticResource SecondaryButtonStyle}"
+                    Width="32"
                     Command="{Binding FirstUsersCommand}"
                     Content="1"/>
                 <Button
+                        Style="{StaticResource SecondaryButtonStyle}"
+                    Width="43"
                     Command="{Binding BackUsersCommand}"
                     Content="&lt;"/>
                 <Button
-                    Command="{Binding ForwardBooksCommand}"
+                        Style="{StaticResource SecondaryButtonStyle}"
+                    Width="43"
+                    Command="{Binding ForwardUsersCommand}"
                     Content="&gt;"/>
                 <Button
-                    Command="{Binding LastBooksCommand}"
+                        Style="{StaticResource SecondaryButtonStyle}"
+                    Width="32"
+                    Command="{Binding LastUsersCommand}"
                     Content="{Binding Pagination.Count}"/>
             </StackPanel>
             <StackPanel Orientation="Horizontal"
                         HorizontalAlignment="Center">
                 <Button
                     Content="Сохранить"
-                    Background="DodgerBlue"
-                    Foreground="White"
-                    BorderBrush="Transparent"
+                    Style="{StaticResource MainButtonStyle}"
                     Command="{Binding SaveCommand}"
                     Width="140"/>
                 <Button
                     Content="Добавить"
                     BorderBrush="DodgerBlue"
                     Foreground="DodgerBlue"
+                    Style="{StaticResource SecondaryButtonStyle}"
                     Command="{Binding AddCommand}"
                     Width="140"/>
                 <Button
                     Content="Удалить"
-                    Foreground="Red"
-                    BorderBrush="Transparent"
+                    Style="{StaticResource DeleteButtonStyle}"
                     Command="{Binding DeleteCommand}"
                     Width="140"/>
 

@@ -1,0 +1,57 @@
+﻿<Window x:Class="CursovayaApp.WPF.Views.Windows.AddOrUpdateAuthors"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:local="clr-namespace:CursovayaApp.WPF.Views"
+        mc:Ignorable="d"
+        WindowStartupLocation="CenterOwner"
+        SizeToContent="WidthAndHeight"
+        ResizeMode="NoResize"
+        Title="AddOrUpdateAuthors" Height="260" Width="500">
+    <Window.Resources>
+        <Style TargetType="TextBox">
+            <Setter Property="Margin" Value="0 5"></Setter>
+        </Style>
+        <Style TargetType="DatePicker">
+            <Setter Property="Margin" Value="0 5"></Setter>
+        </Style>
+    </Window.Resources>
+    <Grid>
+        <StackPanel VerticalAlignment="Center" Margin="10">
+            <StackPanel DataContext="{Binding SelectedAuthor}">
+                <TextBlock Text="ФИО"/>
+                <TextBox Text="{Binding FullName, UpdateSourceTrigger=PropertyChanged}"/>
+                <TextBlock Text="Год рождения"/>
+                <TextBox
+                    Text="{Binding BirthYear, UpdateSourceTrigger=PropertyChanged}"/>
+                <TextBlock Text="Год смерти"/>
+                <TextBox
+                    Text="{Binding DeathYear, UpdateSourceTrigger=PropertyChanged}"
+                    Name="dpDeath" />
+            </StackPanel>
+            <CheckBox 
+                HorizontalAlignment="Right"
+                Click="CheckBox_Click"
+                Command="{Binding DeathYearCommand}"
+                Content="По н.в."
+                Height="20"
+                Margin="5"/>
+            <StackPanel
+                HorizontalAlignment="Center"
+                Orientation="Horizontal">
+                <Button
+                    Style="{StaticResource MainButtonStyle}"
+                    Content="Сохранить"
+                    Command="{Binding AddOrUpdateAuthorCommand}"
+                    Width="110"/>
+                <Button
+                        Style="{StaticResource SecondaryButtonStyle}"
+                    Content="Отменить"
+                    Command="{Binding CancelCommand}"
+                    Width="110"/>
+
+            </StackPanel>
+        </StackPanel>
+    </Grid>
+</Window>

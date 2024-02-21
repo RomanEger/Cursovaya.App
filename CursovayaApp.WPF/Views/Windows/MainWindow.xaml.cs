@@ -1,21 +1,9 @@
 ﻿using System.ComponentModel;
-using System.IO;
-using System.Text;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using CursovayaApp.WPF.Models;
 using CursovayaApp.WPF.Models.DbModels;
 using CursovayaApp.WPF.Services;
-using CursovayaApp.WPF.ViewModels;
 using CursovayaApp.WPF.Views;
-using Microsoft.EntityFrameworkCore;
 
 namespace CursovayaApp.WPF
 {
@@ -28,9 +16,8 @@ namespace CursovayaApp.WPF
         public MainWindow()
         {
             InitializeComponent();
-            ResizeMode =  ResizeMode.CanMinimize;
-            DbClass.entities = new ApplicationContext();
-            MyFrame.frame = MainFrame;
+            ResizeMode = ResizeMode.CanMinimize;
+            MyFrame.Frame = MainFrame;
             Title = "Библиотека \"Читайка\"";
             l = new LoginPage();
             MyFrame.Navigate(l);
@@ -38,7 +25,7 @@ namespace CursovayaApp.WPF
 
         private void MainWindow_OnClosing(object? sender, CancelEventArgs e)
         {
-            var x = MyFrame.frame.Content as Page;
+            var x = MyFrame.Frame.Content as Page;
             if(l.GetType() == x?.GetType())
                 return;
 
@@ -50,15 +37,12 @@ namespace CursovayaApp.WPF
             {
                 try
                 {
-                    DbClass.entities.SaveChanges();
+                    var repo = new ApplicationContext();
+                    repo.SaveChanges();
                 }
                 catch (Exception ex)
                 {
-                    string fileName = $@"C:\Users\error{DateTime.Now}.txt";
-                    FileStream fileStream = new FileStream(fileName, FileMode.Create);
-                    StreamWriter sw = new StreamWriter(fileStream);
-                    sw.Write(ex.Message);
-                    sw.Close();
+                    MessageBox.Show(ex.Message, "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
             else if (a == MessageBoxResult.Cancel) 

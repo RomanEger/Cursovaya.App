@@ -1,6 +1,4 @@
 ﻿using CursovayaApp.WPF.Models.DbModels;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
 using CursovayaApp.WPF.ViewModels;
 
 namespace CursovayaApp.WPF.Models
@@ -15,7 +13,7 @@ namespace CursovayaApp.WPF.Models
             set
             {
                 _currentUser = value;
-                OnPropertyChanged("CurrentUser");
+                OnPropertyChanged();
             } 
         }
     }
