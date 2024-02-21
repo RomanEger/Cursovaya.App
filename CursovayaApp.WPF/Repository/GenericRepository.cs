@@ -21,10 +21,10 @@ public class GenericRepository<T> : IGenericRepository<T> where T: TableBase
         _dbContext.Set<T>().AsEnumerable();
 
 
-    public T Get(Func<T, bool> predicate) =>
+    public T? Get(Func<T, bool> predicate) =>
         _dbContext.Set<T>().FirstOrDefault(predicate);
 
-    public T Get(int id) =>
+    public T? Get(int id) =>
         _dbContext.Set<T>().FirstOrDefault(x => x.Id == id);
 
     public int Add(T newItem)

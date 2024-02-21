@@ -12,7 +12,7 @@ namespace CursovayaApp.WPF.ViewModels
 {
     public class AdminViewModel : ViewModelBase
     {
-        private readonly IUserRepository _userRepository;
+        private readonly IGenericRepository<User> _userRepository;
 
         private List<User> _listUsers;
 
@@ -71,7 +71,7 @@ namespace CursovayaApp.WPF.ViewModels
 
         public AdminViewModel()
         {
-            _userRepository = new UserRepository(new ApplicationContext());
+            _userRepository = new GenericRepository<User>(new ApplicationContext());
             IGenericRepository<Role> roleRepository = new GenericRepository<Role>(new ApplicationContext());
             Pagination = new PaginationService<User>(3);
             try
@@ -145,7 +145,7 @@ namespace CursovayaApp.WPF.ViewModels
             {
                 try
                 {
-                    foreach (User item in Users)
+                    foreach (var item in Users)
                     {
                         _userRepository.AddOrUpdate(item);
                     }

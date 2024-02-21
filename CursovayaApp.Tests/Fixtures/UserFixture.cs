@@ -7,6 +7,7 @@ public class UserFixture : IFixture<User>
 {
     public Faker<User> GenerationRules() =>
         new Faker<User>()
+            .RuleFor(x => x.Id, r => r.IndexFaker)
             .RuleFor(x => x.FullName, r => r.Random.Word())
             .RuleFor(x => x.Password, r => r.Internet.Password())
             .RuleFor(x => x.Login, r => r.Random.Word())

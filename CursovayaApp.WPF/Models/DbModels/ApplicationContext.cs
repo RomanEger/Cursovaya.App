@@ -93,7 +93,7 @@ namespace CursovayaApp.WPF.Models.DbModels
             modelBuilder.Entity<User>().Property(x => x.Login).HasMaxLength(50);
             modelBuilder.Entity<User>().Property(x => x.Password).HasMaxLength(50);
             //check
-            modelBuilder.Entity<User>().ToTable(x => x.HasCheckConstraint("FullName", "LEN(FullName) > 0 AND FullName <> ''"));
+            modelBuilder.Entity<Book>().ToTable(x => x.HasCheckConstraint("FullName", "LEN(FullName) > 0 AND FullName <> ''"));
             modelBuilder.Entity<User>().ToTable(x => x.HasCheckConstraint("Login", "LEN(Login) >= 4 AND Login <> ''"));
             modelBuilder.Entity<User>().ToTable(x => x.HasCheckConstraint("Password", "LEN(Password) >= 4 AND Password <> ''"));
             //unique

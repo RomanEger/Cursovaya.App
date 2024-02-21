@@ -11,7 +11,7 @@ namespace CursovayaApp.WPF.ViewModels
 {
     public class UserViewModel : ViewModelBase
     {
-        private IUserRepository _repository;
+        private IGenericRepository<User> _repository;
         
         private User _thisUser;
 
@@ -30,7 +30,7 @@ namespace CursovayaApp.WPF.ViewModels
                 {
                     try
                     {
-                        var q = _repository.Get(login: ThisUser.Login, password: ThisUser.Password);
+                        var q = _repository.Get(x => x.Login == ThisUser.Login && x.Password == ThisUser.Password);
                         LoggedUser loggedUser = new()
                         {
                             CurrentUser = q
@@ -61,7 +61,7 @@ namespace CursovayaApp.WPF.ViewModels
 #pragma warning restore CS8618
         {
             ThisUser = new User();
-            _repository = new UserRepository(new ApplicationContext());
+            _repository = new GenericRepository<User>(new ApplicationContext());
         }
     }
 }

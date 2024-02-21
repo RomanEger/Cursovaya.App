@@ -5,8 +5,8 @@ namespace CursovayaApp.WPF.Repository.Contracts;
 public interface IGenericRepository<T> :IRepository where T: TableBase
 {
     IEnumerable<T> GetAll();
-    T Get(Func<T, bool> predicate);
-    T Get(int id);
+    T? Get(Func<T, bool> predicate);
+    T? Get(int id);
     int Add(T item);
     int AddOrUpdate(T item);
 

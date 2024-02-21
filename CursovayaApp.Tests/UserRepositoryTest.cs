@@ -8,13 +8,13 @@ namespace CursovayaApp.Tests
 {
     public class UserRepositoryTest
     {
-        private Mock<IUserRepository> _mockUserRepository;
+        private Mock<IGenericRepository<User>> _mockUserRepository;
         private IFixture<User> _fixture;
         private ApplicationContext _dbContext;
         
         public UserRepositoryTest()
         {
-            _mockUserRepository = new Mock<IUserRepository>();
+            _mockUserRepository = new Mock<IGenericRepository<User>>();
             _dbContext = new ApplicationContext();
             _fixture = new UserFixture();
         }
@@ -101,7 +101,7 @@ namespace CursovayaApp.Tests
         {
             int expectedCount = 6;
 
-            var repo = new UserRepository(_dbContext);
+            var repo = new GenericRepository<User>(_dbContext);
 
             var result = repo.GetAll();
 
@@ -135,7 +135,7 @@ namespace CursovayaApp.Tests
         {
             int id = 1001;
 
-            var repo = new UserRepository(_dbContext);
+            var repo = new GenericRepository<User>(_dbContext);
 
             var user = repo.Get(x => x.Id == id);
 
@@ -151,9 +151,9 @@ namespace CursovayaApp.Tests
             
             const string password = "test";
 
-            var repo = new UserRepository(_dbContext);
+            var repo = new GenericRepository<User>(_dbContext);
 
-            var user = repo.Get(login, password);
+            var user = repo.Get(x => x.Login == login && x.Password == password);
 
             Assert.Equal(expectedId, user.Id);
         }
@@ -167,9 +167,9 @@ namespace CursovayaApp.Tests
 
             const string password = "1234";
 
-            var repo = new UserRepository(_dbContext);
+            var repo = new GenericRepository<User>(_dbContext);
 
-            var user = repo.Get(login, password);
+            var user = repo.Get(x => x.Login == login && x.Password == password);
 
             Assert.Equal(expectedId, user.Id);
         }
