@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:CursovayaApp.WPF.Views.Windows"
         mc:Ignorable="d"
-        Title="ForLibrPage" Height="250" Width="800">
+        Height="250" Width="800">
     <Window.Resources>
         <Style TargetType="ComboBox">
             <Setter Property="Width" Value="370"/>

@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:CursovayaApp.WPF.Views.Windows"
         mc:Ignorable="d"
-        Title="ChoosePublishing" Height="150" Width="400">
+        Height="150" Width="400">
     <Grid>
         <StackPanel
             HorizontalAlignment="Center"

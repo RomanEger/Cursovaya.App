@@ -8,7 +8,7 @@
         WindowStartupLocation="CenterOwner"
         SizeToContent="WidthAndHeight"
         ResizeMode="NoResize"
-        Title="AddOrUpdateAuthors" Height="260" Width="500">
+        Title="Редактирование автора" Height="260" Width="500">
     <Window.Resources>
         <Style TargetType="TextBox">
             <Setter Property="Margin" Value="0 5"></Setter>

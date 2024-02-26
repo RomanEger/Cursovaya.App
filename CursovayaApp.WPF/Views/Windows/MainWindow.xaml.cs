@@ -18,7 +18,7 @@ namespace CursovayaApp.WPF
             InitializeComponent();
             ResizeMode = ResizeMode.CanMinimize;
             MyFrame.Frame = MainFrame;
-            Title = "Библиотека \"Читайка\"";
+            Title = "АБИС 1";
             l = new LoginPage();
             MyFrame.Navigate(l);
         }

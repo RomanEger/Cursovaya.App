@@ -22,12 +22,14 @@ namespace CursovayaApp.WPF.Views.Windows
             };
             if (forGive)
             {
+                Title = "Выдать книгу";
                 btn.Content = "Выдать";
                 binding.Path = new PropertyPath("GiveCommand");
                 btn.SetBinding(ButtonBase.CommandProperty, binding);
             }
             else
             {
+                Title = "Принять книгу";
                 btn.Content = "Принять";
                 binding.Path = new PropertyPath("RecieveCommand");
                 btn.SetBinding(ButtonBase.CommandProperty, binding);

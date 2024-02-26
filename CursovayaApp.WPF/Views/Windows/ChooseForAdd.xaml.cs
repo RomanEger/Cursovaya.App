@@ -26,7 +26,7 @@ namespace CursovayaApp.WPF.Views.Windows
             if (isAuthor)
             {
                 SetAuthors();
-
+                Title = "Выбор автора";
                 bindingIS.Path = new PropertyPath("AuthorsForAdd");
                 cmb.SetBinding(ComboBox.ItemsSourceProperty, bindingIS);
                 bindingSI.Path = new PropertyPath("SelectedAuthorForAdd");
@@ -37,7 +37,7 @@ namespace CursovayaApp.WPF.Views.Windows
             else
             {
                 SetPublishings();
-
+                Title = "Выбор издательства";
                 bindingIS.Path = new PropertyPath("ListPublishings");
                 cmb.SetBinding(ComboBox.ItemsSourceProperty, bindingIS);
                 bindingSI.Path = new PropertyPath("SelectedPublishing");
