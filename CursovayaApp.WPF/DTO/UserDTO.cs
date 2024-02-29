@@ -1,4 +1,5 @@
 ﻿using CursovayaApp.WPF.Models.DbModels;
+using System.Collections.Immutable;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
@@ -6,7 +7,7 @@ namespace CursovayaApp.WPF.DTO
 {
     public class UserDTO : TableBase, INotifyPropertyChanged
     {
-        private string _fullName = null!;
+        private string _fullName = string.Empty;
 
         public string FullName
         {
@@ -21,7 +22,7 @@ namespace CursovayaApp.WPF.DTO
             }
         }
 
-        private string _login = null!;
+        private string _login = string.Empty;
 
         public string Login
         {
@@ -36,7 +37,7 @@ namespace CursovayaApp.WPF.DTO
             }
         }
 
-        private string _password = null!;
+        private string _password = string.Empty;
 
         public string Password
         {
@@ -51,7 +52,7 @@ namespace CursovayaApp.WPF.DTO
             }
         }
 
-        private string _role = null!;
+        private string _role = string.Empty;
 
         public string Role
         {
@@ -74,6 +75,6 @@ namespace CursovayaApp.WPF.DTO
                 PropertyChanged(this, new PropertyChangedEventArgs(prop));
         }
 
-        private string[] _allowedRoles = new string[] { "Администратор", "Библиотекарь", "Кладовщик", "Клиент" };
+        private readonly string[] _allowedRoles = new string[] { "Администратор", "Библиотекарь", "Кладовщик", "Клиент" };
     }
 }

@@ -143,7 +143,11 @@ namespace CursovayaApp.WPF.ViewModels
                                     books.Title,
                                     authors.FullName,
                                 }).FirstOrDefault(x => x.Title == bookName && x.FullName == author);
-
+                    if(bookView == null || bookView.Id < 1)
+                    {
+                        MessageBox.Show("Ошибка");
+                        return;
+                    }
                     var count = _repositoryRentalBook.Count(x =>
                         bookView != null && x.IsRentalEnd == false && x.BookId == bookView.Id);
                     var canGive = Books.Count > count;
@@ -152,6 +156,7 @@ namespace CursovayaApp.WPF.ViewModels
                         MessageBox.Show("Нет доступных книг!");
                         return;
                     }
+                    
 
                     var clientFullName = SelectedClient?.Split(Separator)[0];
 
@@ -161,14 +166,17 @@ namespace CursovayaApp.WPF.ViewModels
 
                     var entity = new RentalBook()
                     {
-                        BookId = bookView?.Id ?? 0,
+                        BookId = bookView.Id,
                         UserId = client.Id,
                         DateStart = DateTime.Now.Date,
                         DateEnd = DateTime.Now.AddDays(14).Date,
                         IsRentalEnd = false
                     };
+                    var book = _repositoryBook.Get(x => x.Id == bookView.Id);
+                    --book.Quantity;
                     _repositoryRentalBook.Add(entity);
                     _repositoryRentalBook.Save();
+                    _repositoryBook.Update(book);
                     MessageBox.Show("Книга выдана! Изменения сохранены!");
                 }
                 catch (Exception ex)
@@ -195,7 +203,11 @@ namespace CursovayaApp.WPF.ViewModels
                                      books.Title,
                                      authors.FullName,
                                  }).FirstOrDefault(x => x.Title == bookName && x.FullName == author);
-
+                    if (bookView == null || bookView.Id < 1)
+                    {
+                        MessageBox.Show("Ошибка");
+                        return;
+                    }
                     var clientFullName = SelectedClient?.Split(Separator)[0];
 
                     var clientLogin = SelectedClient?.Split(Separator)[1];
@@ -207,7 +219,9 @@ namespace CursovayaApp.WPF.ViewModels
                     entity.IsRentalEnd = true;
                     
                     _repositoryRentalBook.Update(entity);
-
+                    var book = _repositoryBook.Get(x => x.Id == bookView.Id);
+                    ++book.Quantity;
+                    _repositoryBook.Update(book);
                     MessageBox.Show("Книга принята! Изменения сохранены!");
                     SelectedBook = null;
                     SelectedClient = SelectedClient;
