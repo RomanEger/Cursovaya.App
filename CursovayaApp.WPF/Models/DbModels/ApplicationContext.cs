@@ -9,7 +9,6 @@ namespace CursovayaApp.WPF.Models.DbModels
         public DbSet<Author> Authors { get; set; } = null!;
         public DbSet<Book> Books { get; set; } = null!;
         public DbSet<DeregBook> DeregBooks { get; set; } = null!;
-        public DbSet<Photo> Photos { get; set; } = null!;
         public DbSet<PublishingHouse> PublishingHouses { get; set; } = null!;
         public DbSet<ReasonDereg> ReasonsDereg { get; set; } = null!;
         public DbSet<ReasonReg> ReasonsReg { get; set; } = null!;
@@ -55,9 +54,6 @@ namespace CursovayaApp.WPF.Models.DbModels
             //DeregBook
             modelBuilder.Entity<DeregBook>().Property(x => x.DateOfDereg).HasDefaultValueSql("GETDATE()");
             modelBuilder.Entity<DeregBook>().ToTable(x => x.HasCheckConstraint("DeregQuantity", "DeregQuantity>=0"));
-
-            //Photo
-            modelBuilder.Entity<Photo>().HasIndex(x => x.Image).IsUnique();
 
             //PublishingHouse
             modelBuilder.Entity<PublishingHouse>().Property(x => x.Name).HasMaxLength(120);

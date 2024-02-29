@@ -61,7 +61,6 @@ namespace CursovayaApp.WPF.Models.DbModels
         public PublishingHouse? PublishingHouse { get; set; }
         public ICollection<RegBook> RegBooks { get; set; } = new List<RegBook>();
         public ICollection<DeregBook> DeregBooks { get; set; } = new List<DeregBook>();
-        public ICollection<Photo> Photos { get; set; } = new List<Photo>();
 
 
         public event PropertyChangedEventHandler PropertyChanged;
