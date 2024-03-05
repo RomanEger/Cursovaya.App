@@ -5,11 +5,24 @@ using CursovayaApp.WPF.Views;
 using System.Windows;
 using CursovayaApp.WPF.Repository;
 using CursovayaApp.WPF.Repository.Contracts;
+using CursovayaApp.WPF.Views.Windows;
+using CursovayaApp.WPF.DTO;
 
 namespace CursovayaApp.WPF.ViewModels
 {
     public class AdminViewModel : ViewModelBase
     {
+        private UserDTO _userDTO;
+        public UserDTO UserDto
+        {
+            get => _userDTO;
+            set
+            {
+                _userDTO = value;
+                OnPropertyChanged();
+            }
+        }
+
         private readonly IGenericRepository<User> _userRepository;
 
         private List<User> _listUsers;
@@ -72,6 +85,7 @@ namespace CursovayaApp.WPF.ViewModels
             _userRepository = new GenericRepository<User>(new ApplicationContext());
             IGenericRepository<Role> roleRepository = new GenericRepository<Role>(new ApplicationContext());
             Pagination = new PaginationService<User>(5);
+            UserDto = new UserDTO(this);
             try
             {
                 GetUsers();
@@ -111,6 +125,11 @@ namespace CursovayaApp.WPF.ViewModels
             set
             {
                 _selectedUser = value;
+                if(value != null)
+                {
+                    _userDTO.AllowedRoles.TryGetValue(value.RoleId, out string? str);
+                    _userDTO.Role = str;
+                }
                 OnPropertyChanged();
             }
         }
@@ -143,7 +162,7 @@ namespace CursovayaApp.WPF.ViewModels
             {
                 try
                 {
-                    foreach (var item in Users)
+                    foreach (var item in _listUsers)
                     {
                         _userRepository.AddOrUpdate(item);
                     }
@@ -169,6 +188,20 @@ namespace CursovayaApp.WPF.ViewModels
                 Pagination.InsertToUsers(ref _users, _listUsers);
                 SelectedUser = newUser;
                 SetCount();
+                var window = new AddOrUpdateUsers(this);
+                window.ShowDialog();
+            });
+
+        public RelayCommand UpdateCommand =>
+            new(_ =>
+            {
+                if (SelectedUser == null)
+                {
+                    MessageBox.Show("Сначала выберите пользователя");
+                    return;
+                }
+                var window = new AddOrUpdateUsers(this);
+                window.ShowDialog();
             });
 
         public RelayCommand DeleteCommand =>

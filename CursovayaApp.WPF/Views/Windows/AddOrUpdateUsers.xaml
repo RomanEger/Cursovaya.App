@@ -1,0 +1,54 @@
+﻿<Window x:Class="CursovayaApp.WPF.Views.Windows.AddOrUpdateUsers"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:CursovayaApp.WPF.Views.Windows"
+        mc:Ignorable="d" Height="450" Width="400">
+    <Window.Resources>
+        <Style TargetType="TextBox">
+            <Setter Property="Margin" Value="0,0,0,15"/>
+            <Setter Property="Width" Value="250"/>
+        </Style>
+        <Style TargetType="Label">
+            <Setter Property="HorizontalContentAlignment" Value="Left"/>
+            <Setter Property="Width" Value="250"/>
+            <Setter Property="Padding" Value="0 2"/>
+        </Style>
+    </Window.Resources>
+    <Grid>
+        <StackPanel
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center">
+            <Label Content="ФИО"/>
+                <TextBox Text="{Binding SelectedUser.FullName, UpdateSourceTrigger=PropertyChanged}"/>
+
+                <Label Content="Логин"/>
+                <TextBox Text="{Binding SelectedUser.Login, UpdateSourceTrigger=PropertyChanged}"/>
+
+                <Label Content="Пароль"/>
+                <TextBox Text="{Binding SelectedUser.Password, UpdateSourceTrigger=PropertyChanged}"/>
+                
+
+            <Label Content="Роль"/>
+            <ComboBox Width="250"
+                      DataContext="{Binding UserDto}"
+                      ItemsSource="{Binding AllowedRoles.Values}"
+                      SelectedItem="{Binding Role}"/>
+
+            <StackPanel Orientation="Horizontal">
+                <Button
+                    Width="110"
+                    Style="{StaticResource MainButtonStyle}"
+                    Click="Button_Click"
+                    Content="Сохранить"/>
+                <Button
+                    Width="110"
+                    Style="{StaticResource SecondaryButtonStyle}"
+                    Click="ButtonCancel_Click"
+                    Content="Отменить"/>
+
+            </StackPanel>
+        </StackPanel>
+    </Grid>
+</Window>

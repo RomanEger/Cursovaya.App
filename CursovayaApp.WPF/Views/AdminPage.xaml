@@ -116,7 +116,14 @@
                     Foreground="DodgerBlue"
                     Style="{StaticResource SecondaryButtonStyle}"
                     Command="{Binding AddCommand}"
-                    Width="140"/>
+                    Width="140"/> 
+                <Button 
+                    Style="{StaticResource SecondaryButtonStyle}"
+                    Width="140"
+                    BorderBrush="DodgerBlue"
+                    Foreground="DodgerBlue"
+                    Command="{Binding UpdateCommand}"
+                    Content="Изменить"/>
                 <Button
                     Content="Удалить"
                     Style="{StaticResource DeleteButtonStyle}"

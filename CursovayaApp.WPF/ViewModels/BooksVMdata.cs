@@ -45,7 +45,6 @@ namespace CursovayaApp.WPF.ViewModels
             set
             {
                 _selectedReason = value;
-                OnPropertyChanged();
                 OnPropertyChanged(nameof(AddOrUpdateBookCommand));
                 OnPropertyChanged();
             }
@@ -69,7 +68,6 @@ namespace CursovayaApp.WPF.ViewModels
             set
             {
                 _selectedPublishing = value;
-                OnPropertyChanged();
                 OnPropertyChanged(nameof(AddPublishingCommand));
                 if(SelectedBook != null)
                     SelectedBook.Publishing = _selectedPublishing;
@@ -84,7 +82,6 @@ namespace CursovayaApp.WPF.ViewModels
             set
             {
                 _searchText = value;
-                OnPropertyChanged();
                 Sort();
                 OnPropertyChanged();
             }
@@ -102,8 +99,6 @@ namespace CursovayaApp.WPF.ViewModels
                 if (Equals(value, _authors)) return;
                 _authors = value;
                 OnPropertyChanged();
-                OnPropertyChanged();
-                OnPropertyChanged();
             }
         }
 
@@ -116,8 +111,6 @@ namespace CursovayaApp.WPF.ViewModels
                 _authorsForAdd = value;
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(AddOrUpdateBookCommand));
-                OnPropertyChanged();
-                OnPropertyChanged(nameof(AddOrUpdateBookCommand));
             }
         }
 
@@ -128,7 +121,6 @@ namespace CursovayaApp.WPF.ViewModels
             set
             {
                 _selectedAuthor = value;
-                OnPropertyChanged();
                 OnPropertyChanged(nameof(AddAuthorCommand));
                 Sort();
                 SetCount();
@@ -142,7 +134,6 @@ namespace CursovayaApp.WPF.ViewModels
             set
             {
                 _selectedAuthorForAdd = value;
-                OnPropertyChanged();
                 OnPropertyChanged(nameof(AddAuthorCommand));
                 Sort();
                 SetCount();

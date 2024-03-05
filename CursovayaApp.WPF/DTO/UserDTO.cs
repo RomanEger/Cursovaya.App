@@ -1,4 +1,5 @@
 ﻿using CursovayaApp.WPF.Models.DbModels;
+using CursovayaApp.WPF.ViewModels;
 using System.Collections.Immutable;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
@@ -7,6 +8,14 @@ namespace CursovayaApp.WPF.DTO
 {
     public class UserDTO : TableBase, INotifyPropertyChanged
     {
+        public UserDTO() { }
+
+        public UserDTO(AdminViewModel viewModel) 
+        {
+            _adminViewModel = new Lazy<AdminViewModel>(viewModel);
+        }
+
+        Lazy<AdminViewModel> _adminViewModel;
         private string _fullName = string.Empty;
 
         public string FullName
@@ -59,11 +68,18 @@ namespace CursovayaApp.WPF.DTO
             get => _role;
             set
             {
-                if (value == null ||
-                    value.Length > 50 ||
-                   !_allowedRoles.Contains(value))
+                if (string.IsNullOrEmpty(value))
+                    _role = value;
+                else if (value.Length > 50 ||
+                   !_allowedRoles.Any(x => x.Value == value))
                     return;
                 _role = value;
+                if(_adminViewModel != null)
+                {
+                    _adminViewModel.Value.SelectedUser.RoleId = AllowedRoles.FirstOrDefault(x => x.Value == value).Key;
+                    _adminViewModel.Value.SelectedUser.OnPropertyChanged();
+                }
+                
                 OnPropertyChanged();
             }
         }
@@ -75,6 +91,14 @@ namespace CursovayaApp.WPF.DTO
                 PropertyChanged(this, new PropertyChangedEventArgs(prop));
         }
 
-        private readonly string[] _allowedRoles = new string[] { "Администратор", "Библиотекарь", "Кладовщик", "Клиент" };
+        public Dictionary<int, string> AllowedRoles => _allowedRoles;
+
+        private readonly Dictionary<int, string> _allowedRoles = new Dictionary<int, string>()
+        {
+            {1, "Администратор" },
+            {2, "Библиотекарь" },
+            {3, "Кладовщик" },
+            {4, "Клиент" }
+        };
     }
 }
