@@ -145,9 +145,9 @@ namespace CursovayaApp.Tests
         {
             const int expectedId = 4;
 
-            const string login = "test";
+            const string login = "admin111/";
             
-            const string password = "test";
+            const string password = "admin78";
 
             var repo = new GenericRepository<User>(_dbContext);
 
